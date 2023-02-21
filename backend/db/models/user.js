@@ -16,9 +16,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+    
     static getCurrentUserById(id) {
       return User.scope("currentUser").findByPk(id);
     }
+
     static async login({ credential, password }) {
       const { Op } = require('sequelize');
       const user = await User.scope('loginUser').findOne({
@@ -33,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         return await User.scope('currentUser').findByPk(user.id);
       }
     }
+
     static async signup({ firstName,lastName,username, email, password }) {
       const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({
@@ -63,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           len: [3, 256],
           isEmail: true
@@ -77,12 +81,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       firstName:{
         type: DataTypes.STRING,
-        allowNull:false,
+        
         
       },
       lastName:{
         type:DataTypes.STRING,
-        allowNull:false
+        
       }
     }, {
       sequelize,
