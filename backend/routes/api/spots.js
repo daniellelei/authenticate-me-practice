@@ -2,14 +2,19 @@ const express = require('express');
 
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
-const { Spot } = require('../../db/models');
+const { Spot, SpotImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 router.get('/', async(req, res)=>{
-    const spots = await Spot.findAll();
-    return res.json(spots);
+    const spots = await Spot.findAll({
+        include: SpotImage
+    });
+
+    return res.json({
+        Spots: spots
+    });
 })
 
 //Get all Spots owned by the Current User
