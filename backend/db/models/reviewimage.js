@@ -16,6 +16,19 @@ module.exports = (sequelize, DataTypes) => {
         {foreignKey: "reviewId"}
       )
     }
+
+    static async addImage ({reviewId, url}) {
+
+      const image = await ReviewImage.create({
+        reviewId,
+        url
+      })
+      
+      return await ReviewImage.findByPk(image.id, {
+        attributes:['id', 'url']
+      })
+
+    }
   }
   ReviewImage.init({
     reviewId:{
