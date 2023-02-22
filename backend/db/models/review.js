@@ -26,6 +26,16 @@ module.exports = (sequelize, DataTypes) => {
         {foreignKey: "reviewId"}
       )
     }
+
+    static async addReview ({userId, spotId, review, stars}) {
+      const newReview = await Review.create({
+        userId,
+        spotId,
+        review,
+        stars
+      });
+      return await Review.findByPk(newReview.id);
+    }
   }
   Review.init({
     spotId: {

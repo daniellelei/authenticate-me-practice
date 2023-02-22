@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
-const { User } = require('../../db/models');
+const { User, Review, ReviewImage } = require('../../db/models');
 const { Spot,SpotImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -197,7 +197,68 @@ router.delete(
         })
     }
 )
+//Get all Reviews by a Spot's id
+router.get(
+    '/:spotId/reviews',
+    async (req, res) =>{
+        const {spotId} = req.params;
+        const spot  = await Spot.findByPk(spotId);
+        if(!spot){
+            return res.status(404).json({
+                "message": "Spot couldn't be found",
+                "statusCode": 404
+            })
+        }
 
+        const reviews = await Review.findAll({
+            where: {spotId: spotId},
+            include:[
+                {model: User, attributes:['id', 'firstName', 'lastName']},
+                {model: ReviewImage, attributes:{exclude: ['createdAt', 'updatedAt', 'reviewId']}}
+            ]
+        })
+
+        return res.json({
+            Reviews: reviews
+        })
+
+    }
+
+)
+//Create a Review for a Spot based on the Spot's id
+const checkReviewPost =[
+    check('review')
+    .exists({checkFalsy: true})
+    .withMessage("Review text is required"),
+    check('stars')
+    .exists({checkFalsy: true})
+    .withMessage("Stars must be an integer from 1 to 5"),
+    handleValidationErrors
+];
+
+router.post(
+    '/:spotId/reviews',
+    checkReviewPost,
+    requireAuth,
+    restoreUser,
+    
+    async (req, res) =>{
+        const{review, stars} = req.body;
+        const userId = req.user.id;
+        const spotId = req.params.spotId;
+        const spot = await Spot.findByPk(spotId);
+        if(!spot){
+            return res.status(404).json({
+                "message": "Spot couldn't be found",
+                "statusCode": 404
+            })
+        }
+
+        const newReview = await Review.addReview({userId, spotId, review, stars});
+        res.status(201).json(newReview)
+
+    }
+)
 
 
 
