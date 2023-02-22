@@ -9,12 +9,22 @@ const spotimage = require('../../db/models/spotimage');
 const router = express.Router();
 
 router.get('/', async(req, res)=>{
-    const spots = await Spot.findAll({
+    const spots = await Spot.findAll({   //an array of spots
         include: {
-            model: SpotImage, as: "previewImage",
-            attributes: ['url'],
+            model: SpotImage,
+            as: "previewImage"
         }
-    });
+    }); 
+    //let Spots = {};
+    // let one = await spots.getSpotImages()[0];
+    // console.log(one)
+    // // for(let s of spots) {
+    // //     let imgUrl = await s.getSpotImages();
+    // //     console.log(imgUrl)
+    // //     s = {
+    // //         preview: imgUrl
+    // //     }
+    // // }
 
     //const images = await spots.getSpotImages();
     return res.json({
@@ -37,9 +47,9 @@ router.get('/:spotId', async(req, res)=>{
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId, {
         include: [
-            {model: User},
-            {model: SpotImage, as: "SpotImages"}
-            ]
+                    {model: SpotImage, as: "SpotImages"},
+                    {model: User, as: "Owner"},
+                ]
     });
 
     if(!spot) return res.status(404).json({
