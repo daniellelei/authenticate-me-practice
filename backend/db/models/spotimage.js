@@ -16,6 +16,15 @@ module.exports = (sequelize, DataTypes) => {
         {foreignKey: 'spotId'}
       )
     }
+
+    static async addAnImage({spotId, url, preview}){
+      const image = await SpotImage.create({
+        spotId,
+        url,
+        preview
+      });
+      return await SpotImage.findByPk(image.id);
+    }
   }
   SpotImage.init({
     spotId: {
@@ -33,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'SpotImage',
+    defaultScope:{
+      attributes:{
+        exclude:['createdAt', 'updatedAt', 'spotId']
+      }
+    }
   });
   return SpotImage;
 };

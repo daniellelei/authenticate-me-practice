@@ -2,9 +2,10 @@ const express = require('express');
 
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
-const { Spot } = require('../../db/models');
+const { Spot,SpotImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const spotimage = require('../../db/models/spotimage');
 const router = express.Router();
 
 router.get('/', async(req, res)=>{
@@ -80,12 +81,43 @@ async(req, res)=>{
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
     const ownerId = req.user.id;
     const newSpot = await Spot.postAspot({ownerId, address, city, state, country, lat, lng, name, description, price});
-
-
-
     return res.status(201).json(newSpot);
 })
 
+//Add an Image to a Spot based on the Spot's id
+router.post('/:spotId/images',
+requireAuth,
+restoreUser,
+async(req, res)=>{
+    const {spotId} = req.params
+    const {id} = req.user
+    
+    let {url, preview} = req.body
+    if(preview==="true") preview=true
+    else preview = false;
+
+    const spot = await Spot.findByPk(spotId);
+    if(!spot) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
+    if(id === spot.ownerId){
+        console.log("spotId", spotId);
+        console.log("url", url);
+        console.log("preview", preview);
+        const newImage = await SpotImage.addAnImage({spotId, url, preview});
+        console.log('i added an image.')
+        return res.status(200).json(newImage);
+    }
+    else return res.status(400).json({
+        "message": "Not owner of this spot",
+        "statusCode": 400
+    })
+
+}
+)
 
 
 module.exports = router;
