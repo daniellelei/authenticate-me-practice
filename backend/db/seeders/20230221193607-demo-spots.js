@@ -51,6 +51,19 @@ module.exports = {
       description: "It is near the freeway",
       price: 80,
 
+    },
+    {
+      ownerId: 4, 
+      address: "123 Elizabeth Ave",
+      city: "Monterey Park",
+      state: "California",
+      country: "US",
+      lat: 12.5657773,
+      lng: 109.3344542,
+      name: "Cardi's Castle",
+      description: "Cardi lives here",
+      price: 180,
+
     }
    ])
   },
