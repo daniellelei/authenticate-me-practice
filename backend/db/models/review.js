@@ -36,6 +36,19 @@ module.exports = (sequelize, DataTypes) => {
       });
       return await Review.findByPk(newReview.id);
     }
+
+    static async editReview({reviewId, spotId, userId, review, stars}) {
+      const editreview = await Review.findByPk(reviewId);
+      await editreview.update({
+        spotId,
+        userId,
+        review,
+        stars,
+      })
+
+      return await Review.findByPk(reviewId);
+
+    }
   }
   Review.init({
     spotId: {

@@ -66,7 +66,46 @@ router.post(
     }
 )
 
+router.put(
+    '/:reviewId',
+    requireAuth,
+    restoreUser,
+    async (req, res) =>{
+        const currentUserId = req.user.id;
+        const reviewId = req.params.reviewId;
+        const {review, stars} = req.body;
 
+        //find owner of review
+        const review1 = await Review.findByPk(reviewId)
+        if(!review1) {
+            //need to generate new error
+            return res.status(404).json({
+                "message": "Review couldn't be found",
+                "statusCode": 404
+            })
+        }
+        let owner = await review1.getUser();
+        owner = owner.toJSON();
+        const ownerId = owner.id
+        //console.log(ownerId)
+        //validate currentUser and review's owner
+        if(currentUserId!==ownerId){
+            return res.status(400).json({
+                message: "Only owner can add an image to this review",
+                statusCode: 400
+            })
+        }
+
+        let spot = await review1.getSpot();
+        spot = spot.toJSON();
+        const spotId = spot.id
+
+        const reviewEdited = await Review.editReview({reviewId, spotId, ownerId, review, stars})
+
+        return res.status(200).json(reviewEdited);
+
+    }
+)
 
 
 
