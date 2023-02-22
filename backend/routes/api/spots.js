@@ -9,8 +9,17 @@ const spotimage = require('../../db/models/spotimage');
 const router = express.Router();
 
 router.get('/', async(req, res)=>{
-    const spots = await Spot.findAll();
-    return res.json(spots);
+    const spots = await Spot.findAll({
+        include: {
+            model: SpotImage, as: "previewImage",
+            attributes: ['url'],
+        }
+    });
+
+    //const images = await spots.getSpotImages();
+    return res.json({
+        Spots: spots
+    });
 })
 
 //Get all Spots owned by the Current User
@@ -27,7 +36,10 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=>{
 router.get('/:spotId', async(req, res)=>{
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId, {
-        include: User
+        include: [
+            {model: User},
+            {model: SpotImage, as: "SpotImages"}
+            ]
     });
 
     if(!spot) return res.status(404).json({
