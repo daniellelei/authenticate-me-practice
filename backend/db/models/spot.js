@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       )
 
       Spot.belongsToMany(
-        models.Users,
+        models.User,
         {through: models.Booking}
       )
 

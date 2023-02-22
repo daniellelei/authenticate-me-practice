@@ -5,7 +5,7 @@ const { User } = require('../../db/models');
 const { Spot,SpotImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const spotimage = require('../../db/models/spotimage');
+
 const router = express.Router();
 
 router.get('/', async(req, res)=>{
