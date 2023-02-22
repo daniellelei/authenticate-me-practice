@@ -31,6 +31,16 @@ module.exports = (sequelize, DataTypes) => {
         {foreignKey: 'spotId'}
 
       )
+
+      Spot.belongsToMany(
+        models.Users,
+        {through: models.Booking}
+      )
+
+      Spot.hasMany(
+        models.Booking,
+        {foreignKey: 'spotId'}
+      )
     }
 
     

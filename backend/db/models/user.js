@@ -24,6 +24,16 @@ module.exports = (sequelize, DataTypes) => {
         models.Review,
         {foreignKey: 'userId'}
       )
+
+      User.belongsToMany(
+        models.Spot,
+        {through: models.Booking}
+      )
+
+      User.hasMany(
+        models.Booking,
+        {foreignKey: "userId"}
+      )
     }
     
     static getCurrentUserById(id) {
