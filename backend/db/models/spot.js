@@ -13,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Spot.belongsTo(
         models.User,
-        {foreignKey: "ownerId", as: "Owner"}
+        {foreignKey: "ownerId"
+        , as: "Owner"
+      }
       )
 
       Spot.hasMany(
@@ -41,6 +43,23 @@ module.exports = (sequelize, DataTypes) => {
         price
       });
       return await Spot.findByPk(spot.id);
+    }
+
+    static async editAspot({spotId, address, city, state, country, lat, lng, name, description, price}){
+      const spot = await Spot.findByPk(spotId);
+      await spot.update({
+        address: address,
+        city:city,
+        state:state,
+        country:country,
+        lat:lat,
+        lng:lng,
+        name:name,
+        description:description,
+        price:price
+      })
+
+      return await Spot.findByPk(spotId);
     }
   }
   Spot.init({

@@ -36,8 +36,10 @@ router.get('/', async(req, res)=>{
 router.get('/current', requireAuth, restoreUser, async(req, res)=>{
     const{id} = req.user;
     const user = await User.findByPk(id);
+    console.log(user)
 
     const spotsOwnedbyCurrentUser = await user.getSpots();
+    console.log(spotsOwnedbyCurrentUser)
 
     return res.json(spotsOwnedbyCurrentUser);
 })
@@ -140,6 +142,66 @@ async(req, res)=>{
 
 }
 )
+
+//edit a spot
+router.put(
+    "/:spotId",
+    requireAuth,
+    restoreUser,
+    validateSpotPost,
+    async (req, res)=>{
+        const userId = req.user.id;
+        const{spotId} = req.params;
+        const spot = await Spot.findByPk(spotId);
+        console.log(spot)
+        // console.log()
+        // const owner = 
+        // if(userId !== owner.id) {
+        //     return res.status(400).json({
+        //         "message": "Only owner can edit a spot",
+        //         "statusCode": "400"
+        //     })
+        // }
+        const{ address, city, state, country, lat, lng, name, description, price} = req.body;
+
+        const spotEdited = await Spot.editAspot({spotId, address, city, state, country, lat, lng, name, description, price})
+
+        return res.status(200).json(spotEdited)
+
+    }
+)
+
+//delete a spot --still cannot delete due to foreign key constraints error
+router.delete(
+    '/:spotId',
+    requireAuth,
+    restoreUser,
+    async (req, res) =>{
+        //check owner
+        const spot = await Spot.findByPk(req.params.spotId);
+        console.log(spot)
+
+        if(!spot){
+            return res.status(404).json({
+                "message": "Spot couldn't be found",
+                "statusCode": 404
+            })
+        }
+
+        
+        await spot.destroy();
+
+        return res.status(200).json({
+            "message": "Successfully deleted",
+            "statusCode": 200
+        })
+    }
+)
+
+
+
+
+
 
 
 module.exports = router;
