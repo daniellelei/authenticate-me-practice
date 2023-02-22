@@ -24,32 +24,83 @@ const validateSignup = [
     .exists({ checkFalsy: true })
     .isLength({ min: 6 })
     .withMessage('Password must be 6 characters or more.'),
+  check('firstName')
+    .exists({checkFalsy: true})
+    .withMessage('First Name is required'),
+  check('lastName')
+    .exists({checkFalsy: true})
+    .withMessage('Last Name is required'),
   handleValidationErrors
+  //validateErrorhandling
 ];
 
+//check if email is unique
+const checkIfExists = async(req, res, next) =>{
+  const {email, username} = req.body
+  
+  const user = await User.findAll({
+    where:{
+      email: email
+    }
+  })
+  
+  if(user.length){
+    const err = new Error();
+    err.message = "User already exists"
+    err.status = 403
+    err.errors= {"email": "User with that email already exists"}
+    next(err);
+  }
+
+  const user1 = await User.findAll({
+    where:{
+      username: username
+    }
+  })
+  if(user1.length){
+    const err = new Error();
+    err.message = "User already exists"
+    err.status = 403
+    err.errors= {"username": "User with that username already exists"}
+    next(err);
+  }
+
+  await next();
+}
+
+const validateErrorhandling = (err, req, res, next)=>{
+  if(err){
+    res.status(err.status)
+    return res.json({
+      message: err.message,
+      statusCode: err.status,
+      errors: err.errors
+    })
+  }
+
+  next();
+}
 
 
 
-// Sign up
+// Sign up a user
 router.post(
   '/',
   validateSignup,
+  checkIfExists,
+  validateErrorhandling,
   async (req, res) => {
     console.log('i passed validation');
     const { email, password, username, firstName, lastName } = req.body;
     const user = await User.signup({ email, username, password, firstName, lastName});
 
     const token = await setTokenCookie(res, user);
-    const currentUser = {};
-    currentUser.id = user.id;
-    currentUser.email = user.email;
-    currentUser.firstName = user.firstName;
-    currentUser.lastName = user.lastName;
-    currentUser.username = user.username;
-    currentUser.token = token;
+    
+    
 
     return res.json({
-      user: currentUser
+      user,
+      token: token
     });
   }
 );

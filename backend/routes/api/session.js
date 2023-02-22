@@ -31,21 +31,21 @@ router.post(
     if (!user) {
       const err = new Error('Login failed');
       err.status = 401;
-      err.title = 'Login failed';
+      err.title = 'Invalid credentials';
       err.errors = { credential: 'The provided credentials were invalid.' };
       return next(err);
     }
 
     await setTokenCookie(res, user);
-    let currentUser = {};
-    currentUser.id = user.id;
-    currentUser.firstName = user.firstName;
-    currentUser.lastName = user.lastName;
-    currentUser.email = user.email;
-    currentUser.username = user.username
+    // let currentUser = {};
+    // currentUser.id = user.id;
+    // currentUser.firstName = user.firstName;
+    // currentUser.lastName = user.lastName;
+    // currentUser.email = user.email;
+    // currentUser.username = user.username
 
     return res.json({
-      user: currentUser
+      user: user
     });
   }
 );
@@ -53,7 +53,7 @@ router.post(
 
 //invalid credentials 
 router.use((err, req, res, next)=>{
-  if(err.title === "Login failed"){
+  if(err.title === "Invalid credentials"){
     res.status (err.status) 
     return res.json({
       message: err.title,
@@ -83,13 +83,14 @@ router.use((err, req, res, next)=>{
 //get the current user
 router.get('/', requireAuth, restoreUser, async(req, res, next) =>{
 
-  const{id, firstName, lastName, email} = req.user;
+  const{id, firstName, lastName, email, username} = req.user;
   //const token = await setTokenCookie(res, req.user)
   const currentUser = {};
   currentUser.id = id;
   currentUser.firstName = firstName;
   currentUser.lastName = lastName;
   currentUser.email = email;
+  currentUser.username = username
   //currentUser.token = token;
 
   res.status(200).json({
