@@ -178,9 +178,18 @@ router.delete(
     restoreUser,
     async (req, res) =>{
         //check owner
-        const spot = await Spot.findByPk(req.params.spotId);
-        console.log(spot)
+        const currentUserId = req.user.id;
 
+        const spot = await Spot.findByPk(req.params.spotId, {include: Owner});
+        let owner = spot.Owner;
+        owner = owner.toJSON();
+        const ownerId = owner.id;
+        if(currentUserId!==ownerId){
+            return res.status(400).json({
+                message: "Only owner can add an image to this review",
+                statusCode: 400
+            })
+        }
         if(!spot){
             return res.status(404).json({
                 "message": "Spot couldn't be found",
