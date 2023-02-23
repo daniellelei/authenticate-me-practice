@@ -8,6 +8,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+//get all spots
 router.get('/', async(req, res)=>{
     const allspots = await Spot.findAll(); 
     
@@ -24,9 +25,11 @@ router.get('/', async(req, res)=>{
                 [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
         })
-        let rating = spotRating.dataValues.avgRating
-        if(!rating) spotJson.avgRating = "No reviews yet"
-        else spotJson.avgRating = rating
+        if(!spotRating || spotRating === undefined) spotJson.avgRating = "No reviews yet"
+        else {
+            let rating = spotRating.dataValues.avgRating
+            spotJson.avgRating = rating
+        }
         //previewImage
         const spotImg = await SpotImage.findOne({
             where:{
@@ -34,10 +37,12 @@ router.get('/', async(req, res)=>{
             },
             attributes: ['url']
         })
-        let imgUrl = spotImg.dataValues.url
-        if(!imgUrl) spotJson.previewImage = "No images yet"
-        else spotJson.previewImage = imgUrl
-        payload.push(spotJson)
+        if(!spotImg) spotJson.previewImage = "No images yet"
+        else{
+            let imgUrl = spotImg.dataValues.url
+            spotJson.previewImage = imgUrl
+        }
+        payload.push(spotJson)    
     }
 
     return res.json({
@@ -68,9 +73,12 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=>{
                 [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
         })
-        let rating = spotRating.dataValues.avgRating
-        if(!rating) spotJson.avgRating = "No reviews yet"
-        else spotJson.avgRating = rating
+        if(!spotRating) spotJson.avgRating = "No reviews yet"
+        else {
+            let rating = spotRating.dataValues.avgRating
+            spotJson.avgRating = rating
+        } 
+        
         //previewImage
         const spotImg = await SpotImage.findOne({
             where:{
@@ -78,9 +86,11 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=>{
             },
             attributes: ['url']
         })
-        let imgUrl = spotImg.dataValues.url
-        if(!imgUrl) spotJson.previewImage = "No images yet"
-        else spotJson.previewImage = imgUrl
+        if(!spotImg) spotJson.previewImage = "No images yet"
+        else{
+            let imgUrl = spotImg.dataValues.url
+            spotJson.previewImage = imgUrl
+        }
         payload.push(spotJson)
     }
 
@@ -196,11 +206,13 @@ async(req, res)=>{
     const {id} = req.user
     
     let {url, preview} = req.body
-    if(preview==="true") preview=true
+    if(preview===true) preview=true
     else preview = false;
 
     const spot = await Spot.findByPk(spotId);
     if(!spot) {
+        const err = new Error(`Spot couldn't be found`);
+        err.status = 404;
         return res.status(404).json({
             "message": "Spot couldn't be found",
             "statusCode": 404
@@ -214,10 +226,15 @@ async(req, res)=>{
         console.log('i added an image.')
         return res.status(200).json(newImage);
     }
-    else return res.status(400).json({
+    else {
+        const err = new Error(`Not owner of this spot`);
+        err.status = 400;
+        return res.status(400).json({
         "message": "Not owner of this spot",
         "statusCode": 400
+        
     })
+}
 
 }
 )
@@ -228,26 +245,34 @@ router.put(
     requireAuth,
     restoreUser,
     validateSpotPost,
+    validateErrorhandling,
     async (req, res)=>{
-        const userId = req.user.id;
-        const{spotId} = req.params;
-        const spot = await Spot.findByPk(spotId);
-        console.log(spot)
-        // console.log()
-        // const owner = 
-        // if(userId !== owner.id) {
-        //     return res.status(400).json({
-        //         "message": "Only owner can edit a spot",
-        //         "statusCode": "400"
-        //     })
-        // }
-        const{ address, city, state, country, lat, lng, name, description, price} = req.body;
+    const {spotId} = req.params
+    const {id} = req.user
+    const{ address, city, state, country, lat, lng, name, description, price} = req.body;
 
-        const spotEdited = await Spot.editAspot({spotId, address, city, state, country, lat, lng, name, description, price})
-
-        return res.status(200).json(spotEdited)
-
+    const spot = await Spot.findByPk(spotId);
+    if(!spot) {
+        const err = new Error(`Spot couldn't be found`);
+        err.status = 404;
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
     }
+    if(id === spot.ownerId){
+        const spotEdited = await Spot.editAspot({spotId, address, city, state, country, lat, lng, name, description, price});
+        return res.status(200).json(spotEdited);
+    }
+    else {
+        const err = new Error(`Not owner of this spot`);
+        err.status = 400;
+        return res.status(400).json({
+        "message": "Not owner of this spot",
+        "statusCode": 400
+    })
+}
+}
 )
 
 //delete a spot --still cannot delete due to foreign key constraints error
@@ -258,26 +283,31 @@ router.delete(
     async (req, res) =>{
         //check owner
         const currentUserId = req.user.id;
+        const{spotId} = req.params;
 
-        const spot = await Spot.findByPk(req.params.spotId, {include: Owner});
-        let owner = spot.Owner;
-        owner = owner.toJSON();
-        const ownerId = owner.id;
-        if(currentUserId!==ownerId){
-            return res.status(400).json({
-                message: "Only owner can add an image to this review",
-                statusCode: 400
-            })
-        }
+        const spot = await Spot.findByPk(spotId, {attributes:['ownerId']});
+        
         if(!spot){
+            const err = new Error(`Spot couldn't be found`);
+            err.status = 404;
             return res.status(404).json({
                 "message": "Spot couldn't be found",
                 "statusCode": 404
             })
         }
-
         
-        await spot.destroy();
+
+        let ownerID = spot.dataValues.ownerId
+        if(currentUserId!==ownerID){
+            const err = new Error(`Only the owner can add an image to this review`);
+            err.status = 400;
+            return res.status(400).json({
+                message: "Only owner can add an image to this review",
+                statusCode: 400
+            })
+        }
+        const deleteSpot = await Spot.findByPk(spotId);
+        await deleteSpot.destroy();
 
         return res.status(200).json({
             "message": "Successfully deleted",
