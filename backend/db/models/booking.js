@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         {foreignKey: "userId"}
       )
     }
+
+    
   }
   Booking.init({
     spotId: {
@@ -30,11 +32,11 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.INTEGER,
     },
     startDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     endDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
   }, {

@@ -13,8 +13,8 @@ module.exports = {
      * }], {});
     */
    await queryInterface.bulkInsert('Bookings', [
-    {spotId:1, userId:3, startDate:'2022-03-17' , endDate:'2022-03-19' },
-    {spotId:2, userId:2, startDate:'2022-04-17' , endDate:'2022-04-18' },
+    {spotId:1, userId:3, startDate:"2022-03-17" , endDate:"2022-03-19"},
+    {spotId:2, userId:2, startDate:"2022-04-17" , endDate:"2022-04-18" },
   
    ])
   },
