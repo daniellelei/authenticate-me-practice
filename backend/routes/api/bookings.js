@@ -193,6 +193,60 @@ router.delete(
     requireAuth,
     restoreUser,
     async (req, res) => {
+        //isOwner?
+        const currentUserId = req.user.id;
+        const {bookingId} = req.params;
+        console.log(bookingId)
+        const booking = await Booking.findOne({
+            where:{id:bookingId},
+            attributes:['userId', 'spotId']
+        })
+        
+        //cannot find booking 
+        if(!booking) {
+            const err = new Error();
+            err.status = 404;
+            err.message =  "Booking couldn't be found";
+            //return next(err)
+
+            return res.status(404).json({
+                "message": "Booking couldn't be found",
+                "statusCode": 404
+            })
+        }
+        //belongs to current user?
+        //let bookingJson = booking.toJson();
+        let userId = booking.userId;
+        if(currentUserId!==userId) {
+            const err = new Error();
+            return res.status(400).json({
+                "message": "Not your booking",
+                "statusCode": 400
+            })
+        }
+
+        //Bookings that have been started can't be deleted
+        const{startDate, endDate} = req.body;
+        let newStart = new Date(startDate);
+        let newEnd = new Date(endDate);
+        let currentDate = new Date();
+        if( newStart.getTime() < currentDate.getTime() ){
+            const err = new Error();
+            return res.status(403).json({
+                "message": "Bookings that have been started can't be deleted",
+                "statusCode": 403
+            })
+        }
+
+        const currentBooking = await Booking.findOne({
+            where:{id:bookingId}
+        });
+        await currentBooking.destroy();
+        return res.status(200).json({
+            "message": "Successfully deleted",
+            "statusCode": 200
+        })
+
         
     }
 )
