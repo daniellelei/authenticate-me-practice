@@ -107,6 +107,47 @@ router.put(
     }
 )
 
+router.delete(
+    '/:reviewId',
+    requireAuth,
+    restoreUser,
+    async (req, res) => {
+        const currentUserId = req.user.id;
+        const reviewId = req.params.reviewId;
+        // console.log("currentUserId", currentUserId);
+        // console.log("reviewId", reviewId)
+        //find owner of review
+        const review1 = await Review.findByPk(reviewId, {include: User})
+        //console.log("currentUserId", currentUserId);
+        if(!review1) {
+            //need to generate new error
+            return res.status(404).json({
+                "message": "Review couldn't be found",
+                "statusCode": 404
+            })
+        }
+        let owner = review1.User;
+        
+        owner = owner.toJSON();
+        const ownerId = owner.id
+        //console.log(ownerId)
+        //validate currentUser and review's owner
+        if(currentUserId!==ownerId){
+            return res.status(400).json({
+                message: "Only owner can add an image to this review",
+                statusCode: 400
+            })
+        }
+
+        await review1.destroy();
+
+        return res.status(200).json({
+            "message": "Successfully deleted",
+            "statusCode": 200
+        })
+    }
+)
+
 
 
 module.exports = router;
