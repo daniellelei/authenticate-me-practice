@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
-const { User, Review, ReviewImage } = require('../../db/models');
+const { User, Review, ReviewImage, sequelize } = require('../../db/models');
 const { Spot,SpotImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -9,26 +9,39 @@ const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 router.get('/', async(req, res)=>{
-    const spots = await Spot.findAll({   //an array of spots
-        include: {
-            model: SpotImage,
-            as: "previewImage"
-        }
-    }); 
-    //let Spots = {};
-    // let one = await spots.getSpotImages()[0];
-    // console.log(one)
-    // // for(let s of spots) {
-    // //     let imgUrl = await s.getSpotImages();
-    // //     console.log(imgUrl)
-    // //     s = {
-    // //         preview: imgUrl
-    // //     }
-    // // }
+    const allspots = await Spot.findAll(); 
+    
+    let payload = []
+    for(let i = 0; i < allspots.length; i++) {
+        const spot = allspots[i];
+        let spotJson = spot.toJSON()
+        //avgRating
+        const spotRating = await Review.findOne({
+            where: {
+                spotId: spot.id
+            },
+            attributes: [
+                [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
+            ]
+        })
+        let rating = spotRating.dataValues.avgRating
+        if(!rating) spotJson.avgRating = "No reviews yet"
+        else spotJson.avgRating = rating
+        //previewImage
+        const spotImg = await SpotImage.findOne({
+            where:{
+                spotId: spot.id
+            },
+            attributes: ['url']
+        })
+        let imgUrl = spotImg.dataValues.url
+        if(!imgUrl) spotJson.previewImage = "No images yet"
+        else spotJson.previewImage = imgUrl
+        payload.push(spotJson)
+    }
 
-    //const images = await spots.getSpotImages();
     return res.json({
-        Spots: spots
+        Spots: payload
     });
 })
 
@@ -36,16 +49,49 @@ router.get('/', async(req, res)=>{
 router.get('/current', requireAuth, restoreUser, async(req, res)=>{
     const{id} = req.user;
     const user = await User.findByPk(id);
-    console.log(user)
+    const allspots = await user.getSpots();
+    if(!allspots.length){
+        return res.json({
+            message: "No spots posted yet"
+        })
+    }
+    let payload = []
+    for(let i = 0; i < allspots.length; i++) {
+        const spot = allspots[i];
+        let spotJson = spot.toJSON()
+        //avgRating
+        const spotRating = await Review.findOne({
+            where: {
+                spotId: spot.id
+            },
+            attributes: [
+                [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
+            ]
+        })
+        let rating = spotRating.dataValues.avgRating
+        if(!rating) spotJson.avgRating = "No reviews yet"
+        else spotJson.avgRating = rating
+        //previewImage
+        const spotImg = await SpotImage.findOne({
+            where:{
+                spotId: spot.id
+            },
+            attributes: ['url']
+        })
+        let imgUrl = spotImg.dataValues.url
+        if(!imgUrl) spotJson.previewImage = "No images yet"
+        else spotJson.previewImage = imgUrl
+        payload.push(spotJson)
+    }
 
-    const spotsOwnedbyCurrentUser = await user.getSpots();
-    console.log(spotsOwnedbyCurrentUser)
+    return res.json({
+        Spots: payload
+    });
 
-    return res.json(spotsOwnedbyCurrentUser);
 })
 
 //Get details of a Spot from an id
-router.get('/:spotId', async(req, res)=>{
+router.get('/:spotId', async(req, res, next)=>{
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId, {
         include: [
@@ -54,12 +100,29 @@ router.get('/:spotId', async(req, res)=>{
                 ]
     });
 
-    if(!spot) return res.status(404).json({
-        "message": "Spot couldn't be found",
-        "statusCode": 404
-    })
+    if(!spot) {
+        const err = new Error(`Spot couldn't be found`)
+        err.status = 404
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
 
-    return res.json(spot);
+    let spotJson = spot.toJSON();
+    const spotRating = await Review.findOne({
+            where: {
+                spotId: spot.id
+            },
+            attributes: [
+                [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
+            ]
+        })
+        let rating = spotRating.dataValues.avgRating
+        if(!rating) spotJson.avgStarRating = "No reviews yet"
+        else spotJson.avgStarRating = rating
+
+    return res.json(spotJson);
 })
 //validateSpotPost
 const validateSpotPost = [
@@ -77,29 +140,45 @@ const validateSpotPost = [
     .withMessage("Country is required"),
     check('lat')
     .exists({checkFalsy: true})
+    .isNumeric({checkFalsy: true})
     .withMessage("Latitude is not valid"),
     check('lng')
     .exists({checkFalsy: true})
+    .isNumeric({checkFalsy: true})
     .withMessage("Longitude is not valid"),
     check('name')
     .exists({checkFalsy: true})
+    .isLength({max: 50})
     .withMessage("Name must be less than 50 characters"),
     check('description')
     .exists({checkFalsy: true})
     .withMessage("Description is required"),
     check('price')
     .exists({checkFalsy: true})
+    .isNumeric({checkFalsy: true})
     .withMessage("Price per day is required"),
     handleValidationErrors
     
 ];
 
+const validateErrorhandling = (err, req, res, next)=>{
+  if(err){
+    res.status(err.status)
+    return res.json({
+      message: err.message,
+      statusCode: err.status,
+      errors: err.errors
+    })
+  }
 
+  next();
+}
 //Create a Spot
 router.post('/', 
-validateSpotPost,
 requireAuth,
 restoreUser,
+validateSpotPost,
+validateErrorhandling,
 async(req, res)=>{
     console.log('i passed validation');
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
