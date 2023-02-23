@@ -15,18 +15,44 @@ router.get(
     restoreUser,
     async(req, res)=>{
         const currentUserId = req.user.id;
-        const reviews = await Review.findAll({
+        const allspots = await Review.findAll({
             where: {userId: currentUserId},
-            include: [
-                {model: User, attributes: ['id', 'firstName', 'lastName']},
-                {model: Spot, attributes:{exclude: ['createdAt', 'updatedAt']} },
-                {model: ReviewImage, attributes:{exclude: ['createdAt', 'updatedAt', 'reviewId']}}
-            ]
+            //attributes: ['spotId']
         })
+        let payload = []
+        for (let i = 0; i < allspots.length; i++){
+            const spot = allspots[i];
+            let spotJson = spot.toJSON();
+            const spotImg = await SpotImage.findOne({
+            where:{
+                spotId: spot.id
+            },
+            attributes: ['url']
+            })
+            
+            if(!spotImg) spotJson.previewImage = "No images yet"
+            else{
+                let imgUrl = spotImg.dataValues.url
+                spotJson.previewImage = imgUrl
+            }
+            payload.push(spotJson)
+        }
+        res.json(payload)
 
-        return res.json({
-            Reviews: reviews
-        });
+
+
+        // const reviews = await Review.findAll({
+        //     where: {userId: currentUserId},
+        //     include: [
+        //         {model: User, attributes: ['id', 'firstName', 'lastName']},
+        //         {model: Spot, attributes:{exclude: ['createdAt', 'updatedAt']} },
+        //         {model: ReviewImage, attributes:{exclude: ['createdAt', 'updatedAt', 'reviewId']}}
+        //     ]
+        // })
+
+        // return res.json({
+        //     Reviews: reviews
+        // });
 
     }
 )
