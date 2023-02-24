@@ -39,24 +39,73 @@ router.get(
         }
         res.json(payload)
 
+    const userId = req.user.id;
 
+    const allbookings = await Booking.findAll({
+        where:{userId: userId},
+        attributes:['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
+        include:Spot
+    })
+    if(!allbookings.length){
+        return res.status(404).json({
+            "message": "You don't have a booking yet",
+            "statusCode": 404
+        })
+    }
+    const spots = [];
+    for(let b of allbookings){
+        let s = b.Spot;
+        spots.push(s)
+    }
 
-        // const reviews = await Review.findAll({
-        //     where: {userId: currentUserId},
-        //     include: [
-        //         {model: User, attributes: ['id', 'firstName', 'lastName']},
-        //         {model: Spot, attributes:{exclude: ['createdAt', 'updatedAt']} },
-        //         {model: ReviewImage, attributes:{exclude: ['createdAt', 'updatedAt', 'reviewId']}}
-        //     ]
-        // })
+    const findPreview = spot => {
+        const img = SpotImage.findAll({
+             where: {
+                spotId: spot.id,
+                preview: true
+            },
+        })
+        if(img.length) return true;
+        return false
+    }
 
-        // return res.json({
-        //     Reviews: reviews
-        // });
+    const findUrl = spot =>{
+        const spotImg = SpotImage.findOne({
+        where:{
+            spotId: spot.id
+        },
+        attributes:['url']
+        })
+        return spotImg.dataValues.url
+    }
+    
+    // const SpotsWithPreviewImg = spots.reduce((acc, spot) => [
+    //     ...acc,
+    //     {
+    //         ...spot,
+    //         previewImage: findPreview(spot) 
+    //         ? findUrl(spot)
+    //         : "No preview image yet"
+    //     }
+    // ], [])
+
+    for(let b = 0; b < allbookings.length; b++){
+        let spot = spots[b]
+        if(findPreview(spot)){
+            allbookings[b].dataValues.Spot.dataValues.preiewImage = findUrl(spot)
+        }
+
+        allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
+    }
+    return res.json({
+        Bookings: allbookings
+       
+    })
 
     }
 )
 
+//Add an Image to a Review based on the Review's id
 router.post(
     '/:reviewId/images',
     requireAuth,
@@ -65,6 +114,7 @@ router.post(
         const currentUserId = req.user.id;
         const reviewId = req.params.reviewId;
         const {url} = req.body;
+
         //find owner of review
         const review = await Review.findByPk(reviewId)
         if(!review) {
@@ -77,7 +127,7 @@ router.post(
         let owner = await review.getUser();
         owner = owner.toJSON();
         const ownerId = owner.id
-        console.log(ownerId)
+        
         //validate currentUser and review's owner
         if(currentUserId!==ownerId){
             return res.status(400).json({
@@ -86,16 +136,51 @@ router.post(
             })
         }
 
-        const addedImage = await ReviewImage.addImage({reviewId, url});
+        //Error response: Cannot add any more images because 
+        //there is a maximum of 10 images per resource
+        const allreviewImgs = await ReviewImage.findAll({
+            where:{reviewId: reviewId}
+        })
+        if(allreviewImgs.length===10){
+            return res.status(400).json({
+                "message": "Maximum number of images for this resource was reached",
+                "statusCode": 403
+            })
+        }
 
-        return res.json(addedImage)
+        const addedImage = await ReviewImage.addImage({reviewId, url});
+        return res.status(200).json(addedImage)
     }
 )
 
+const checkReviewPost =[
+    check('review')
+    .exists({checkFalsy: true})
+    .withMessage("Review text is required"),
+    check('stars')
+    .exists({checkFalsy: true})
+    .withMessage("Stars must be an integer from 1 to 5"),
+    handleValidationErrors
+];
+const validateErrorhandling = (err, req, res, next)=>{
+  if(err){
+    res.status(err.status)
+    return res.json({
+      message: err.message,
+      statusCode: err.status,
+      errors: err.errors
+    })
+  }
+  next();
+}
+
+//Edit a Review
 router.put(
     '/:reviewId',
     requireAuth,
     restoreUser,
+    checkReviewPost,
+    validateErrorhandling,
     async (req, res) =>{
         const currentUserId = req.user.id;
         const reviewId = req.params.reviewId;
@@ -140,8 +225,7 @@ router.delete(
     async (req, res) => {
         const currentUserId = req.user.id;
         const reviewId = req.params.reviewId;
-        // console.log("currentUserId", currentUserId);
-        // console.log("reviewId", reviewId)
+        
         //find owner of review
         const review1 = await Review.findByPk(reviewId, {include: User})
         //console.log("currentUserId", currentUserId);
@@ -160,7 +244,7 @@ router.delete(
         //validate currentUser and review's owner
         if(currentUserId!==ownerId){
             return res.status(400).json({
-                message: "Only owner can add an image to this review",
+                message: "Not authorized to delete this review",
                 statusCode: 400
             })
         }

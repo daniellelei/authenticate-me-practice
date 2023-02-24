@@ -6,8 +6,25 @@ const { Spot,SpotImage, Booking } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const booking = require('../../db/models/booking');
-
 const router = express.Router();
+////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////      Helper Function        //////////////////////////////
+
+const validateErrorhandling = (err, req, res, next)=>{
+  if(err){
+    res.status(err.status)
+    return res.json({
+      message: err.message,
+      statusCode: err.status,
+      errors: err.errors
+    })
+  }
+  next();
+}
+
+
+//////////////////////     Spots Endpoints        //////////////////////////////
 
 //get all spots
 router.get('/', async(req, res)=>{
@@ -208,6 +225,9 @@ router.get('/:spotId', async(req, res, next)=>{
 
     return res.json(spotJson);
 })
+
+/////// Posting a spot =========================================
+
 //validateSpotPost
 const validateSpotPost = [
     check('address')
@@ -242,21 +262,8 @@ const validateSpotPost = [
     .isNumeric({checkFalsy: true})
     .withMessage("Price per day is required"),
     handleValidationErrors
-    
 ];
 
-const validateErrorhandling = (err, req, res, next)=>{
-  if(err){
-    res.status(err.status)
-    return res.json({
-      message: err.message,
-      statusCode: err.status,
-      errors: err.errors
-    })
-  }
-
-  next();
-}
 //Create a Spot
 router.post('/', 
 requireAuth,
@@ -417,7 +424,10 @@ router.get(
     }
 
 )
-//Create a Review for a Spot based on the Spot's id
+
+//////////////////////         spots/review        /////////////////////////////
+
+
 const checkReviewPost =[
     check('review')
     .exists({checkFalsy: true})
@@ -427,13 +437,13 @@ const checkReviewPost =[
     .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ];
-
+//Create a Review for a Spot based on the Spot's id
 router.post(
     '/:spotId/reviews',
     checkReviewPost,
+    validateErrorhandling,
     requireAuth,
     restoreUser,
-    
     async (req, res) =>{
         const{review, stars} = req.body;
         const userId = req.user.id;
@@ -445,13 +455,30 @@ router.post(
                 "statusCode": 404
             })
         }
+        //Error response: Review from the current user already exists for the Spot
+        const allReviews = await Review.findAll({
+            where:{spotId: spotId},
+            attributes:['userId']
+        }) 
+        for(let i = 0; i < allReviews.length; i++){
+            let review = allReviews[i];
+            let reviewUserId = review.userId;
+            
+            if(userId === reviewUserId) {
+                return res.status(403).json({
+                    "message": "User already has a review for this spot",
+                    "statusCode": 403
+                })
+            }
+        }
 
         const newReview = await Review.addReview({userId, spotId, review, stars});
         res.status(201).json(newReview)
-
     }
 );
 
+
+///////////////////////       Spots/Booking      ///////////////////////////////
 //get all bookings for a spot based on the spotId
 router.get(
     '/:spotId/bookings',
@@ -497,6 +524,8 @@ router.get(
         })
     }
 )
+
+
 
 
 const validateBookingPost = [

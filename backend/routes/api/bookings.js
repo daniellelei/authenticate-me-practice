@@ -5,6 +5,8 @@ const { User, Review, ReviewImage, sequelize } = require('../../db/models');
 const { Spot,SpotImage, Booking } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const booking = require('../../db/models/booking');
+const spot = require('../../db/models/spot');
 
 const router = express.Router();
 
@@ -13,16 +15,68 @@ router.get('/current',
 requireAuth,
 restoreUser,
 async (req, res) =>{
+    const userId = req.user.id;
 
     const allbookings = await Booking.findAll({
-        where:{userId: req.user.id},
+        where:{userId: userId},
+        attributes:['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
         include:Spot
     })
+    if(!allbookings.length){
+        return res.status(404).json({
+            "message": "You don't have a booking yet",
+            "statusCode": 404
+        })
+    }
+    const spots = [];
+    for(let b of allbookings){
+        let s = b.Spot;
+        spots.push(s)
+    }
+
+    const findPreview = spot => {
+        const img = SpotImage.findAll({
+             where: {
+                spotId: spot.id,
+                preview: true
+            },
+        })
+        if(img.length) return true;
+        return false
+    }
+
+    const findUrl = spot =>{
+        const spotImg = SpotImage.findOne({
+        where:{
+            spotId: spot.id
+        },
+        attributes:['url']
+        })
+        return spotImg.dataValues.url
+    }
+    
+    // const SpotsWithPreviewImg = spots.reduce((acc, spot) => [
+    //     ...acc,
+    //     {
+    //         ...spot,
+    //         previewImage: findPreview(spot) 
+    //         ? findUrl(spot)
+    //         : "No preview image yet"
+    //     }
+    // ], [])
+
+    for(let b = 0; b < allbookings.length; b++){
+        let spot = spots[b]
+        if(findPreview(spot)){
+            allbookings[b].dataValues.Spot.dataValues.preiewImage = findUrl(spot)
+        }
+
+        allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
+    }
     return res.json({
         Bookings: allbookings
+       
     })
-    //need to include previewimage url
-
 }
 )
 
