@@ -69,7 +69,7 @@ router.put(
     async (req, res, next) => {
         const currentUserId = req.user.id;
         const {bookingId} = req.params;
-        console.log(bookingId)
+        
         const booking = await Booking.findOne({
             where:{id:bookingId},
             attributes:['userId', 'spotId']
@@ -228,7 +228,7 @@ router.delete(
         //isOwner?
         const currentUserId = req.user.id;
         const {bookingId} = req.params;
-        console.log(bookingId)
+        
         const booking = await Booking.findOne({
             where:{id:bookingId},
             attributes:['userId', 'spotId']
