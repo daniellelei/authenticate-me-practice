@@ -27,7 +27,32 @@ const validateErrorhandling = (err, req, res, next)=>{
 //////////////////////     Spots Endpoints        //////////////////////////////
 
 //get all spots
-router.get('/', async(req, res)=>{
+const{query} = require('express-validator/check');
+// const validateQuery =[
+//     query('page')
+//     .exists({checkFalsy: true})
+//     .
+//     .withMessage("Page must be greater than or equal to 1"),
+//     query('size')
+//     .exists({checkFalsy: true})
+//     .withMessage("Size must be greater than or equal to 1"),
+//     query('maxLat')
+//     .withMessage("Maximum latitude is invalid"),
+//     query('minLat')
+//     .withMessage("Minimum latitude is invalid"),
+//     query('minLng')
+//     .withMessage("Minimum longitude is invalid"),
+//     query('maxLng')
+//     .withMessage("Maximum longitude is invalid"),
+//     query('minPrice')
+//     .withMessage("Minimum price must be greater than or equal to 0"),
+//     query('maxPrice')
+//     .withMessage("Maximum price must be greater than or equal to 0"),
+//     handleValidationErrors,
+//     validateErrorhandling
+// ]
+router.get('/', 
+async(req, res)=>{
     let{page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
 
     let query = {
@@ -37,6 +62,23 @@ router.get('/', async(req, res)=>{
 
     page = parseInt(page);
     size = parseInt(size);
+    if(!isNaN(page)&& page < 1){
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "page": "Page must be greater than or equal to 1",
+        }})
+    }
+    if(!isNaN(size)&& size < 1){
+    return res.status(400).json({
+        "message": "Validation Error",
+        "statusCode": 400,
+        "errors": {
+            "size": "Size must be greater than or equal to 1",
+    }})
+    }
+
 
     if(!page || page < 1 || page > 10 || isNaN(page)) page = 1
     if(!size || size < 1 || size > 20 || isNaN(size)) size = 20
@@ -52,6 +94,13 @@ router.get('/', async(req, res)=>{
                 [Op.gte]: minLat
             }
         }
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "minLat": "Minimum latitude is invalid",
+            }
+        })
     }
     //maxLat
     if(maxLat) {
@@ -61,6 +110,13 @@ router.get('/', async(req, res)=>{
                 [Op.lte]: maxLat
             }
         }
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {   
+                "maxLat": "Maximum latitude is invalid",
+            }
+        })
     }
     //minLng
     if(minLng) {
@@ -70,6 +126,13 @@ router.get('/', async(req, res)=>{
                 [Op.gte]: minLng
             }
         }
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "minLng": "Minimum longitude is invalid",
+            }
+        })
     }
     //maxLng
     if(maxLng) {
@@ -79,6 +142,13 @@ router.get('/', async(req, res)=>{
                 [Op.lte]: maxLng
             }
         }
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "maxLng": "Maximum longitude is invalid",
+            }
+        })
     }
     //minPrice
     if(minPrice) {
@@ -88,6 +158,13 @@ router.get('/', async(req, res)=>{
                 [Op.gte]: minPrice
             }
         }
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "minPrice": "Minimum price must be greater than or equal to 0",
+            }
+        })
     }
     //maxPrice
     if(maxPrice) {
@@ -97,6 +174,13 @@ router.get('/', async(req, res)=>{
                 [Op.lte]: maxPrice
             }
         }
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "maxPrice": "Maximum price must be greater than or equal to 0"
+            }
+        })
     }
     
     const allspots = await Spot.findAll(query); 
