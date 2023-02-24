@@ -1,34 +1,104 @@
 // backend/routes/api/session.js
 const express = require('express')
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
-
-
+const e = require('express');
 const router = express.Router();
 
+
+// log in a user
 router.post(
   '/',
   async (req, res, next) => {
     const { credential, password } = req.body;
+
+    if(!credential || !password 
+      || credential===undefined 
+      || password === undefined) {
+      const err = new Error('Validation error')
+      err.status = 400;
+      err.title = 'Validation error';
+      err.errors = {
+        "credential": "Email or username is required",
+        "password": "Password is required"
+      }
+      return next(err);
+    }
 
     const user = await User.login({ credential, password });
 
     if (!user) {
       const err = new Error('Login failed');
       err.status = 401;
-      err.title = 'Login failed';
+      err.title = 'Invalid credentials';
       err.errors = { credential: 'The provided credentials were invalid.' };
       return next(err);
     }
 
     await setTokenCookie(res, user);
+    // let currentUser = {};
+    // currentUser.id = user.id;
+    // currentUser.firstName = user.firstName;
+    // currentUser.lastName = user.lastName;
+    // currentUser.email = user.email;
+    // currentUser.username = user.username
 
     return res.json({
       user: user
     });
   }
 );
+
+
+//invalid credentials 
+router.use((err, req, res, next)=>{
+  if(err.title === "Invalid credentials"){
+    res.status (err.status) 
+    return res.json({
+      message: err.title,
+      statusCode: err.status
+    })
+  }
+  return next(err);
+  
+})
+
+
+
+//validation errors
+router.use((err, req, res, next)=>{
+  if(err.title === 'Validation error'){
+    res.status (err.status)
+    return res.json({
+      message: err.title,
+      statusCode: err.status,
+      errors: err.errors
+    })
+  }
+  return next(err);
+  
+})
+
+//get the current user
+router.get('/', requireAuth, restoreUser, async(req, res, next) =>{
+
+  const{id, firstName, lastName, email, username} = req.user;
+  //const token = await setTokenCookie(res, req.user)
+  const currentUser = {};
+  currentUser.id = id;
+  currentUser.firstName = firstName;
+  currentUser.lastName = lastName;
+  currentUser.email = email;
+  currentUser.username = username
+  //currentUser.token = token;
+
+  res.status(200).json({
+    user: currentUser
+  })
+
+})
+
 
 
 // Log out

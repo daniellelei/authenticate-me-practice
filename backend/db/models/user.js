@@ -15,10 +15,32 @@ module.exports = (sequelize, DataTypes) => {
     }
     static associate(models) {
       // define association here
+      User.hasMany(
+        models.Spot,
+        {foreignKey: 'ownerId', }
+      )
+
+      User.hasMany(
+        models.Review,
+        {foreignKey: 'userId'}
+      )
+
+      User.belongsToMany(
+        models.Spot,
+        {through: models.Booking,
+        foreignKey: "userId"}
+      )
+
+      User.hasMany(
+        models.Booking,
+        {foreignKey: "userId"}
+      )
     }
+    
     static getCurrentUserById(id) {
       return User.scope("currentUser").findByPk(id);
     }
+
     static async login({ credential, password }) {
       const { Op } = require('sequelize');
       const user = await User.scope('loginUser').findOne({
@@ -33,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
         return await User.scope('currentUser').findByPk(user.id);
       }
     }
+
     static async signup({ firstName,lastName,username, email, password }) {
       const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({
@@ -63,6 +86,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           len: [3, 256],
           isEmail: true
@@ -94,7 +118,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       scopes: {
         currentUser: {
-          attributes: { exclude: ["hashedPassword"] }
+          attributes: { exclude: ["hashedPassword","createdAt", "updatedAt"] }
         },
         loginUser: {
           attributes: {}
