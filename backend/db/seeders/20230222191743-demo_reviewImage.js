@@ -6,15 +6,7 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) =>{
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+
    options.tableName = "ReviewImages";
    return queryInterface.bulkInsert(options, [
     {reviewId:2, url:"reviewImage1",},
@@ -25,14 +17,9 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize)=> {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+
     options.tableName = "ReviewImages"
-    const Op = Sequelize.Op;
+    
     return queryInterface.bulkDelete(options, null, {})
   }
 };
