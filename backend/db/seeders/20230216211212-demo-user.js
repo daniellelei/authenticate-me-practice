@@ -1,4 +1,5 @@
 'use strict';
+
 const bcrypt = require("bcryptjs");
 
 let options = {};
@@ -12,6 +13,8 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
       {
         email: 'user1@gmail.com',
+        firstName: 'Leo',
+        lastName: "Apple",
         username: 'user1',
         hashedPassword: bcrypt.hashSync('password1')
       },
@@ -50,9 +53,9 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     options.tableName = 'Users';
     const Op = Sequelize.Op;
-    // return queryInterface.bulkDelete(options, {
-    //   username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
-    // }, {});
-    await queryInterface.bulkDelete('Users', null)
+    return queryInterface.bulkDelete(options, {
+      username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
+    }, {});
+    //await queryInterface.bulkDelete('Users', null)
   }
 };
