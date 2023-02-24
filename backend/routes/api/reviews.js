@@ -14,92 +14,43 @@ router.get(
     requireAuth,
     restoreUser,
     async(req, res)=>{
-        const currentUserId = req.user.id;
-        const allspots = await Review.findAll({
-            where: {userId: currentUserId},
-            //attributes: ['spotId']
-        })
-        let payload = []
-        for (let i = 0; i < allspots.length; i++){
-            const spot = allspots[i];
-            let spotJson = spot.toJSON();
-            const spotImg = await SpotImage.findOne({
-            where:{
-                spotId: spot.id
-            },
-            attributes: ['url']
-            })
-            
-            if(!spotImg) spotJson.previewImage = "No images yet"
-            else{
-                let imgUrl = spotImg.dataValues.url
-                spotJson.previewImage = imgUrl
-            }
-            payload.push(spotJson)
-        }
-        res.json(payload)
-
     const userId = req.user.id;
 
-    const allbookings = await Booking.findAll({
+    const allreviews = await Review.findAll({
         where:{userId: userId},
-        attributes:['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
-        include:Spot
+        attributes:['id', 'spotId', 'userId', 'review', 'stars', 'createdAt', 'updatedAt'],
+        include:[{model:Spot, attributes:{exclude: ['createdAt', 'updatedAt']}}, {model:ReviewImage, attributes:['id', 'url']}]
     })
-    if(!allbookings.length){
+    if(!allreviews.length){
         return res.status(404).json({
-            "message": "You don't have a booking yet",
+            "message": "You have not posted a review yet",
             "statusCode": 404
         })
     }
     const spots = [];
-    for(let b of allbookings){
+    for(let b of allreviews){
         let s = b.Spot;
         spots.push(s)
     }
 
-    const findPreview = spot => {
-        const img = SpotImage.findAll({
-             where: {
+    for(let b = 0; b < allreviews.length; b++){
+        let spot = spots[b];
+        const img = await SpotImage.findAll({
+            where: {
                 spotId: spot.id,
                 preview: true
             },
+            attributes:['url']
         })
-        if(img.length) return true;
-        return false
-    }
-
-    const findUrl = spot =>{
-        const spotImg = SpotImage.findOne({
-        where:{
-            spotId: spot.id
-        },
-        attributes:['url']
-        })
-        return spotImg.dataValues.url
-    }
-    
-    // const SpotsWithPreviewImg = spots.reduce((acc, spot) => [
-    //     ...acc,
-    //     {
-    //         ...spot,
-    //         previewImage: findPreview(spot) 
-    //         ? findUrl(spot)
-    //         : "No preview image yet"
-    //     }
-    // ], [])
-
-    for(let b = 0; b < allbookings.length; b++){
-        let spot = spots[b]
-        if(findPreview(spot)){
-            allbookings[b].dataValues.Spot.dataValues.preiewImage = findUrl(spot)
+        let imgUrl = img[0].dataValues.url
+        
+        if(!img.length){
+            allreviews[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
         }
-
-        allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
+        allreviews[b].dataValues.Spot.dataValues.preiewImage = imgUrl
     }
     return res.json({
-        Bookings: allbookings
-       
+        Reviews: allreviews
     })
 
     }
