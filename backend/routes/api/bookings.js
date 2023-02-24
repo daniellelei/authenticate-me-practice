@@ -34,44 +34,22 @@ async (req, res) =>{
         spots.push(s)
     }
 
-    const findPreview = spot => {
-        const img = SpotImage.findAll({
+
+    for(let b = 0; b < allbookings.length; b++){
+        let spot = spots[b]
+        const img = await SpotImage.findAll({
              where: {
                 spotId: spot.id,
                 preview: true
             },
+            attributes:['url']
         })
-        if(img.length) return true;
-        return false
-    }
-
-    const findUrl = spot =>{
-        const spotImg = SpotImage.findOne({
-        where:{
-            spotId: spot.id
-        },
-        attributes:['url']
-        })
-        return spotImg.dataValues.url
-    }
-    
-    // const SpotsWithPreviewImg = spots.reduce((acc, spot) => [
-    //     ...acc,
-    //     {
-    //         ...spot,
-    //         previewImage: findPreview(spot) 
-    //         ? findUrl(spot)
-    //         : "No preview image yet"
-    //     }
-    // ], [])
-
-    for(let b = 0; b < allbookings.length; b++){
-        let spot = spots[b]
-        if(findPreview(spot)){
-            allbookings[b].dataValues.Spot.dataValues.preiewImage = findUrl(spot)
+        //console.log(img)
+        if(!img.length){
+            allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
         }
-
-        allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
+        let imgUrl = img[0].dataValues.url
+        allbookings[b].dataValues.Spot.dataValues.preiewImage = imgUrl;
     }
     return res.json({
         Bookings: allbookings

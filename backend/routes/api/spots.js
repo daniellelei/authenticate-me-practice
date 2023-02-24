@@ -98,7 +98,7 @@ router.get('/', async(req, res)=>{
             }
         }
     }
-    console.log(query)
+    
     const allspots = await Spot.findAll(query); 
     
     let payload = []
@@ -271,7 +271,7 @@ restoreUser,
 validateSpotPost,
 validateErrorhandling,
 async(req, res)=>{
-    console.log('i passed validation');
+    
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
     const ownerId = req.user.id;
     const newSpot = await Spot.postAspot({ownerId, address, city, state, country, lat, lng, name, description, price});
@@ -300,11 +300,9 @@ async(req, res)=>{
         })
     }
     if(id === spot.ownerId){
-        console.log("spotId", spotId);
-        console.log("url", url);
-        console.log("preview", preview);
+       
         const newImage = await SpotImage.addAnImage({spotId, url, preview});
-        console.log('i added an image.')
+       
         return res.status(200).json(newImage);
     }
     else {
@@ -575,7 +573,7 @@ router.post(
         const{startDate, endDate} = req.body;
         let newStart = new Date(startDate);
         let newEnd = new Date(endDate);
-        console.log(newStart, newEnd)
+        
         let isStartDateSmaller = false;
         if(newStart.getTime()<newEnd.getTime()) {
             isStartDateSmaller = true;
@@ -588,6 +586,16 @@ router.post(
                 "errors": {
                     "endDate": "endDate cannot be on or before startDate"
                 }
+            })
+        }
+
+        //is startDate in the past?
+        let currentDate = new Date();
+        if(newStart.getTime() <= currentDate.getTime()){
+            const err = new Error();
+            return res.status(400).json({
+                "message": "start date cannot be in the past",
+                "statusCode": 400
             })
         }
 
