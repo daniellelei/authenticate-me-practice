@@ -36,7 +36,7 @@ router.delete(
 
         //spotImage exists?
         const img = await SpotImage.findByPk(imageId);
-        console.log(img)
+        
         if(!img) {
             const err = new Error();
             return res.status(400).json({                
@@ -57,10 +57,9 @@ router.delete(
             where:{id:spotId},
             attributes: ['ownerId']
         })
-        console.log(owner)
+        
         const ownerId = owner.ownerId
-        console.log("currentUser", currentUserId)
-        console.log('owner', ownerId);
+        
         if(currentUserId!==ownerId) {
             const err = new Error();
             return res.status(400).json({

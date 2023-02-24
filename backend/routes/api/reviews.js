@@ -149,7 +149,7 @@ router.put(
         let owner = await review1.getUser();
         owner = owner.toJSON();
         const ownerId = owner.id
-        //console.log(ownerId)
+        
         //validate currentUser and review's owner
         if(currentUserId!==ownerId){
             return res.status(400).json({
@@ -179,7 +179,7 @@ router.delete(
         
         //find owner of review
         const review1 = await Review.findByPk(reviewId, {include: User})
-        //console.log("currentUserId", currentUserId);
+        
         if(!review1) {
             //need to generate new error
             return res.status(404).json({
@@ -191,7 +191,7 @@ router.delete(
         
         owner = owner.toJSON();
         const ownerId = owner.id
-        //console.log(ownerId)
+        
         //validate currentUser and review's owner
         if(currentUserId!==ownerId){
             return res.status(400).json({

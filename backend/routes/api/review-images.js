@@ -21,7 +21,7 @@ router.delete(
 
         //spotImage exists?
         const img = await ReviewImage.findByPk(imageId);
-        console.log(img)
+        
         if(!img) {
             const err = new Error();
             return res.status(400).json({                
