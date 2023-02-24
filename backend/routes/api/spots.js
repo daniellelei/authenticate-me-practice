@@ -1,5 +1,5 @@
 const express = require('express');
-
+const { Op } = require("sequelize");
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 const { User, Review, ReviewImage, sequelize } = require('../../db/models');
 const { Spot,SpotImage, Booking } = require('../../db/models');
@@ -11,7 +11,78 @@ const router = express.Router();
 
 //get all spots
 router.get('/', async(req, res)=>{
-    const allspots = await Spot.findAll(); 
+    let{page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
+
+    let query = {
+        where: {},
+        include:[]
+    }
+
+    page = parseInt(page);
+    size = parseInt(size);
+
+    if(!page || page < 1 || page > 10 || isNaN(page)) page = 1
+    if(!size || size < 1 || size > 20 || isNaN(size)) size = 20
+
+    query.limit = size;
+    query.offset = size * (page - 1)
+
+    //minLat
+    if(minLat) {
+        minLat = parseFloat(minLat);
+        if(!isNaN(minLat)){
+            query.where.Lat = {
+                [Op.gte]: minLat
+            }
+        }
+    }
+    //maxLat
+    if(maxLat) {
+        maxLat = parseFloat(maxLat);
+        if(!isNaN(maxLat)){
+            query.where.Lat = {
+                [Op.lte]: maxLat
+            }
+        }
+    }
+    //minLng
+    if(minLng) {
+        minLng = parseFloat(minLng);
+        if(!isNaN(minLng)){
+            query.where.Lng = {
+                [Op.gte]: minLng
+            }
+        }
+    }
+    //maxLng
+    if(maxLng) {
+        maxLng = parseFloat(maxLng);
+        if(!isNaN(maxLng)){
+            query.where.Lng = {
+                [Op.lte]: maxLng
+            }
+        }
+    }
+    //minPrice
+    if(minPrice) {
+        minPrice = parseFloat(minPrice);
+        if(!isNaN(minPrice) && minPrice >= 0) {
+            query.where.price = {
+                [Op.gte]: minPrice
+            }
+        }
+    }
+    //maxPrice
+    if(maxPrice) {
+        maxPrice = parseFloat(maxPrice);
+        if(!isNaN(maxPrice) && maxPrice >= 0) {
+            query.where.price = {
+                [Op.lte]: maxPrice
+            }
+        }
+    }
+    console.log(query)
+    const allspots = await Spot.findAll(query); 
     
     let payload = []
     for(let i = 0; i < allspots.length; i++) {
@@ -47,7 +118,9 @@ router.get('/', async(req, res)=>{
     }
 
     return res.json({
-        Spots: payload
+        Spots: payload,
+        page: page,
+        size: size,
     });
 })
 
