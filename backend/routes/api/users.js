@@ -90,7 +90,7 @@ router.post(
   checkIfExists,
   validateErrorhandling,
   async (req, res) => {
-    console.log('i passed validation');
+    
     const { email, password, username, firstName, lastName } = req.body;
     const user = await User.signup({ email, username, password, firstName, lastName});
 
