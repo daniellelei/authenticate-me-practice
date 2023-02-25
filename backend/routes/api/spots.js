@@ -93,14 +93,16 @@ async(req, res)=>{
             query.where.Lat = {
                 [Op.gte]: minLat
             }
-        }
-        return res.status(400).json({
+        } else {
+            return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
             "errors": {
                 "minLat": "Minimum latitude is invalid",
             }
         })
+        }
+        
     }
     //maxLat
     if(maxLat) {
@@ -109,14 +111,16 @@ async(req, res)=>{
             query.where.Lat = {
                 [Op.lte]: maxLat
             }
-        }
-        return res.status(400).json({
+        } else {
+            return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
             "errors": {   
                 "maxLat": "Maximum latitude is invalid",
             }
         })
+        }
+        
     }
     //minLng
     if(minLng) {
@@ -125,14 +129,16 @@ async(req, res)=>{
             query.where.Lng = {
                 [Op.gte]: minLng
             }
-        }
-        return res.status(400).json({
+        } else {
+            return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
             "errors": {
                 "minLng": "Minimum longitude is invalid",
             }
         })
+        }
+        
     }
     //maxLng
     if(maxLng) {
@@ -142,29 +148,36 @@ async(req, res)=>{
                 [Op.lte]: maxLng
             }
         }
-        return res.status(400).json({
+        else {
+            return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
             "errors": {
                 "maxLng": "Maximum longitude is invalid",
             }
         })
+        }
+        
     }
     //minPrice
     if(minPrice) {
         minPrice = parseFloat(minPrice);
+        
         if(!isNaN(minPrice) && minPrice >= 0) {
             query.where.price = {
                 [Op.gte]: minPrice
             }
         }
-        return res.status(400).json({
+        else{
+            return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
             "errors": {
                 "minPrice": "Minimum price must be greater than or equal to 0",
             }
         })
+        }
+        
     }
     //maxPrice
     if(maxPrice) {
@@ -173,14 +186,16 @@ async(req, res)=>{
             query.where.price = {
                 [Op.lte]: maxPrice
             }
-        }
-        return res.status(400).json({
+        } else {
+            return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
             "errors": {
                 "maxPrice": "Maximum price must be greater than or equal to 0"
             }
         })
+        }
+        
     }
     
     const allspots = await Spot.findAll(query); 
