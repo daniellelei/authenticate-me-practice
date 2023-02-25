@@ -35,14 +35,16 @@ router.get(
 
     for(let b = 0; b < allreviews.length; b++){
         let spot = spots[b];
-        const img = await SpotImage.findAll({
+        let img = await SpotImage.findAll({
             where: {
                 spotId: spot.id,
                 preview: true
             },
             attributes:['url']
         })
-        let imgUrl = img[0].dataValues.url
+        
+        let imgJson = img[0].toJSON();
+        let imgUrl = imgJson.url
         
         if(!img.length){
             allreviews[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
