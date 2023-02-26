@@ -10,7 +10,7 @@ module.exports = {
    options.tableName = 'Spots';
    return queryInterface.bulkInsert(options,[
     {
-      ownerId: 4, 
+      ownerId: 1, 
       address: "222 Denton Ave",
       city: "Rosemead",
       state: "California",
