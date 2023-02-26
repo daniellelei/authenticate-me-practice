@@ -568,7 +568,8 @@ const checkReviewPost =[
     check('stars')
     .exists({checkFalsy: true})
     .withMessage("Stars must be an integer from 1 to 5"),
-    handleValidationErrors
+    handleValidationErrors,
+    validateErrorhandling,
 ];
 //Create a Review for a Spot based on the Spot's id
 router.post(
@@ -577,7 +578,6 @@ router.post(
     restoreUser,
     AuthErrorHandling,
     checkReviewPost,
-    validateErrorhandling,
     async (req, res) =>{
         const{review, stars} = req.body;
         const userId = req.user.id;
@@ -645,6 +645,11 @@ router.get(
             include:{model:User, attributes:['id', 'firstName', 'lastName']},
             attributes:['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
         })
+        if(!allbookings.length){
+            return res.json({
+                "message": "There is no booking at this spot yet."
+            })
+        }
             return res.status(200).json({
                 Bookings: allbookings
             })
@@ -670,6 +675,7 @@ const validateBookingPost = [
     .exists({checkFalsy: true}),
     handleValidationErrors
 ]
+
 //Create a Booking from a Spot based on the Spot's id
 router.post(
     '/:spotId/bookings',
@@ -684,9 +690,8 @@ router.post(
 
         //spot found?
         const spot = await Spot.findByPk(spotId)
+        
         if(!spot) {
-            const err = new Error();
-            err.status(404);
             return res.status(404).json({
                 "message": "Spot couldn't be found",
                 "statusCode": 404
@@ -701,9 +706,9 @@ router.post(
         let ownerJson = owner.toJSON();
         let ownerId = ownerJson.ownerId;
         if(userId===ownerId) {
-            return res.status(400).json({
-                "message": 'Hi Owner',
-                "statusCode": 400
+            return res.status(403).json({
+                "message": 'Forbidden: Owners are not able to make booking with their spots',
+                "statusCode": 403
             })
         }
         
@@ -759,7 +764,7 @@ router.post(
                             "message": "Sorry, this spot is already booked for the specified dates",
                             "statusCode": 403,
                             "errors": {
-                                "startDate": "Start date conflicts with an existing booking",
+                                
                                 "endDate": "End date conflicts with an existing booking"
                             }
                             }
@@ -774,7 +779,7 @@ router.post(
                             "statusCode": 403,
                             "errors": {
                                 "startDate": "Start date conflicts with an existing booking",
-                                "endDate": "End date conflicts with an existing booking"
+                                
                             }
                             }
                     )
@@ -788,7 +793,7 @@ router.post(
                             "statusCode": 403,
                             "errors": {
                                 "startDate": "Start date conflicts with an existing booking",
-                                "endDate": "End date conflicts with an existing booking"
+                                
                             }
                             }
                     )

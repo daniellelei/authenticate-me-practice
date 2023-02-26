@@ -89,9 +89,9 @@ router.post(
         
         //validate currentUser and review's owner
         if(currentUserId!==ownerId){
-            return res.status(400).json({
-                message: "Only owner can add an image to this review",
-                statusCode: 400
+            return res.status(403).json({
+                message: "Forbidden: Only owner can add an image to this review",
+                statusCode: 403
             })
         }
 
@@ -101,7 +101,7 @@ router.post(
             where:{reviewId: reviewId}
         })
         if(allreviewImgs.length===10){
-            return res.status(400).json({
+            return res.status(403).json({
                 "message": "Maximum number of images for this resource was reached",
                 "statusCode": 403
             })
@@ -158,12 +158,12 @@ router.put(
         let owner = await review1.getUser();
         owner = owner.toJSON();
         const ownerId = owner.id
-        //console.log(ownerId)
+        
         //validate currentUser and review's owner
         if(currentUserId!==ownerId){
-            return res.status(400).json({
-                message: "Only owner can add an image to this review",
-                statusCode: 400
+            return res.status(403).json({
+                message: "Forbidden: Only owner can add an image to this review",
+                statusCode: 403
             })
         }
 
@@ -204,9 +204,9 @@ router.delete(
         //console.log(ownerId)
         //validate currentUser and review's owner
         if(currentUserId!==ownerId){
-            return res.status(400).json({
-                message: "Not authorized to delete this review",
-                statusCode: 400
+            return res.status(403).json({
+                message: "Forbidden: Not authorized to delete this review",
+                statusCode: 403
             })
         }
 

@@ -63,9 +63,9 @@ router.delete(
         
         if(currentUserId!==ownerId) {
             const err = new Error();
-            return res.status(400).json({
+            return res.status(403).json({
             message: 'Not owner of this spot',
-            statusCode: 400
+            statusCode: 403
         })
         }
     
