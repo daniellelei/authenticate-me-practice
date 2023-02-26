@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser,AuthErrorHandling, } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { Spot, SpotImage } = require('../../db/models');
 const { Review, ReviewImage } = require('../../db/models');
@@ -28,6 +28,7 @@ const isOwner = (currentUserId, imageId) => {
 router.delete(
     '/:imageId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
 
     async (req, res) => {

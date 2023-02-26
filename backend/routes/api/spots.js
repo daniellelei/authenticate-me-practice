@@ -1,6 +1,6 @@
 const express = require('express');
 const { Op } = require("sequelize");
-const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser,AuthErrorHandling } = require('../../utils/auth');
 const { User, Review, ReviewImage, sequelize } = require('../../db/models');
 const { Spot,SpotImage, Booking } = require('../../db/models');
 const { check } = require('express-validator');
@@ -241,7 +241,11 @@ async(req, res)=>{
 })
 
 //Get all Spots owned by the Current User
-router.get('/current', requireAuth, restoreUser, async(req, res)=>{
+router.get('/current', 
+requireAuth, 
+restoreUser, 
+AuthErrorHandling,
+async(req, res)=>{
     const{id} = req.user;
     const user = await User.findByPk(id);
     const allspots = await user.getSpots();
@@ -265,8 +269,9 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=>{
         })
         if(!spotRating) spotJson.avgRating = "No reviews yet"
         else {
-            let rating = spotRating.dataValues.avgRating
-            spotJson.avgRating = rating
+            let rating = spotRating.toJSON().avgRating
+    
+            spotJson.avgRating = rating;
         } 
         
         //previewImage
@@ -276,9 +281,10 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=>{
             },
             attributes: ['url']
         })
+        
         if(!spotImg) spotJson.previewImage = "No images yet"
         else{
-            let imgUrl = spotImg.dataValues.url
+            let imgUrl = spotImg.toJSON().url
             spotJson.previewImage = imgUrl
         }
         payload.push(spotJson)
@@ -291,7 +297,8 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=>{
 })
 
 //Get details of a Spot from an id
-router.get('/:spotId', async(req, res, next)=>{
+router.get('/:spotId', 
+async(req, res, next)=>{
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId, {
         include: [
@@ -310,18 +317,29 @@ router.get('/:spotId', async(req, res, next)=>{
     }
 
     let spotJson = spot.toJSON();
-    const spotRating = await Review.findOne({
+    const spotRating = await Review.findAll({
             where: {
                 spotId: spot.id
             },
             attributes: [
                 [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
+    })
+    
+    
+    let rating = spotRating[0].dataValues.avgRating
+    if(!rating) {
+        spotJson.avgStarRating = "No reviews yet";
+        spotJson.numReviews = 0;
+    } else {
+        spotJson.avgStarRating = rating;
+        const spotReviews = await Review.count({
+        where:{
+            spotId: spot.id
+        }
         })
-        let rating = spotRating.dataValues.avgRating
-        if(!rating) spotJson.avgStarRating = "No reviews yet"
-        else spotJson.avgStarRating = rating
-
+        spotJson.numReviews = spotReviews;
+    }
     return res.json(spotJson);
 })
 
@@ -351,6 +369,7 @@ const validateSpotPost = [
     .withMessage("Longitude is not valid"),
     check('name')
     .exists({checkFalsy: true})
+    .withMessage("Name is required")
     .isLength({max: 50})
     .withMessage("Name must be less than 50 characters"),
     check('description')
@@ -367,6 +386,7 @@ const validateSpotPost = [
 router.post('/', 
 requireAuth,
 restoreUser,
+AuthErrorHandling,
 validateSpotPost,
 validateErrorhandling,
 async(req, res)=>{
@@ -378,14 +398,28 @@ async(req, res)=>{
 })
 
 //Add an Image to a Spot based on the Spot's id
+const validateImagePost = [
+    check("url")
+    .exists({checkFalsy: true})
+    .withMessage("url is required"),
+    check("preview")
+    .exists({checkFalsy: true})
+    .withMessage("preview status is required"),
+    handleValidationErrors,
+    validateErrorhandling,
+    
+]
 router.post('/:spotId/images',
 requireAuth,
+AuthErrorHandling,
 restoreUser,
+validateImagePost,
 async(req, res)=>{
     const {spotId} = req.params
     const {id} = req.user
     
     let {url, preview} = req.body
+
     if(preview===true) preview=true
     else preview = false;
 
@@ -406,10 +440,10 @@ async(req, res)=>{
     }
     else {
         const err = new Error(`Not owner of this spot`);
-        err.status = 400;
+        err.status = 403;
         return res.status(400).json({
-        "message": "Not owner of this spot",
-        "statusCode": 400
+        "message": "Forbidden: Not owner of this spot",
+        "statusCode": 403
         
     })
 }
@@ -421,6 +455,7 @@ async(req, res)=>{
 router.put(
     "/:spotId",
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     validateSpotPost,
     validateErrorhandling,
@@ -444,19 +479,20 @@ router.put(
     }
     else {
         const err = new Error(`Not owner of this spot`);
-        err.status = 400;
-        return res.status(400).json({
-        "message": "Not owner of this spot",
-        "statusCode": 400
+        err.status = 403;
+        return res.status(403).json({
+        "message": "Forbidden: Not owner of this spot",
+        "statusCode": 403
     })
 }
 }
 )
 
-//delete a spot --still cannot delete due to foreign key constraints error
+//delete a spot 
 router.delete(
     '/:spotId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     async (req, res) =>{
         //check owner
@@ -478,10 +514,10 @@ router.delete(
         let ownerID = spot.dataValues.ownerId
         if(currentUserId!==ownerID){
             const err = new Error(`Only the owner can add an image to this review`);
-            err.status = 400;
-            return res.status(400).json({
-                message: "Only owner can add an image to this review",
-                statusCode: 400
+            err.status = 403;
+            return res.status(403).json({
+                message: "Forbidden: Only owner can remove this spot",
+                statusCode: 403
             })
         }
         const deleteSpot = await Spot.findByPk(spotId);
@@ -537,10 +573,11 @@ const checkReviewPost =[
 //Create a Review for a Spot based on the Spot's id
 router.post(
     '/:spotId/reviews',
-    checkReviewPost,
-    validateErrorhandling,
     requireAuth,
     restoreUser,
+    AuthErrorHandling,
+    checkReviewPost,
+    validateErrorhandling,
     async (req, res) =>{
         const{review, stars} = req.body;
         const userId = req.user.id;
@@ -580,6 +617,7 @@ router.post(
 router.get(
     '/:spotId/bookings',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     async (req, res) =>{
         //find this spot
@@ -636,6 +674,7 @@ const validateBookingPost = [
 router.post(
     '/:spotId/bookings',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     validateBookingPost,
     validateErrorhandling,

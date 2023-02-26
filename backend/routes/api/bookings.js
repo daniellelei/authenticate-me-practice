@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser,AuthErrorHandling, } = require('../../utils/auth');
 const { User, Review, ReviewImage, sequelize } = require('../../db/models');
 const { Spot,SpotImage, Booking } = require('../../db/models');
 const { check } = require('express-validator');
@@ -13,6 +13,7 @@ const router = express.Router();
 //get all of the current user's bookings
 router.get('/current',
 requireAuth,
+AuthErrorHandling,
 restoreUser,
 async (req, res) =>{
     const userId = req.user.id;
@@ -64,6 +65,7 @@ async (req, res) =>{
 router.put(
     '/:bookingId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
 
     async (req, res, next) => {
@@ -223,6 +225,7 @@ router.put(
 router.delete(
     '/:bookingId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     async (req, res) => {
         //isOwner?
@@ -282,15 +285,5 @@ router.delete(
         
     }
 )
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;

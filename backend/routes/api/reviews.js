@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser, AuthErrorHandling, } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { Spot,SpotImage } = require('../../db/models');
 const { Review, ReviewImage } = require('../../db/models');
@@ -12,6 +12,7 @@ const router = express.Router();
 router.get(
     '/current',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     async(req, res)=>{
     const userId = req.user.id;
@@ -19,7 +20,11 @@ router.get(
     const allreviews = await Review.findAll({
         where:{userId: userId},
         attributes:['id', 'spotId', 'userId', 'review', 'stars', 'createdAt', 'updatedAt'],
-        include:[{model:Spot, attributes:{exclude: ['createdAt', 'updatedAt']}}, {model:ReviewImage, attributes:['id', 'url']}]
+        include:[
+            {model: User, attributes:['id', 'firstName', 'lastName']},
+            {model:Spot, attributes:{exclude: ['createdAt', 'updatedAt']}}, 
+            {model:ReviewImage, attributes:['id', 'url']}
+        ]
     })
     if(!allreviews.length){
         return res.status(404).json({
@@ -62,6 +67,7 @@ router.get(
 router.post(
     '/:reviewId/images',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     async(req, res) => {
         const currentUserId = req.user.id;
@@ -131,6 +137,7 @@ const validateErrorhandling = (err, req, res, next)=>{
 router.put(
     '/:reviewId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     checkReviewPost,
     validateErrorhandling,
@@ -174,6 +181,7 @@ router.put(
 router.delete(
     '/:reviewId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     async (req, res) => {
         const currentUserId = req.user.id;
