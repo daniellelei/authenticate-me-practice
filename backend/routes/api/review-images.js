@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser,AuthErrorHandling, } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { Spot, SpotImage } = require('../../db/models');
 const { Review, ReviewImage } = require('../../db/models');
@@ -13,6 +13,7 @@ const router = express.Router();
 router.delete(
     '/:imageId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
 
     async (req, res) => {
@@ -24,8 +25,8 @@ router.delete(
         
         if(!img) {
             const err = new Error();
-            return res.status(400).json({                
-                "message": "Spot Image couldn't be found",
+            return res.status(404).json({                
+                "message": "Review Image couldn't be found",
                 "statusCode": 404
             })
         }
@@ -45,9 +46,9 @@ router.delete(
         
         if(currentUserId!==userId) {
             const err = new Error();
-            return res.status(400).json({
-            message: 'Not owner of this spot',
-            statusCode: 400
+            return res.status(403).json({
+            message: 'Not owner of this review',
+            statusCode: 403
         })
         }
 

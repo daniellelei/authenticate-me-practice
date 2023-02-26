@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser,AuthErrorHandling, } = require('../../utils/auth');
 const { User, Review, ReviewImage, sequelize } = require('../../db/models');
 const { Spot,SpotImage, Booking } = require('../../db/models');
 const { check } = require('express-validator');
@@ -13,6 +13,7 @@ const router = express.Router();
 //get all of the current user's bookings
 router.get('/current',
 requireAuth,
+AuthErrorHandling,
 restoreUser,
 async (req, res) =>{
     const userId = req.user.id;
@@ -64,6 +65,7 @@ async (req, res) =>{
 router.put(
     '/:bookingId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
 
     async (req, res, next) => {
@@ -72,13 +74,13 @@ router.put(
         
         const booking = await Booking.findOne({
             where:{id:bookingId},
-            attributes:['userId', 'spotId']
+            attributes:['userId', 'spotId', 'startDate', 'endDate']
         })
         
         //cannot find booking 
         if(!booking) {
             const err = new Error();
-            err.status = 404;
+            
             err.message =  "Booking couldn't be found";
             //return next(err)
 
@@ -92,9 +94,22 @@ router.put(
         let userId = booking.userId;
         if(currentUserId!==userId) {
             const err = new Error();
-            return res.status(400).json({
-                "message": "Not your booking",
-                "statusCode": 400
+            return res.status(403).json({
+                "message": "Forbidden: This booking is belonged to another user",
+                "statusCode": 403
+            })
+        }
+        //Can't edit a booking that's past the end date
+
+        let currentDate = new Date();
+        let bookingEndDate = booking.endDate;
+        bookingEndDate = new Date(bookingEndDate);
+        
+        if(bookingEndDate.getTime() < currentDate.getTime()){
+            const err = new Error();
+            return res.status(403).json({
+                "message": "Past bookings can't be modified",
+                "statusCode": 403
             })
         }
 
@@ -119,15 +134,7 @@ router.put(
             })
         }
 
-        //Can't edit a booking that's past the end date
-        let currentDate = new Date();
-        if(newEnd.getTime() < currentDate.getTime()){
-            const err = new Error();
-            return res.status(403).json({
-                "message": "Past bookings can't be modified",
-                "statusCode": 403
-            })
-        }
+        
 
         //Booking conflict
         //find the spotId
@@ -135,7 +142,7 @@ router.put(
         
         const allbookings = await Booking.findAll({
             where: {spotId: spotId},
-            attributes: ['startDate', 'endDate']
+            attributes: ['userId','startDate', 'endDate']
         })
        
 
@@ -144,6 +151,8 @@ router.put(
             let existedBookingJson = existedBooking.toJSON();
             let existedStart = existedBookingJson.startDate;
             let existedEnd = existedBookingJson.endDate;
+            let user = existedBookingJson.userId;
+            if(user !== currentUserId){
             let newExistedStart = new Date(existedStart);
             let newExistedEnd = new Date(existedEnd);
             if(newStart.getTime() < newExistedStart.getTime()){
@@ -154,7 +163,7 @@ router.put(
                             "message": "Sorry, this spot is already booked for the specified dates",
                             "statusCode": 403,
                             "errors": {
-                                "startDate": "Start date conflicts with an existing booking",
+                                //"startDate": "Start date conflicts with an existing booking",
                                 "endDate": "End date conflicts with an existing booking"
                             }
                             }
@@ -169,7 +178,7 @@ router.put(
                             "statusCode": 403,
                             "errors": {
                                 "startDate": "Start date conflicts with an existing booking",
-                                "endDate": "End date conflicts with an existing booking"
+                                //"endDate": "End date conflicts with an existing booking"
                             }
                             }
                     )
@@ -183,13 +192,13 @@ router.put(
                             "statusCode": 403,
                             "errors": {
                                 "startDate": "Start date conflicts with an existing booking",
-                                "endDate": "End date conflicts with an existing booking"
+                                //"endDate": "End date conflicts with an existing booking"
                             }
                             }
                     )
                 }
             }
-
+            }
         }
 
         //no errors => edit a booking
@@ -207,22 +216,11 @@ router.put(
 )
 
 
-// const bookingErrorHandler =  (err, req, res, next) =>{
-//     if (err) {
-//         res.status(err.status)
-//         return res.json({
-//             message: err.message,
-//             statusCode: err.status,
-//             errors: err.errors ? null : err.errors
-//         })
-//     }
-//     next();
-// }
-
 //delete a booking
 router.delete(
     '/:bookingId',
     requireAuth,
+    AuthErrorHandling,
     restoreUser,
     async (req, res) => {
         //isOwner?
@@ -237,10 +235,6 @@ router.delete(
         //cannot find booking 
         if(!booking) {
             const err = new Error();
-            err.status = 404;
-            err.message =  "Booking couldn't be found";
-            //return next(err)
-
             return res.status(404).json({
                 "message": "Booking couldn't be found",
                 "statusCode": 404
@@ -251,9 +245,9 @@ router.delete(
         let userId = booking.userId;
         if(currentUserId!==userId) {
             const err = new Error();
-            return res.status(400).json({
+            return res.status(403).json({
                 "message": "Not your booking",
-                "statusCode": 400
+                "statusCode": 403
             })
         }
 
@@ -262,7 +256,7 @@ router.delete(
         let newStart = new Date(startDate);
         let newEnd = new Date(endDate);
         let currentDate = new Date();
-        if( newStart.getTime() < currentDate.getTime() ){
+        if( newStart.getTime() <= currentDate.getTime() ){
             const err = new Error();
             return res.status(403).json({
                 "message": "Bookings that have been started can't be deleted",
@@ -282,15 +276,5 @@ router.delete(
         
     }
 )
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;

@@ -1,30 +1,53 @@
 // backend/routes/api/session.js
 const express = require('express')
 
-const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, restoreUser,AuthErrorHandling } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const e = require('express');
 const router = express.Router();
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
-
+const validateErrorhandling = (err, req, res, next)=>{
+  if(err){
+    res.status(err.status)
+    return res.json({
+      message: err.message,
+      statusCode: err.status,
+      errors: err.errors
+    })
+  }
+  next();
+}
 // log in a user
+const validateLogin = [
+  check('credential')
+  .exists({checkFalsy: true})
+  .withMessage("Email or username is required"),
+  check('password')
+  .exists({checkFalsy: true})
+  .withMessage("Password is required"),
+  handleValidationErrors,
+  validateErrorhandling,
+]
 router.post(
   '/',
+  validateLogin,
   async (req, res, next) => {
     const { credential, password } = req.body;
 
-    if(!credential || !password 
-      || credential===undefined 
-      || password === undefined) {
-      const err = new Error('Validation error')
-      err.status = 400;
-      err.title = 'Validation error';
-      err.errors = {
-        "credential": "Email or username is required",
-        "password": "Password is required"
-      }
-      return next(err);
-    }
+    // if(!credential || !password 
+    //   || credential===undefined 
+    //   || password === undefined) {
+    //   const err = new Error('Validation error')
+    //   err.status = 400;
+    //   err.title = 'Validation error';
+    //   err.errors = {
+    //     "credential": "Email or username is required",
+    //     "password": "Password is required"
+    //   }
+    //   return next(err);
+    // }
 
     const user = await User.login({ credential, password });
 
@@ -37,12 +60,7 @@ router.post(
     }
 
     await setTokenCookie(res, user);
-    // let currentUser = {};
-    // currentUser.id = user.id;
-    // currentUser.firstName = user.firstName;
-    // currentUser.lastName = user.lastName;
-    // currentUser.email = user.email;
-    // currentUser.username = user.username
+
 
     return res.json({
       user: user
@@ -81,7 +99,11 @@ router.use((err, req, res, next)=>{
 })
 
 //get the current user
-router.get('/', requireAuth, restoreUser, async(req, res, next) =>{
+router.get('/', 
+requireAuth, 
+restoreUser,
+AuthErrorHandling,
+async(req, res, next) =>{
 
   const{id, firstName, lastName, email, username} = req.user;
   //const token = await setTokenCookie(res, req.user)
