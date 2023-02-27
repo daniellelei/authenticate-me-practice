@@ -119,6 +119,12 @@ const checkReviewPost =[
     check('stars')
     .exists({checkFalsy: true})
     .withMessage("Stars must be an integer from 1 to 5"),
+    check('stars')
+    .isInt({min:1})
+    .withMessage("Stars must be an integer from 1 to 5"),
+    check('stars')
+    .isInt({max:5})
+    .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ];
 const validateErrorhandling = (err, req, res, next)=>{
@@ -145,6 +151,16 @@ router.put(
         const currentUserId = req.user.id;
         const reviewId = req.params.reviewId;
         const {review, stars} = req.body;
+        if(parseInt(stars)<=0 || parseInt(stars>5)){
+            return res.status(400).json({
+                "message": "Validation error",
+                "statusCode": 400,
+                "errors": {
+                    
+                    "stars": "Stars must be an integer from 1 to 5",
+                }
+            })
+        }
 
         //find owner of review
         const review1 = await Review.findByPk(reviewId)
