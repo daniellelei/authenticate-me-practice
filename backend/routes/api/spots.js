@@ -457,7 +457,9 @@ async(req, res, next)=>{
                 [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
     })
-    
+    if(!spotJson.SpotImages.length){
+        spotJson.SpotImages = "No images yet"
+    }
     
     let rating = spotRating[0].dataValues.avgRating
     if(!rating) {
