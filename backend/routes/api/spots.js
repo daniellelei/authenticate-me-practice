@@ -28,29 +28,7 @@ const validateErrorhandling = (err, req, res, next)=>{
 
 //get all spots
 const{query} = require('express-validator/check');
-// const validateQuery =[
-//     query('page')
-//     .exists({checkFalsy: true})
-//     .
-//     .withMessage("Page must be greater than or equal to 1"),
-//     query('size')
-//     .exists({checkFalsy: true})
-//     .withMessage("Size must be greater than or equal to 1"),
-//     query('maxLat')
-//     .withMessage("Maximum latitude is invalid"),
-//     query('minLat')
-//     .withMessage("Minimum latitude is invalid"),
-//     query('minLng')
-//     .withMessage("Minimum longitude is invalid"),
-//     query('maxLng')
-//     .withMessage("Maximum longitude is invalid"),
-//     query('minPrice')
-//     .withMessage("Minimum price must be greater than or equal to 0"),
-//     query('maxPrice')
-//     .withMessage("Maximum price must be greater than or equal to 0"),
-//     handleValidationErrors,
-//     validateErrorhandling
-// ]
+
 router.get('/', 
 async(req, res)=>{
     let{page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
@@ -86,14 +64,21 @@ async(req, res)=>{
     query.limit = size;
     query.offset = size * (page - 1)
 
-    //minLat
-    if(minLat) {
+    //minLat && maxLat
+    if(minLat && maxLat) {
         minLat = parseFloat(minLat);
-        if(!isNaN(minLat)){
-            query.where.Lat = {
-                [Op.gte]: minLat
+        maxLat = parseFloat(maxLat);
+
+        if (isNaN(maxLat)){
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "maxLat": "Maximum latitude is invalid",
             }
-        } else {
+        })
+        }
+        if (isNaN(minLat)) {
             return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
@@ -102,13 +87,52 @@ async(req, res)=>{
             }
         })
         }
+        if(!isNaN(minLat) && !isNaN(maxLat)){
+            if(minLat < maxLat){
+                query.where.lat = {
+                [Op.between]: [minLat, maxLat]
+            }
+            }
+            else if(minLat === maxLat) {
+                query.where.lat = minLat;
+            }
+            else {
+                return res.status(400).json({
+                    "message": "Validation Error",
+                    "statusCode": 400,
+                    "errors": {
+                        "minLat": "Minimum latitude must be smaller than maxLat",
+                    }
+                })
+            }
+        } 
         
     }
+
+    //minLat
+    if(minLat && !maxLat) {
+        minLat = parseFloat(minLat);
+        if(!isNaN(minLat)){
+            query.where.lat = {
+                [Op.gte]: minLat
+            }
+        } else {
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {   
+                "minLat": "Minimum latitude is invalid",
+            }
+        })
+        }
+        
+    }
+
     //maxLat
-    if(maxLat) {
+    if(maxLat && !minLat) {
         maxLat = parseFloat(maxLat);
         if(!isNaN(maxLat)){
-            query.where.Lat = {
+            query.where.lat = {
                 [Op.lte]: maxLat
             }
         } else {
@@ -122,11 +146,57 @@ async(req, res)=>{
         }
         
     }
+    //minLng && maxLng
+    if(minLng && maxLng) {
+        minLng = parseFloat(minLng);
+        maxLng = parseFloat(maxLng);
+
+        if (isNaN(maxLng)){
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "maxLng": "Maximum longitude is invalid",
+            }
+        })
+        }
+
+        if (isNaN(minLng) && !isNaN(maxLng)) {
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "minLng": "Minimum longitude is invalid",
+            }
+        })
+        }
+
+        if(!isNaN(minLng) && !isNaN(maxLng)){
+            if(minLng < maxLng){
+                query.where.lng = {
+                [Op.between]: [minLng, maxLng]
+            }
+            }
+            else if(minLng === maxLng) {
+                query.where.lng = minLng;
+            }
+            else {
+                return res.status(400).json({
+                    "message": "Validation Error",
+                    "statusCode": 400,
+                    "errors": {
+                        "minLng": "Minimum longitude must be smaller than maxLat",
+                    }   
+                })
+            }
+        } 
+        
+    }
     //minLng
-    if(minLng) {
+    if(minLng && !maxLng) {
         minLng = parseFloat(minLng);
         if(!isNaN(minLng)){
-            query.where.Lng = {
+            query.where.lng = {
                 [Op.gte]: minLng
             }
         } else {
@@ -141,10 +211,10 @@ async(req, res)=>{
         
     }
     //maxLng
-    if(maxLng) {
+    if(maxLng && !minLng) {
         maxLng = parseFloat(maxLng);
         if(!isNaN(maxLng)){
-            query.where.Lng = {
+            query.where.lng = {
                 [Op.lte]: maxLng
             }
         }
@@ -159,8 +229,70 @@ async(req, res)=>{
         }
         
     }
+    //minPrice && maxPrice
+    if(minPrice && maxPrice) {
+        minPrice = parseFloat(minPrice);
+        maxPrice = parseFloat(maxPrice);
+        if(minPrice < 0){
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "minPrice": "Minimum price must be greater than or equal to 0",
+            }
+
+        })
+        }
+        if(maxPrice < 0){
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "maxPrice": "Maximum price must be greater than or equal to 0"
+            }
+        })
+        }
+        if (isNaN(maxPrice)){
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "maxPrice": "Maximum price is invalid",
+            }
+        })
+        } 
+        if (isNaN(minPrice)) {
+            return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "minPrice": "Minimum price is invalid",
+            }
+        })
+        }
+
+        if(!isNaN(minPrice) && !isNaN(maxPrice)){
+            if(minPrice < maxPrice){
+                query.where.price = {
+                [Op.between]: [minPrice, maxPrice]
+            }
+            }
+            else if(minPrice === maxPrice) {
+                query.where.price = minPrice;
+            }
+            else {
+                return res.status(400).json({
+                    "message": "Validation Error",
+                    "statusCode": 400,
+                    "errors": {
+                        "minPrice": "Minimum longitude must be smaller than maxLat",
+            }
+                })
+            }
+        } 
+    }
     //minPrice
-    if(minPrice) {
+    if(minPrice && !maxPrice) {
         minPrice = parseFloat(minPrice);
         
         if(!isNaN(minPrice) && minPrice >= 0) {
@@ -180,7 +312,7 @@ async(req, res)=>{
         
     }
     //maxPrice
-    if(maxPrice) {
+    if(maxPrice && !minPrice) {
         maxPrice = parseFloat(maxPrice);
         if(!isNaN(maxPrice) && maxPrice >= 0) {
             query.where.price = {
@@ -303,7 +435,7 @@ async(req, res, next)=>{
     const spot = await Spot.findByPk(spotId, {
         include: [
                     {model: SpotImage, as: "SpotImages"},
-                    {model: User, as: "Owner"},
+                    {model: User, as: "Owner", attributes:['id', 'firstName', 'lastName']},
                 ]
     });
 
@@ -568,6 +700,12 @@ const checkReviewPost =[
     check('stars')
     .exists({checkFalsy: true})
     .withMessage("Stars must be an integer from 1 to 5"),
+    check('stars')
+    .isInt({min:1})
+    .withMessage("Stars must be an integer from 1 to 5"),
+    check('stars')
+    .isInt({max:5})
+    .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors,
     validateErrorhandling,
 ];
@@ -580,6 +718,15 @@ router.post(
     checkReviewPost,
     async (req, res) =>{
         const{review, stars} = req.body;
+        // if(parseInt(stars)<=0 || parseInt(stars)>5){
+        //     return res.status(400).json({
+        //         "message": "Validation error",
+        //         "statusCode": 400,
+        //         "errors": {
+        //             "stars": "Stars must be an integer from 1 to 5",
+        //         }
+        //     })
+        // }
         const userId = req.user.id;
         const spotId = req.params.spotId;
         const spot = await Spot.findByPk(spotId);
@@ -657,7 +804,7 @@ router.get(
         // if it is not owner
         const allbookings = await Booking.findAll({
             where:{spotId: req.params.spotId},
-            attributes:['id','spotId', 'startDate', 'endDate']
+            attributes:['spotId', 'startDate', 'endDate']
         })
         return res.status(200).json({
             Bookings: allbookings
@@ -809,7 +956,16 @@ router.post(
             startDate,
             endDate
         })
-        return res.status(200).json(newBooking)
+        const bookingMade = await Booking.findOne({
+            where:{
+                spotId: spotId,
+                userId:userId,
+                startDate:startDate,
+                endDate:endDate,
+            },
+            attributes: ['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
+        })
+        return res.status(200).json(bookingMade)
     }
 )
 

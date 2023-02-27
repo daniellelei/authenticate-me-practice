@@ -210,8 +210,12 @@ router.put(
             startDate,
             endDate,
         })
+        const bookingEdited = await Booking.findOne({
+            where:{id:bookingId},
+            attributes:['id','spotId','userId','startDate','endDate','createdAt','updatedAt']
+        })
 
-        return res.status(200).json(editBooking);
+        return res.status(200).json(bookingEdited);
     }
 )
 
