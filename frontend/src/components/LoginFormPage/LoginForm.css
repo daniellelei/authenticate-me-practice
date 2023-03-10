@@ -1,0 +1,22 @@
+/* Define all your CSS styling rules for the LoginFormPage component in the LoginForm.css file. */
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:antiquewhite;
+}
+
+label {
+    margin: 0.5em;
+}
+
+input {
+    margin: 1em;
+}
+
+
+
+button {
+    padding: 0.2em;
+}
