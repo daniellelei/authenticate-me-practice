@@ -98,28 +98,31 @@ router.use((err, req, res, next)=>{
   
 })
 
-//get the current user
-router.get('/', 
-requireAuth, 
-restoreUser,
-AuthErrorHandling,
-async(req, res, next) =>{
+// //get the current user
+// router.get('/', 
+// //requireAuth, 
+// restoreUser,
+// AuthErrorHandling,
+// async(req, res, next) =>{
+//   if(!req.user) res.status(200).json({
+//     user:null
+//   })
 
-  const{id, firstName, lastName, email, username} = req.user;
-  //const token = await setTokenCookie(res, req.user)
-  const currentUser = {};
-  currentUser.id = id;
-  currentUser.firstName = firstName;
-  currentUser.lastName = lastName;
-  currentUser.email = email;
-  currentUser.username = username
-  //currentUser.token = token;
+//   const{id, firstName, lastName, email, username} = req.user;
+//   //const token = await setTokenCookie(res, req.user)
+//   const currentUser = {
+//     id,
+//     firstName,
+//     lastName,
+//     email,
+//     username
+//   };
+ 
+//   res.status(200).json({
+//     user: currentUser
+//   })
 
-  res.status(200).json({
-    user: currentUser
-  })
-
-})
+// })
 
 
 
