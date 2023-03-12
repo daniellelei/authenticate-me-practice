@@ -45,7 +45,7 @@ async (req, res) =>{
             },
             attributes:['url']
         })
-        //console.log(img)
+        
         if(!img.length){
             allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
         }
@@ -118,7 +118,7 @@ router.put(
         const{startDate, endDate} = req.body;
         let newStart = new Date(startDate);
         let newEnd = new Date(endDate);
-        //console.log(newStart, newEnd)
+        
         let isStartDateSmaller = false;
         if(newStart.getTime()<newEnd.getTime()) {
             isStartDateSmaller = true;
