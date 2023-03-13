@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
@@ -14,6 +14,18 @@ function SignupFormModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const { closeModal } = useModal();
+  //const [error1, setError1] = useState({});
+
+  useEffect(()=>{
+    const err = [];
+    if(!firstName.length) err.push('First name is required');
+    if(!lastName.length) err.push('Last name is required');
+    if(username.length < 4) err.push ('username needs to be at least 4 characters.')
+    if(password.length < 6) err.push('password needs to be at least 6 characters.');
+    if(password!==confirmPassword) err.push('Confirm Password field must be the same as the Password field')
+    setErrors(err);
+  }, [firstName, lastName, username, password, confirmPassword])
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +35,7 @@ function SignupFormModal() {
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
-          if (data && data.errors) setErrors(data.errors);
+          if (data && data.errors) setErrors(Object.values(data.errors));
         });
     }
     return setErrors(['Confirm Password field must be the same as the Password field']);
@@ -90,7 +102,10 @@ function SignupFormModal() {
             required
           />
         </label>
-        <button type="submit">Sign Up</button>
+        <button 
+        type="submit"
+        disabled={errors.length}
+        >Sign Up</button>
       </form>
     </>
   );
