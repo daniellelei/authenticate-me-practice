@@ -18,10 +18,10 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       <Switch>
-          <Route exact path = '/api/spots'>
+          <Route exact path = '/'>
             <SpotsIndex />
           </Route>
-          <Route path = '/api/spots/:spotId'>
+          <Route path = '/spots/:spotId'>
             <SingleSpot />
           </Route>
           <Route>

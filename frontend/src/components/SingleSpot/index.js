@@ -20,6 +20,15 @@ const SingleSpot = () => {
         window.alert('Feature Coming Soon')
     }
 
+    let images = spot.SpotImages;
+    const imagesRender = (images) => {
+        for (let i=0; i<images.length; i++){
+            images[i].ind = `img${i}`
+        }
+        return images;
+    }
+    images = imagesRender(images);
+
     return (
         <div className="wholePage">
             <div className="singleSpot">
@@ -28,9 +37,10 @@ const SingleSpot = () => {
                     <span>{spot.city}, {spot.state}, {spot.country} </span> 
                 </div>
                 <div className="images">
-                    {spot.SpotImages.map((image) => (
-                        <img key={image.id} id={image.id} src={image.url} />
+                    {images.map((image) => (
+                        <img key={image.id} className={image.ind} src={image.url} />
                     ))}
+
                    
                 </div>
                 <div className="belowImage">
@@ -39,7 +49,10 @@ const SingleSpot = () => {
                         <p>{spot.description}</p>
                     </div>
                     <div className="callOut">
-                        <p>${spot.price} night</p>
+                        <div className="price">
+                            <p>${spot.price} night</p>
+                            <p>{spot.avgStarRating} stars {spot.numReviews} reviews</p>
+                        </div>
                         <button onClick={clickReserve} className="reserve">Reserve</button>
                     </div>
                 </div>

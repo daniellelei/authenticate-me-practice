@@ -22,7 +22,7 @@ function SpotsIndex() {
             <nav>
                {spots.map((spot) => (
                 <div className='spot'>
-                    <NavLink key={spot.id} to={`/api/spots/${spot.id}`}>
+                    <NavLink key={spot.id} to={`/spots/${spot.id}`}>
                         <img src={spot.previewImage} alt={spot.name} /> 
                         <div className='spoti'>
                             <div className = 'info'>

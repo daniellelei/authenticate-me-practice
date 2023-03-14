@@ -11,8 +11,30 @@
 }
 
 .images {
-    display: flex;
+    display: grid;
+    grid-template-areas: 
+    "a a b c"
+    "a a d e";
     width: 100%;
+    margin: 2em;
+}
+
+.img0 {
+    grid-area: a;
+    height: 48em;
+    width: 48em;
+}
+.img1 {
+    grid-area: b;
+}
+.img2 {
+    grid-area: c;
+}
+.img3 {
+    grid-area: d;
+}
+.img4 {
+    grid-area: e;
 }
 
 .details{
@@ -22,6 +44,7 @@
 .callOut {
     width: 30%;
     border: 1px solid black;
+    border-radius: 0.5em;
     padding: 1em;
     display: flex;
     flex-direction: column;
@@ -39,4 +62,11 @@
 .reserve {
     background-color: coral;
     width: 100%;
+}
+
+.price {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
