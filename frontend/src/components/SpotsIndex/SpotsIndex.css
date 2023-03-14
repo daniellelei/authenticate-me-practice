@@ -1,1 +1,25 @@
+.spots-index{
+    font-family: sans-serif;
+}
 
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin:3em;
+}
+
+img {
+    width: 380px;
+    height:380px;
+    object-fit: cover;
+}
+
+.spoti {
+    display: flex;
+    justify-content: space-between;
+}
+
+h4 {
+    font-weight: lighter;
+}

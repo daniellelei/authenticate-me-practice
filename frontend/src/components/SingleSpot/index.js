@@ -25,22 +25,24 @@ const SingleSpot = () => {
             <div className="singleSpot">
                 <h1 className="spotName">{spot.name}</h1>
                 <div className="locationInfo">
-                    <span>{spot.city}</span>
-                    <span>{spot.state}</span>
-                    <span>{spot.country}</span>  
+                    <span>{spot.city}, {spot.state}, {spot.country} </span> 
                 </div>
                 <div className="images">
-                <img src={spot.SpotImages[0].url}  alt= {spot.SpotImages[0].url}/> 
+                    {spot.SpotImages.map((image) => (
+                        <img key={image.id} id={image.id} src={image.url} />
+                    ))}
+                   
                 </div>
-                <div className="details">
-                    <span>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</span>
-                    <p>{spot.description}</p>
+                <div className="belowImage">
+                    <div className="details">
+                        <span>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</span>
+                        <p>{spot.description}</p>
+                    </div>
+                    <div className="callOut">
+                        <p>${spot.price} night</p>
+                        <button onClick={clickReserve} className="reserve">Reserve</button>
+                    </div>
                 </div>
-                
-            </div>
-            <div className="callOut">
-                <p>${spot.price} night</p>
-                <button onClick={clickReserve}>Reserve</button>
             </div>
         </div>
     )

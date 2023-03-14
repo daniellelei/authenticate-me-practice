@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {Route, Switch, NavLink} from 'react-router-dom';
 import { loadAllSpots } from '../../store/spots';
 import SingleSpot from '../SingleSpot';
+import './SpotsIndex.css'
 
 
 function SpotsIndex() {
@@ -18,17 +19,21 @@ function SpotsIndex() {
 
     return (
         <div className='spots-index'>
-            <h2>All Spots</h2>
             <nav>
                {spots.map((spot) => (
-                <div>
-                    <NavLink key={spot.id} to={`/api/spots/${spot.id}`}>{spot.name}</NavLink>
-                    {/* <img src={spot.previewImage} alt={spot.name} />  */}
-                    <p> {spot.city} </p>
-                    <p> {spot.state} </p>
-                    <p> {spot.name} </p>
-                    <p> ${spot.price} night </p> 
-                    {!spot.avgRating ? <p> New </p> : spot.avgRating}
+                <div className='spot'>
+                    <NavLink key={spot.id} to={`/api/spots/${spot.id}`}>
+                        <img src={spot.previewImage} alt={spot.name} /> 
+                        <div className='spoti'>
+                            <div className = 'info'>
+                              <h4> {spot.city}, {spot.state} </h4>
+                              <h4> ${spot.price} night </h4>   
+                            </div>
+                            <div className='rating'>
+                                {!spot.avgRating ? <h4> New </h4> : <h4>{spot.avgRating}</h4>}
+                            </div>
+                        </div>
+                    </NavLink>     
                 </div>
             ))} 
             </nav>
