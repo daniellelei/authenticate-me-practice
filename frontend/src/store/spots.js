@@ -1,8 +1,9 @@
-
-
+import {csrfFetch} from './csrf';
+import Cookies from 'js-cookie';
 
 const LOAD_ALL_SPOTS = 'spots/loadAllSpots';
-const LOAD_ONE_SPOT = 'spots/loadOneSpot'
+const LOAD_ONE_SPOT = 'spots/loadOneSpot';
+const ADD_SPOT = 'spots/AddSpot';
 
 export const loadSpots = (allSpots) => {
     return {
@@ -14,6 +15,13 @@ export const loadSpots = (allSpots) => {
 export const loadOneSpot = (singleSpot) => {
     return {
         type: LOAD_ONE_SPOT,
+        singleSpot
+    }
+}
+
+export const addSpot = (singleSpot) => {
+    return {
+        type: ADD_SPOT,
         singleSpot
     }
 }
@@ -38,6 +46,19 @@ export const loadOneSpotThunk = (spotId) => async (dispatch) => {
         return spotRes;
     }
 }
+export const addSpotThunk = (spot) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots`, {
+        method: 'POST',
+        header: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(spot)
+    })
+
+    if(response.ok) {
+        const spot = await response.json();
+        dispatch(addSpot(spot));
+        return spot
+    }
+}
 
 const initialState = { spots: {}, isLoading: true};
 
@@ -47,6 +68,8 @@ const spotsReducer = (state = initialState.spots, action) => {
             return {...state, allSpots: [...action.allSpots]};
         case LOAD_ONE_SPOT:
             return {...state, singleSpot: action.singleSpot};
+        case ADD_SPOT:
+            return {...state, allSpots: [...state.allSpots, action.singleSpot]};
         default:
             return state;
     }
