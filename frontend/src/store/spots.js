@@ -47,14 +47,17 @@ export const loadOneSpotThunk = (spotId) => async (dispatch) => {
     }
 }
 export const addSpotThunk = (spot) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots`, {
+    //post a spot
+    const response1 = await csrfFetch(`/api/spots`, {
         method: 'POST',
         header: {'Content-Type' : 'application/json'},
         body: JSON.stringify(spot)
     })
+    //post an image
+    
 
-    if(response.ok) {
-        const spot = await response.json();
+    if(response1.ok) {
+        const spot = await response1.json();
         dispatch(addSpot(spot));
         return spot
     }
@@ -69,7 +72,11 @@ const spotsReducer = (state = initialState.spots, action) => {
         case LOAD_ONE_SPOT:
             return {...state, singleSpot: action.singleSpot};
         case ADD_SPOT:
-            return {...state, allSpots: [...state.allSpots, action.singleSpot]};
+            return {
+                ...state, 
+                allSpots: [...state.allSpots, action.singleSpot], 
+                singleSpot: action.singleSpot
+            };
         default:
             return state;
     }

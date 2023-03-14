@@ -493,14 +493,14 @@ const validateSpotPost = [
     check('country')
     .exists({checkFalsy: true})
     .withMessage("Country is required"),
-    check('lat')
-    //.exists({checkFalsy: true})
-    .isNumeric({checkFalsy: true})
-    .withMessage("Latitude is not valid"),
-    check('lng')
-    //.exists({checkFalsy: true})
-    .isNumeric({checkFalsy: true})
-    .withMessage("Longitude is not valid"),
+    // check('lat')
+    // //.exists({checkFalsy: true})
+    // .isNumeric({checkFalsy: true})
+    // .withMessage("Latitude is not valid"),
+    // check('lng')
+    // //.exists({checkFalsy: true})
+    // .isNumeric({checkFalsy: true})
+    // .withMessage("Longitude is not valid"),
     check('name')
     .exists({checkFalsy: true})
     .withMessage("Name is required")
@@ -525,7 +525,7 @@ validateSpotPost,
 validateErrorhandling,
 async(req, res)=>{
     
-    const {address, city, state, country, lat, lng, name, description, price} = req.body;
+    let {address, city, state, country, lat, lng, name, description, price} = req.body;
     const ownerId = req.user.id;
     if(!lat) lat = 0;
     if(!lng) lng = 0;

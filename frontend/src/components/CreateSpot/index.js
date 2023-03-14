@@ -1,8 +1,8 @@
 import './CreateSpot.css'
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {addSpotThunk} from '../../store/spots';
-
+import { useHistory } from 'react-router-dom';
 const CreateSpot = () => {
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -13,9 +13,13 @@ const CreateSpot = () => {
     const [price, setPrice] = useState(0);
 
     const dispatch = useDispatch();
-    
-    const handleSubmit = (e) => {
+    const history = useHistory();
+
+    useEffect(()=>{},[])
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         const newSpot = {
             address,
             city,
@@ -25,8 +29,13 @@ const CreateSpot = () => {
             description,
             price,
         };
-        dispatch(addSpotThunk(newSpot));
-        reset();
+
+        let createdSpot = await dispatch(addSpotThunk(newSpot));
+        console.log(createdSpot);
+        if(createdSpot) {
+            history.push(`/spots/${createdSpot.id}`)
+            reset();
+        }
     };
 
     const reset = () => {
@@ -129,11 +138,14 @@ const CreateSpot = () => {
                 <div className='section5'>
                     <h2>Liven up your spot with photos</h2>
                     <p>Submit a link to at least one photo to publish your spot.</p>
-                    <input
+                    {/* <input
                     type = 'text'
                     onChange={(e)=>{}}
                     >
-                    </input>
+                    </input> */}
+                </div>
+                <div>
+                    <button type='submit'>Create Spot</button>
                 </div>
                 
             </form>

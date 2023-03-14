@@ -20,15 +20,15 @@ const SingleSpot = () => {
         window.alert('Feature Coming Soon')
     }
 
-    let images = spot.SpotImages;
     const imagesRender = (images) => {
         for (let i=0; i<images.length; i++){
             images[i].ind = `img${i}`
         }
         return images;
     }
+    let images = spot.SpotImages;
     images = imagesRender(images);
-
+    
     return (
         <div className="wholePage">
             <div className="singleSpot">
