@@ -39,9 +39,9 @@ export const loadOneSpotThunk = (spotId) => async (dispatch) => {
     }
 }
 
-//const initialState = {spots:[], isLoading: true};
+const initialState = { spots: {}, isLoading: true};
 
-const spotsReducer = ( state = {}, action) => {
+const spotsReducer = (state = initialState.spots, action) => {
     switch (action.type) {
         case LOAD_ALL_SPOTS:
             return {...state, allSpots: [...action.allSpots]};

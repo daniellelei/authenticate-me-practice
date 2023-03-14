@@ -15,15 +15,33 @@ const SingleSpot = () => {
     }, [dispatch])
     if(!spot) return null;
 
+    const clickReserve = (e) => {
+        e.preventDefault();
+        window.alert('Feature Coming Soon')
+    }
+
     return (
-        <div className="singleSpot">
-            <h1>{spot.name}</h1>
-            <img src={spot.SpotImages[0].url}  alt= {spot.SpotImages[0].url}/>
-            <p>{spot.city}</p>
-            <p>{spot.state}</p>
-            <p>{spot.country}</p>
-            <p>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</p>
-            <p>{spot.description}</p>
+        <div className="wholePage">
+            <div className="singleSpot">
+                <h1 className="spotName">{spot.name}</h1>
+                <div className="locationInfo">
+                    <span>{spot.city}</span>
+                    <span>{spot.state}</span>
+                    <span>{spot.country}</span>  
+                </div>
+                <div className="images">
+                <img src={spot.SpotImages[0].url}  alt= {spot.SpotImages[0].url}/> 
+                </div>
+                <div className="details">
+                    <span>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</span>
+                    <p>{spot.description}</p>
+                </div>
+                
+            </div>
+            <div className="callOut">
+                <p>${spot.price} night</p>
+                <button onClick={clickReserve}>Reserve</button>
+            </div>
         </div>
     )
 
