@@ -46,6 +46,7 @@ const CreateSpot = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrors({});
         setHasSubmitted(true);
 
         const newSpot = {
@@ -58,10 +59,8 @@ const CreateSpot = () => {
             price,
         };
 
-        
-
         let createdSpot = await dispatch(addSpotThunk(newSpot,images));
-        console.log(createdSpot);
+        //console.log(createdSpot);
         if(createdSpot) {
             history.push(`/spots/${createdSpot.id}`)
             reset();
@@ -81,7 +80,7 @@ const CreateSpot = () => {
 
     return (
         <div className='createSpotPage'>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='createForm'>
                 <div className='title'>
                 <h1>Create a New Spot</h1>   
                 </div>

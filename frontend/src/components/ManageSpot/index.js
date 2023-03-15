@@ -2,18 +2,29 @@ import React from 'react';
 import './ManageSpot.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { loadSpotsCurrent } from '../../store/spots';
-import { NavLink, useHistory} from 'react-router-dom';
-import { useEffect } from 'react';
+import { NavLink, useHistory, Route, Switch} from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
+import EditSpot from './EditSpot';
 
 
 const CurrentUserSpots = () => {
     const dispatch = useDispatch();
     const spots = useSelector(state => state.spots.allSpots);
+    const history = useHistory();
+
+    const [showEditForm, setShowEditForm] = useState(false);
 
     useEffect(()=> {
+        setShowEditForm(false);
         dispatch(loadSpotsCurrent());
     }, [dispatch])
+
+    const editSpotClick = (e) => {
+        e.preventDefault();
+        setShowEditForm(true);
+        //history.push('/spots/:spotId')
+    }
 
     if(!spots) return (
         <div>
@@ -40,10 +51,13 @@ const CurrentUserSpots = () => {
                                     {!spot.avgRating ? <h4> New </h4> : <h4>{spot.avgRating}</h4>}
                                 </div>
                         </NavLink>
-                        <div>
-                            <button>Update</button>
-                            <button>Delete</button>
-                        </div>
+                            <div>
+                                <button onClick={editSpotClick}>Update</button>
+                                <button>Delete</button>
+                            </div>
+                        {/* <div>
+                            {showEditForm ? <EditSpot spot={spot} /> : null}
+                        </div> */}
                     </div>
                 ))}
             </nav>

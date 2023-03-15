@@ -37,12 +37,6 @@ function SpotsIndex() {
                 </div>
             ))} 
             </nav>
-
-            {/* <Switch>
-                <Route path='api/spots/:spotId'>
-                    <SingleSpot />
-                </Route>
-            </Switch> */}
         </div>
     )
 }

@@ -37,9 +37,9 @@ function LoginFormModal() {
   };
 
   return (
-    <>
+    <div className="loginModal">
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className='loginForm'>
         <ul>
           {errors.map((error, idx) => (
             <li key={idx}>{error}</li>
@@ -63,18 +63,15 @@ function LoginFormModal() {
             required
           />
         </label>
-        <button type="submit"
+        <button 
+        type="submit"
+        className="loginButton"
         disabled={Boolean(Object.values(error1).length)}>
           Log In</button>
       </form>
-    </>
+    </div>
   );
 }
 
 export default LoginFormModal;
 
-{/* <ul>
-          {errors.map((error, idx) => (
-            <li key={idx}>{error}</li>
-          ))}
-        </ul> */}
