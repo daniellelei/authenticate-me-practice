@@ -44,6 +44,11 @@ function ProfileButton({ user }) {
     history.push('/spots')
   };
 
+  const manageSpotsClick = (e) => {
+    e.preventDefault();
+    history.push('/spots/current')
+  }
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
@@ -59,6 +64,9 @@ function ProfileButton({ user }) {
             <li>{user.email}</li>
             <li>
               <button onClick={createSpotClick}>Create a New Spot</button>
+            </li>
+            <li>
+              <button onClick={manageSpotsClick}>Manage Spots</button>
             </li>
             <li>
               <button onClick={logout}>Log Out</button>

@@ -1,0 +1,64 @@
+.createSpotPage {
+    font-family: sans-serif;
+    margin:2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.title{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+form{
+    width: 35%;
+    padding: 2em;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.error {
+    color: red;
+}
+
+.section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width:100%
+}
+
+.cityState {
+    display: flex;
+    justify-content: space-between;
+}
+
+.city {
+    margin: 1em;
+}
+.labelError {
+    display: flex;
+}
+
+label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    width: 100%;
+}
+
+.titleCaption{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.dollorSign{
+    display: flex;
+}
+

@@ -5,6 +5,7 @@ const LOAD_ALL_SPOTS = 'spots/loadAllSpots';
 const LOAD_ONE_SPOT = 'spots/loadOneSpot';
 const ADD_SPOT = 'spots/AddSpot';
 
+
 export const loadSpots = (allSpots) => {
     return {
         type: LOAD_ALL_SPOTS,
@@ -46,20 +47,41 @@ export const loadOneSpotThunk = (spotId) => async (dispatch) => {
         return spotRes;
     }
 }
-export const addSpotThunk = (spot) => async (dispatch) => {
+export const addSpotThunk = (spot, images) => async (dispatch) => {
     //post a spot
     const response1 = await csrfFetch(`/api/spots`, {
         method: 'POST',
         header: {'Content-Type' : 'application/json'},
         body: JSON.stringify(spot)
     })
+    const spotRes = await response1.json();
+    console.log(spotRes.id);
     //post an image
-    
+    for(let i of images){
+        let imgObj = {
+            url:i,
+            preview:true
+        }
+        await csrfFetch(`/api/spots/${spotRes.id}/images`,{
+        method: 'POST',
+        header: {'Content-Type' : 'application/json'},
+        body:JSON.stringify(imgObj)
+    })
+    }
+    const newSpotRes = await csrfFetch(`/api/spots/${spotRes.id}`);
+    const newSpot = await newSpotRes.json();
+    dispatch(addSpot(newSpot));
+    return newSpot;
 
-    if(response1.ok) {
-        const spot = await response1.json();
-        dispatch(addSpot(spot));
-        return spot
+}
+//Get all Spots owned by the Current User
+export const loadSpotsCurrent = (payload) => async (dispatch) => {
+    const response = await csrfFetch('/api/spots/current');
+    if(response.ok) {
+        const spotsRes = await response.json();
+        const Spots = spotsRes.Spots;
+        dispatch(loadSpots(Spots));
+        return Spots;
     }
 }
 
@@ -74,7 +96,6 @@ const spotsReducer = (state = initialState.spots, action) => {
         case ADD_SPOT:
             return {
                 ...state, 
-                allSpots: [...state.allSpots, action.singleSpot], 
                 singleSpot: action.singleSpot
             };
         default:
