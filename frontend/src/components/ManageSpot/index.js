@@ -2,7 +2,7 @@ import React from 'react';
 import './ManageSpot.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { loadSpotsCurrent } from '../../store/spots';
-import { NavLink, useHistory, Route, Switch} from 'react-router-dom';
+import { NavLink, useHistory, Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
 import EditSpot from './EditSpot';
@@ -52,7 +52,10 @@ const CurrentUserSpots = () => {
                                     </div>
                             </NavLink>
                                 <div>
-                                    <button onClick={editSpotClick}>Update</button>
+                                    <Link key={spot.id} to={`/spots/${spot.id}/edit`}>
+                                        <EditSpot />
+                                        <p>Update</p>
+                                    </Link>
                                     <button>Delete</button>
                                 </div>
                             {/* <div>
