@@ -29,7 +29,7 @@ const CurrentUserSpots = () => {
     if(!spots) return (
         <div>
             <h2>There is no spots posted yet</h2>
-            <NavLink to={`/spots`}>
+            <NavLink to={`/spots/new`}>
                 <CreateSpot />
                 Create a New Spot 
             </NavLink>

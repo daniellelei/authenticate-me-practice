@@ -4,9 +4,10 @@
 
 nav {
     display: flex;
-    justify-content: space-between;
+    flex-wrap:wrap;
+    justify-content: flex-start;
     align-items: center;
-    margin:3em;
+    margin:2em;
 }
 
 img {
@@ -14,10 +15,13 @@ img {
     height:380px;
     object-fit: cover;
 }
-
+.spot{
+    margin: 1em;
+}
 .spoti {
     display: flex;
     justify-content: space-between;
+    
 }
 
 h4 {

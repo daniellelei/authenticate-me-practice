@@ -41,7 +41,7 @@ function ProfileButton({ user }) {
 
   const createSpotClick = (e) => {
     e.preventDefault();
-    history.push('/spots')
+    history.push('/spots/new')
   };
 
   const manageSpotsClick = (e) => {
