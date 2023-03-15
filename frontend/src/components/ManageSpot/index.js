@@ -35,34 +35,37 @@ const CurrentUserSpots = () => {
             </NavLink>
         </div>
     );
-
-    return (
-        <div className='currentSpots'>
-            <nav>
-                {spots.map((spot) => (
-                    <div>
-                        <NavLink key={spot.id} to={`/spots/${spot.id}`}>
-                            <img src={spot.previewImage} alt={spot.name} />
-                            <div>
-                                <h4>{spot.city}, {spot.state}</h4>
-                                <h4> ${spot.price} night </h4> 
-                            </div>
-                            <div className='rating'>
-                                    {!spot.avgRating ? <h4> New </h4> : <h4>{spot.avgRating}</h4>}
+    else{
+        return (
+            <div className='currentSpots'>
+                <nav>
+                    {spots.map((spot) => (
+                        <div>
+                            <NavLink key={spot.id} to={`/spots/${spot.id}`}>
+                                <img src={spot.previewImage} alt={spot.name} />
+                                <div>
+                                    <h4>{spot.city}, {spot.state}</h4>
+                                    <h4> ${spot.price} night </h4> 
                                 </div>
-                        </NavLink>
-                            <div>
-                                <button onClick={editSpotClick}>Update</button>
-                                <button>Delete</button>
-                            </div>
-                        {/* <div>
-                            {showEditForm ? <EditSpot spot={spot} /> : null}
-                        </div> */}
-                    </div>
-                ))}
-            </nav>
-        </div>
-    )
+                                <div className='rating'>
+                                        {!spot.avgRating ? <h4> New </h4> : <h4>{spot.avgRating}</h4>}
+                                    </div>
+                            </NavLink>
+                                <div>
+                                    <button onClick={editSpotClick}>Update</button>
+                                    <button>Delete</button>
+                                </div>
+                            {/* <div>
+                                {showEditForm ? <EditSpot spot={spot} /> : null}
+                            </div> */}
+                        </div>
+                    ))}
+                </nav>
+            </div>
+        )
+
+    }
+
     
 }
 export default CurrentUserSpots;

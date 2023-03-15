@@ -13,10 +13,10 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState([]);
-  const [resErrors, setResErrors] = useState([]);
   const [showErrors, setShowErrors] = useState([]);
+  const [resErrors, setResErrors] = useState({});
   const { closeModal } = useModal();
-  //const [error1, setError1] = useState({});
+  
 
   useEffect(()=>{
     const err = [];
@@ -25,7 +25,7 @@ function SignupFormModal() {
     if(!lastName.length) err.push('Last name is required');
     if(username.length < 4) err.push ('username needs to be at least 4 characters.')
     if(password.length < 6) err.push('password needs to be at least 6 characters.');
-    if(password!==confirmPassword) err.push('Confirm Password field must be the same as the Password field')
+    //if(password!==confirmPassword) err.push('Confirm Password field must be the same as the Password field')
     setErrors(err);
   }, [email, firstName, lastName, username, password, confirmPassword])
 
@@ -34,26 +34,19 @@ function SignupFormModal() {
     e.preventDefault();
     setShowErrors(errors);
     setErrors([]);
-    
-    return dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          let err = ['abc'];
-          console.log('err', err[0]);
-          setResErrors(err);
-          console.log('resErrors', resErrors);
-          //setShowErrors(errors);
-          // console.log(data.message);
-          // let err = [];
-          // err.push(data.message);
-          // console.log('err', err[0]);
-          // setErrors(err);
-          // //setShowErrors(errors);
-          // console.log('showErrors',errors[0])
-        }
-      });
+    setResErrors([]);
+    if(password===confirmPassword){
+      return dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
+        .then(closeModal)
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) {
+            setResErrors(data.errors);
+          }
+        });
+    } else {
+      setResErrors(['Confirm Password field must be the same as the Password field'])
+    }
   }
     
   
@@ -64,6 +57,7 @@ function SignupFormModal() {
       <form onSubmit={handleSubmit} className='signUpForm'>
         <ul>
           {showErrors.map((error, idx) => <li key={idx}>{error}</li>)}
+          {Boolean(Object.values(resErrors).length) ? <li>{Object.values(resErrors)}</li> : null}
         </ul>
         <div className="signUpLabel">
           <label>
