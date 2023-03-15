@@ -598,10 +598,10 @@ router.put(
     async (req, res)=>{
     const {spotId} = req.params
     const {id} = req.user
+    
+    let{ address, city, state, country, lat, lng, name, description, price} = req.body;
     if(!lat) lat = 0;
     if(!lng) lng = 0;
-    
-    const{ address, city, state, country, lat, lng, name, description, price} = req.body;
 
     const spot = await Spot.findByPk(spotId);
     if(!spot) {

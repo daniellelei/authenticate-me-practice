@@ -53,7 +53,7 @@ const CurrentUserSpots = () => {
                             </NavLink>
                                 <div>
                                     <Link key={spot.id} to={`/spots/${spot.id}/edit`}>
-                                        <EditSpot />
+                                        {/* <EditSpot /> */}
                                         <p>Update</p>
                                     </Link>
                                     <button>Delete</button>

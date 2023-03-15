@@ -87,11 +87,18 @@ export const loadSpotsCurrent = () => async (dispatch) => {
 
 //Edit spot thunk
 export const editSpotThunk = (payload) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${payload.id}`, {
+    const editResponse = await csrfFetch(`/api/spots/${payload.id}`, {
         method: 'PUT',
         header: {'Content-Type' : 'application/json'},
         body: JSON.stringify(payload)
     })
+
+    if(editResponse.ok) {
+        const updatedSpotRes = await csrfFetch(`/api/spots/${payload.id}`)
+        const updatedSpot = await updatedSpotRes.json()
+        dispatch(loadOneSpot(updatedSpot));
+        return updatedSpot;
+    }
 }
 
 const initialState = { spots: {}, isLoading: true};

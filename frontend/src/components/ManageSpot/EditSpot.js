@@ -16,16 +16,28 @@ const EditSpot = () => {
         dispatch(loadOneSpotThunk(spotId))
     }, [dispatch])
 
-    const [address, setAddress] = useState(spot.address);
-    const [city, setCity] = useState(spot.city);
-    const [state, setState] = useState(spot.state);
-    const [country, setCountry] = useState(spot.country);
-    const [name, setName] = useState(spot.name);
-    const [description, setDescription] = useState(spot.description);
-    const [price, setPrice] = useState(spot.price);
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [country, setCountry] = useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState(0);
     const [errors, setErrors] = useState({});
     const [showErrors, setShowErrors] = useState({})
 
+    useEffect(()=>{
+        if(spot) {
+            setAddress(spot.address);
+            setCity(spot.city);
+            setState(spot.state);
+            setCountry(spot.country);
+            setName(spot.name);
+            setDescription(spot.description);
+            setPrice(spot.price);
+        }
+    }, [spot])
+    
     const updateAddress = (e) => setAddress(e.target.value);
     const updateCity = (e) => setCity(e.target.value);
     const updateState = (e) => setState(e.target.value);
@@ -33,6 +45,7 @@ const EditSpot = () => {
     const updateName = (e) => setName(e.target.value);
     const updateDescription = (e) => setDescription(e.target.value);
     const updatePrice = (e) => setPrice(e.target.value);
+    
 
     useEffect(()=>{
         const err = {};
@@ -66,18 +79,12 @@ const EditSpot = () => {
             description,
             price
         };
-        console.log('payload.id',payload.id)
-        console.log('address', payload.address);
-        console.log(payload)
 
-        // let updatedSpot = await dispatch(editSpotThunk(payload));
-        // if(updatedSpot) {
-        //     history.push(`/spots/${updatedSpot.id}`)
-        // }
-
+        let updatedSpot = await dispatch(editSpotThunk(payload));
+        if(updatedSpot) {
+            history.push(`/spots/${updatedSpot.id}`)
+        }
     }
-
-
 
     if(!spot) return (
     <h1>No spots found</h1>);
@@ -197,7 +204,7 @@ const EditSpot = () => {
                 <div>
                     <button type='submit'
                     // disabled={Boolean(Object.values(errors).length)}
-                    >Create Spot</button>
+                    >Update Spot</button>
                 </div>
                 
             </form>
