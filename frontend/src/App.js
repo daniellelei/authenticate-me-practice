@@ -7,6 +7,7 @@ import * as sessionActions from "./store/session";
 import SpotsIndex from './components/SpotsIndex/index'
 import SingleSpot from "./components/SingleSpot";
 import CreateSpot from "./components/CreateSpot";
+import CurrentUserSpots from "./components/ManageSpot";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,12 +23,16 @@ function App() {
           <Route exact path = '/'>
             <SpotsIndex />
           </Route>
-          <Route path = '/spots/:spotId'>
+          <Route exact path = '/spots/current'>
+            <CurrentUserSpots />
+          </Route>
+          <Route exact path = '/spots/:spotId'>
             <SingleSpot />
           </Route>
-          <Route path = '/spots'>
+          <Route exact path = '/spots'>
             <CreateSpot />
           </Route>
+          
           <Route>
             Page Not Found
           </Route>

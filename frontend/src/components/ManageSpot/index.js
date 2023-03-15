@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadSpotsCurrent } from '../../store/spots';
 import { NavLink, useHistory} from 'react-router-dom';
 import { useEffect } from 'react';
+import CreateSpot from '../CreateSpot';
 
 
 const CurrentUserSpots = () => {
@@ -14,7 +15,15 @@ const CurrentUserSpots = () => {
         dispatch(loadSpotsCurrent());
     }, [dispatch])
 
-    if(!spots) return null;
+    if(!spots) return (
+        <div>
+            <h2>There is no spots posted yet</h2>
+            <NavLink to={`/spots`}>
+                <CreateSpot />
+                Create a New Spot 
+            </NavLink>
+        </div>
+    );
 
     return (
         <div className='currentSpots'>

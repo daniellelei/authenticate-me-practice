@@ -27,7 +27,7 @@ export const addSpot = (singleSpot) => {
     }
 }
 
-export const loadAllSpots = (payload) => async (dispatch) => {
+export const loadAllSpots = () => async (dispatch) => {
     const response = await fetch('/api/spots');
     if(response.ok) {
         const spotsRes = await response.json();
@@ -42,7 +42,7 @@ export const loadOneSpotThunk = (spotId) => async (dispatch) => {
     const response = await fetch(`/api/spots/${spotId}`);
     if(response.ok) {
         const spotRes = await response.json();
-        console.log(spotRes);
+        //console.log(spotRes);
         dispatch(loadOneSpot(spotRes));
         return spotRes;
     }
@@ -75,7 +75,7 @@ export const addSpotThunk = (spot, images) => async (dispatch) => {
 
 }
 //Get all Spots owned by the Current User
-export const loadSpotsCurrent = (payload) => async (dispatch) => {
+export const loadSpotsCurrent = () => async (dispatch) => {
     const response = await csrfFetch('/api/spots/current');
     if(response.ok) {
         const spotsRes = await response.json();
