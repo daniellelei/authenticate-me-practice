@@ -5,7 +5,7 @@ const LOAD_ALL_SPOTS = 'spots/loadAllSpots';
 const LOAD_ONE_SPOT = 'spots/loadOneSpot';
 const ADD_SPOT = 'spots/AddSpot';
 const DELETE_SPOT = 'spots/deleteSpot';
-
+const LOAD_CURRENT_SPOTS = 'spots/loadCurrentSpots'
 
 export const loadSpots = (allSpots) => {
     return {
@@ -18,6 +18,13 @@ export const loadOneSpot = (singleSpot) => {
     return {
         type: LOAD_ONE_SPOT,
         singleSpot
+    }
+}
+
+export const loadCurrentSpots = (currentSpots) => {
+    return {
+        type: LOAD_CURRENT_SPOTS,
+        currentSpots
     }
 }
 
@@ -88,7 +95,7 @@ export const loadSpotsCurrent = () => async (dispatch) => {
     if(response.ok) {
         const spotsRes = await response.json();
         const Spots = spotsRes.Spots;
-        dispatch(loadSpots(Spots));
+        dispatch(loadCurrentSpots(Spots));
         return Spots;
     }
 }
@@ -129,6 +136,8 @@ const spotsReducer = (state = initialState.spots, action) => {
             return {...state, allSpots: [...action.allSpots]};
         case LOAD_ONE_SPOT:
             return {...state, singleSpot: action.singleSpot};
+        case LOAD_CURRENT_SPOTS:
+            return {currentSpots:[...action.currentSpots]}
         case ADD_SPOT:
             return {
                 ...state, 

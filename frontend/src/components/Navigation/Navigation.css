@@ -1,6 +1,16 @@
-/* ul {
+.headNav{
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: coral;
-} */
+    height:120px;
+}
+
+.navRight {
+    display: flex;
+    padding: 2em;
+}
+
+.createSpot {
+    margin: 2em;
+}

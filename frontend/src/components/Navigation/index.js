@@ -7,17 +7,28 @@ import './Navigation.css';
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
+  
 
   return (
-    <ul>
-      <li>
-        <NavLink exact to="/">Home</NavLink>
+    <ul className='headNav'>
+      <li className='home'>
+        <NavLink exact to="/">
+          <i class="fa-solid fa-house"></i>
+        </NavLink>
       </li>
+      <div className='navRight'>
+      {sessionUser ?
+      (<li className='createSpot'>
+        <NavLink exact to='/spots/new'>Create a New Spot
+        </NavLink>
+      </li>
+      ) : (null)}
       {isLoaded && (
-        <li>
+        <li className='profileButton'>
           <ProfileButton user={sessionUser} />
         </li>
       )}
+      </div>
       
     </ul>
   );

@@ -6,23 +6,24 @@ import { NavLink, useHistory, Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
 import DeleteModal from '../DeleteSpotModal';
-import OpenModalMenuItem from './OpenModalMenuItem';
+import OpenModalButton from '../OpenModalButton/index'
+//import OpenModalMenuItem from './OpenModalMenuItem';
 
 
 const CurrentUserSpots = () => {
     const dispatch = useDispatch();
-    const spots = useSelector(state => state.spots.allSpots);
     const history = useHistory();
-    const [deleteClicked, setDeleteClicked] = useState(false);
-
+    
     useEffect(()=> {
         dispatch(loadSpotsCurrent());
     }, [dispatch])
-
-    const deleteButtonClick = (e) => {
-        e.preventDefault();
-        setDeleteClicked(true);
-    }
+    const spots = useSelector(state => state.spots.currentSpots);
+    const [currentSpots, setCurrentSpots] = useState([]);
+    useEffect(()=>{
+        if(spots) {
+            setCurrentSpots(spots)
+        }
+    },[spots])
 
     if(!spots) return (
         <div>
@@ -36,14 +37,6 @@ const CurrentUserSpots = () => {
     else{
         return (
             <div className='currentSpots'>
-                {deleteButtonClick ? (
-                    <>
-                    <OpenModalMenuItem>
-                        
-                    </OpenModalMenuItem>
-                    </>
-                    
-                ) : (
                 <nav>
                     {spots.map((spot) => (
                         <div>
@@ -61,14 +54,17 @@ const CurrentUserSpots = () => {
                                     <Link key={spot.id} to={`/spots/${spot.id}/edit`}>
                                         <p>Update</p>
                                     </Link>
-                                    <button
-                                    onClick={deleteButtonClick}
-                                    >Delete</button>
+                                    
+                                    <OpenModalButton 
+                                        buttonText= 'Delete'
+                                        modalComponent={<DeleteModal spot={spot}/>}
+                                        onButtonClick={() => console.log("Greeting initiated")}
+                                        onModalClose={() => console.log("Greeting completed")}
+                                    />
                                 </div>
                         </div>
                     ))}
                 </nav>
-                )}
             </div>
         )
 

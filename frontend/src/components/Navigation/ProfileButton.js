@@ -39,11 +39,6 @@ function ProfileButton({ user }) {
   };
   const history = useHistory();
 
-  const createSpotClick = (e) => {
-    e.preventDefault();
-    history.push('/spots/new')
-  };
-
   const manageSpotsClick = (e) => {
     e.preventDefault();
     history.push('/spots/current')
@@ -62,9 +57,7 @@ function ProfileButton({ user }) {
             <li>{user.username}</li>
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
-            <li>
-              <button onClick={createSpotClick}>Create a New Spot</button>
-            </li>
+            
             <li>
               <button onClick={manageSpotsClick}>Manage Spots</button>
             </li>

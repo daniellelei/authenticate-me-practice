@@ -1,15 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import * as spotActions from '../../store/spot';
+import * as spotActions from '../../store/spots';
 import { useDispatch, useSelector } from 'react-redux';
-import { useModal } from '../../context/Modal';
-
-function DeleteModal () {
+import { useModal } from "../../context/Modal";
+import { useHistory } from 'react-router-dom';
+function DeleteModal ({spot}) {
     const dispatch = useDispatch();
     const {closeModal} = useModal();
+    const history = useHistory();
+
     const ClickYes = (e) => {
         e.preventDefault();
-        return dispatch(spotActions.deleteSpotThunk(id))
+        dispatch(spotActions.deleteSpotThunk(spot.id))
         .then(closeModal)
+        return (history.push('/spots/current'));
     }
 
     const ClickNo = (e) => {
