@@ -10,12 +10,14 @@ import './SpotsIndex.css'
 
 function SpotsIndex() {
     const dispatch = useDispatch();
-    const spots = useSelector(state=>state.spots.allSpots);
+    const spotsObj = useSelector(state=>state.spots.allSpots);
+    
 
     useEffect(()=>{
         dispatch(loadAllSpots());
     },[dispatch])
-    if(!spots) return null;
+    if(!spotsObj) return null;
+    const spots = Object.values(spotsObj);
 
     return (
         <div className='spots-index'>

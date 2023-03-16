@@ -11,8 +11,8 @@ function DeleteModal ({spot}) {
     const ClickYes = (e) => {
         e.preventDefault();
         dispatch(spotActions.deleteSpotThunk(spot.id))
-        .then(closeModal)
-        return (history.push('/spots/current'));
+        closeModal()
+        history.push('/spots/current');
     }
 
     const ClickNo = (e) => {

@@ -1,6 +1,14 @@
 import {csrfFetch} from './csrf';
 import Cookies from 'js-cookie';
 
+export const normalize = (array) =>{
+    const obj = {};
+    array.forEach(o => {
+        obj[o.id] = o;
+    })
+    return obj;
+}
+
 const LOAD_ALL_SPOTS = 'spots/loadAllSpots';
 const LOAD_ONE_SPOT = 'spots/loadOneSpot';
 const ADD_SPOT = 'spots/AddSpot';
@@ -21,10 +29,10 @@ export const loadOneSpot = (singleSpot) => {
     }
 }
 
-export const loadCurrentSpots = (currentSpots) => {
+export const loadCurrentSpots = (current) => {
     return {
         type: LOAD_CURRENT_SPOTS,
-        currentSpots
+        current
     }
 }
 
@@ -46,7 +54,8 @@ export const loadAllSpots = () => async (dispatch) => {
     const response = await fetch('/api/spots');
     if(response.ok) {
         const spotsRes = await response.json();
-        const Spots = spotsRes.Spots;
+        let Spots = spotsRes.Spots; //array
+        Spots = normalize(Spots)
         dispatch(loadSpots(Spots));
         return Spots;
     }
@@ -90,12 +99,15 @@ export const addSpotThunk = (spot, images) => async (dispatch) => {
 
 }
 //Get all Spots owned by the Current User
-export const loadSpotsCurrent = () => async (dispatch) => {
+export const loadSpotsCurrentThunk = () => async (dispatch) => {
     const response = await csrfFetch('/api/spots/current');
     if(response.ok) {
         const spotsRes = await response.json();
-        const Spots = spotsRes.Spots;
+        let Spots = spotsRes.Spots;
+        Spots = normalize(Spots)
         dispatch(loadCurrentSpots(Spots));
+        console.log(spotsRes);
+        console.log('Spots',Spots);
         return Spots;
     }
 }
@@ -130,22 +142,24 @@ export const deleteSpotThunk = (id) => async (dispatch) => {
 
 const initialState = { spots: {}, isLoading: true};
 
-const spotsReducer = (state = initialState.spots, action) => {
+const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_ALL_SPOTS:
-            return {...state, allSpots: [...action.allSpots]};
+            return {...state, allSpots: {...action.allSpots}};
         case LOAD_ONE_SPOT:
             return {...state, singleSpot: action.singleSpot};
         case LOAD_CURRENT_SPOTS:
-            return {currentSpots:[...action.currentSpots]}
+            return {currentSpots: action.current}
         case ADD_SPOT:
             return {
                 ...state, 
-                singleSpot: action.singleSpot
+                singleSpot: action.singleSpot,
+                allSpots: action.singleSpot,
             };
         case DELETE_SPOT:
-            const newState = {...state, allSpots:[...state.allSpots]}
+            const newState = {...state, allSpots: {...action.allSpots}, currentSpots: {...action.currentSpots}}
             delete newState.allSpots[action.id]
+            delete newState.currentSpots[action.id]
             return newState;
         default:
             return state;

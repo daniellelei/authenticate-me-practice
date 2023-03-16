@@ -1,7 +1,7 @@
 import React from 'react';
 import './ManageSpot.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSpotThunk, loadSpotsCurrent } from '../../store/spots';
+import { deleteSpotThunk, loadSpotsCurrentThunk } from '../../store/spots';
 import { NavLink, useHistory, Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
@@ -13,19 +13,16 @@ import OpenModalButton from '../OpenModalButton/index'
 const CurrentUserSpots = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const spotsObj = useSelector(state => state.spots.currentSpots);
+    
+    const spots = Object.values(spotsObj);
     
     useEffect(()=> {
-        dispatch(loadSpotsCurrent());
+        dispatch(loadSpotsCurrentThunk());
     }, [dispatch])
-    const spots = useSelector(state => state.spots.currentSpots);
-    const [currentSpots, setCurrentSpots] = useState([]);
-    useEffect(()=>{
-        if(spots) {
-            setCurrentSpots(spots)
-        }
-    },[spots])
-
-    if(!spots) return (
+    
+    
+    if(!spots.length) return (
         <div>
             <h2>There is no spots posted yet</h2>
             <NavLink to={`/spots/new`}>
@@ -34,7 +31,7 @@ const CurrentUserSpots = () => {
             </NavLink>
         </div>
     );
-    else{
+    
         return (
             <div className='currentSpots'>
                 <nav>
@@ -71,5 +68,5 @@ const CurrentUserSpots = () => {
     }
 
     
-}
+
 export default CurrentUserSpots;
