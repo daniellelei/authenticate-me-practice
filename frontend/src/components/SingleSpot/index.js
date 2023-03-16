@@ -15,11 +15,14 @@ const SingleSpot = () => {
     const spot = useSelector(state=>state.spots.singleSpot);
     let reviews = useSelector(state => state.reviews.reviews);
     reviews = Object.values(reviews);
+    console.log('review from single spot',reviews)
 
     useEffect(()=>{
         dispatch(loadOneSpotThunk(spotId));
+        console.log('useEffect before loadReviewThunk',reviews)
         dispatch(loadReviewThunk(spotId));
-    }, [dispatch])
+        console.log('useEffect after loadReview Thunk', reviews)
+    }, [dispatch, spotId])
     if(!spot) return null;
 
     const clickReserve = (e) => {
@@ -75,7 +78,7 @@ const SingleSpot = () => {
                     </div>
                     {reviews.map((review)=> (
                         <div>
-                            <h4>{review.User.firstName}</h4>
+                            <h4>{review?.User?.firstName}</h4>
                             <h4>{review.createdAt}</h4>
                             <p>{review.review}</p>
                         </div>
