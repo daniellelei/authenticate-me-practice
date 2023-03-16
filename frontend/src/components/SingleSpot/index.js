@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadOneSpotThunk } from "../../store/spots";
 import { loadReviewThunk } from "../../store/reviews";
 import { useEffect } from "react";
+import DeleteModal from '../DeleteSpotModal';
+import OpenModalButton from '../OpenModalButton/index'
+import CreateReviewModal from "../CreateReviewModal";
 
 
 const SingleSpot = () => {
@@ -63,6 +66,13 @@ const SingleSpot = () => {
                 </div>
 
                 <div className="reviews">
+                    <div>
+                        <OpenModalButton 
+                            buttonText= 'Post a review'
+                            modalComponent={<CreateReviewModal spot={spot}/>}
+                        />
+
+                    </div>
                     {reviews.map((review)=> (
                         <div>
                             <h4>{review.User.firstName}</h4>
