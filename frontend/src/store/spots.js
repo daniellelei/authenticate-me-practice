@@ -79,7 +79,7 @@ export const addSpotThunk = (spot, images) => async (dispatch) => {
         body: JSON.stringify(spot)
     })
     const spotRes = await response1.json();
-    console.log(spotRes.id);
+    //console.log(spotRes.id);
     //post an image
     for(let i of images){
         let imgObj = {
@@ -104,10 +104,11 @@ export const loadSpotsCurrentThunk = () => async (dispatch) => {
     if(response.ok) {
         const spotsRes = await response.json();
         let Spots = spotsRes.Spots;
-        Spots = normalize(Spots)
-        dispatch(loadCurrentSpots(Spots));
-        console.log(spotsRes);
-        console.log('Spots',Spots);
+        console.log('from thunk', Spots)
+        if(Spots){
+            Spots = normalize(Spots)
+            dispatch(loadCurrentSpots(Spots));
+        }
         return Spots;
     }
 }
@@ -149,7 +150,7 @@ const spotsReducer = (state = initialState, action) => {
         case LOAD_ONE_SPOT:
             return {...state, singleSpot: action.singleSpot};
         case LOAD_CURRENT_SPOTS:
-            return {currentSpots: action.current}
+            return {currentSpots: {...action.current}}
         case ADD_SPOT:
             return {
                 ...state, 

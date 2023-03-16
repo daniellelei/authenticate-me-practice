@@ -32,7 +32,12 @@ function SpotsIndex() {
                               <h4> ${spot.price} night </h4>   
                             </div>
                             <div className='rating'>
-                                {!spot.avgRating ? <h4> New </h4> : <h4>{spot.avgRating}</h4>}
+                                {!spot.avgRating ? 
+                                <h4> New </h4> : 
+                                (<div className='ratingStar'>
+                                    <i class="fa-sharp fa-solid fa-star"></i>
+                                    <h4 className='spotRate'>{spot.avgRating}</h4>
+                                </div>)}
                             </div>
                         </div>
                     </NavLink>     

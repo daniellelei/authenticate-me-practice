@@ -14,29 +14,32 @@ const CurrentUserSpots = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const spotsObj = useSelector(state => state.spots.currentSpots);
+    console.log('first spotObj', spotsObj)
+    let spots = [];
+    const [curr, setCurr] = useState({});
     
-    const spots = Object.values(spotsObj);
-    
-    useEffect(()=> {
+    useEffect(()=> {       
         dispatch(loadSpotsCurrentThunk());
+        console.log('useEffect ran')
+        setCurr(spotsObj)
     }, [dispatch])
-    
+
+    if(spotsObj!== null && spotsObj!==undefined){
+        spots = Object.values(spotsObj);
+    }
     
     if(!spots.length) return (
         <div>
             <h2>There is no spots posted yet</h2>
-            <NavLink to={`/spots/new`}>
-                <CreateSpot />
-                Create a New Spot 
-            </NavLink>
+            <CreateSpot />   
         </div>
     );
     
         return (
-            <div className='currentSpots'>
-                <nav>
+            <div className='currentSpotsPage'>
+                <nav className='currentSpots'>
                     {spots.map((spot) => (
-                        <div>
+                        <div className='currSingleSpot'>
                             <NavLink key={spot.id} to={`/spots/${spot.id}`}>
                                 <img src={spot.previewImage} alt={spot.name} />
                                 <div>
@@ -55,8 +58,8 @@ const CurrentUserSpots = () => {
                                     <OpenModalButton 
                                         buttonText= 'Delete'
                                         modalComponent={<DeleteModal spot={spot}/>}
-                                        onButtonClick={() => console.log("Greeting initiated")}
-                                        onModalClose={() => console.log("Greeting completed")}
+                                        // onButtonClick={() => console.log("Greeting initiated")}
+                                        // onModalClose={() => console.log("Greeting completed")}
                                     />
                                 </div>
                         </div>

@@ -23,7 +23,22 @@ img {
     justify-content: space-between;
     
 }
+.ratingStar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
 
 h4 {
     font-weight: lighter;
+}
+
+.spotRate {
+    margin:0.5em
+}
+
+.reserve {
+    padding:1em;
+    color:white;
 }

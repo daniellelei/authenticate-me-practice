@@ -3,6 +3,8 @@ import * as spotActions from '../../store/spots';
 import { useDispatch, useSelector } from 'react-redux';
 import { useModal } from "../../context/Modal";
 import { useHistory } from 'react-router-dom';
+
+
 function DeleteModal ({spot}) {
     const dispatch = useDispatch();
     const {closeModal} = useModal();

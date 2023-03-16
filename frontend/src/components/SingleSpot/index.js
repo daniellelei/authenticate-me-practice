@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import './SingleSpot.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loadOneSpotThunk } from "../../store/spots";
+import { loadReviewThunk } from "../../store/reviews";
 import { useEffect } from "react";
 
 
@@ -9,9 +10,12 @@ const SingleSpot = () => {
     const { spotId }  = useParams();
     const dispatch = useDispatch();
     const spot = useSelector(state=>state.spots.singleSpot);
+    let reviews = useSelector(state => state.reviews.reviews);
+    reviews = Object.values(reviews);
 
     useEffect(()=>{
         dispatch(loadOneSpotThunk(spotId));
+        dispatch(loadReviewThunk(spotId));
     }, [dispatch])
     if(!spot) return null;
 
@@ -51,10 +55,22 @@ const SingleSpot = () => {
                     <div className="callOut">
                         <div className="price">
                             <p>${spot.price} night</p>
-                            <p>{spot.avgStarRating} stars {spot.numReviews} reviews</p>
+                            
+                            <p>{spot.avgStarRating}<i class="fa-sharp fa-solid fa-star"></i>  {spot.numReviews}reviews</p>
                         </div>
                         <button onClick={clickReserve} className="reserve">Reserve</button>
                     </div>
+                </div>
+
+                <div className="reviews">
+                    {reviews.map((review)=> (
+                        <div>
+                            <h4>{review.User.firstName}</h4>
+                            <h4>{review.createdAt}</h4>
+                            <p>{review.review}</p>
+                        </div>
+                        
+                    ))}
                 </div>
             </div>
         </div>
