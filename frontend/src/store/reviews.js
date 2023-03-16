@@ -28,7 +28,7 @@ export const loadReviewThunk = (id) => async (dispatch) => {
 }
 
 
-const initialState = { reviews: null};
+const initialState = { reviews: {}};
 
 const reviewsReducer = (state = initialState, action) => {
     switch(action.type) {

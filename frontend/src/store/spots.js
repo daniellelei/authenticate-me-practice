@@ -141,7 +141,7 @@ export const deleteSpotThunk = (id) => async (dispatch) => {
     }
 }
 
-const initialState = { spots: {}, isLoading: true};
+const initialState = { allSpots:{}, currentSpots: {}, isLoading: true};
 
 const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
