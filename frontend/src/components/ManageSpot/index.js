@@ -1,29 +1,27 @@
 import React from 'react';
 import './ManageSpot.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSpotsCurrent } from '../../store/spots';
+import { deleteSpotThunk, loadSpotsCurrent } from '../../store/spots';
 import { NavLink, useHistory, Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
-import EditSpot from './EditSpot';
+import DeleteModal from '../DeleteSpotModal';
+import OpenModalMenuItem from './OpenModalMenuItem';
 
 
 const CurrentUserSpots = () => {
     const dispatch = useDispatch();
     const spots = useSelector(state => state.spots.allSpots);
     const history = useHistory();
-
-    const [showEditForm, setShowEditForm] = useState(false);
+    const [deleteClicked, setDeleteClicked] = useState(false);
 
     useEffect(()=> {
-        setShowEditForm(false);
         dispatch(loadSpotsCurrent());
     }, [dispatch])
 
-    const editSpotClick = (e) => {
+    const deleteButtonClick = (e) => {
         e.preventDefault();
-        setShowEditForm(true);
-        //history.push('/spots/:spotId')
+        setDeleteClicked(true);
     }
 
     if(!spots) return (
@@ -38,6 +36,14 @@ const CurrentUserSpots = () => {
     else{
         return (
             <div className='currentSpots'>
+                {deleteButtonClick ? (
+                    <>
+                    <OpenModalMenuItem>
+                        
+                    </OpenModalMenuItem>
+                    </>
+                    
+                ) : (
                 <nav>
                     {spots.map((spot) => (
                         <div>
@@ -53,17 +59,16 @@ const CurrentUserSpots = () => {
                             </NavLink>
                                 <div>
                                     <Link key={spot.id} to={`/spots/${spot.id}/edit`}>
-                                        {/* <EditSpot /> */}
                                         <p>Update</p>
                                     </Link>
-                                    <button>Delete</button>
+                                    <button
+                                    onClick={deleteButtonClick}
+                                    >Delete</button>
                                 </div>
-                            {/* <div>
-                                {showEditForm ? <EditSpot spot={spot} /> : null}
-                            </div> */}
                         </div>
                     ))}
                 </nav>
+                )}
             </div>
         )
 

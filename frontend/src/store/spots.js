@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 const LOAD_ALL_SPOTS = 'spots/loadAllSpots';
 const LOAD_ONE_SPOT = 'spots/loadOneSpot';
 const ADD_SPOT = 'spots/AddSpot';
+const DELETE_SPOT = 'spots/deleteSpot';
 
 
 export const loadSpots = (allSpots) => {
@@ -24,6 +25,13 @@ export const addSpot = (singleSpot) => {
     return {
         type: ADD_SPOT,
         singleSpot
+    }
+}
+
+export const deleteSpot = (id) => {
+    return {
+        type: DELETE_SPOT,
+        id
     }
 }
 
@@ -101,6 +109,18 @@ export const editSpotThunk = (payload) => async (dispatch) => {
     }
 }
 
+//delete spot thunk
+export const deleteSpotThunk = (id) => async (dispatch) => {
+    const deleteResponse = await csrfFetch(`/api/spots/${id}`, {
+        method: 'DELETE'
+    })
+    if(deleteResponse.ok) {
+        const deleteMessage = await deleteResponse.json()
+        dispatch(deleteSpot(id));
+        return deleteMessage;
+    }
+}
+
 const initialState = { spots: {}, isLoading: true};
 
 const spotsReducer = (state = initialState.spots, action) => {
@@ -114,6 +134,10 @@ const spotsReducer = (state = initialState.spots, action) => {
                 ...state, 
                 singleSpot: action.singleSpot
             };
+        case DELETE_SPOT:
+            const newState = {...state, allSpots:[...state.allSpots]}
+            delete newState.allSpots[action.id]
+            return newState;
         default:
             return state;
     }
