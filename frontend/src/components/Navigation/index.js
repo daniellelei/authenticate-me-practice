@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 
+
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
   
@@ -12,8 +13,12 @@ function Navigation({ isLoaded }){
   return (
     <ul className='headNav'>
       <li className='home'>
-        <NavLink exact to="/">
-          <i class="fa-solid fa-house"></i>
+        <NavLink style={{textDecoration: 'none'}} exact to="/">
+          <div className='iconName'>
+            <img className='icon' src='https://cdn-icons-png.flaticon.com/128/3281/3281223.png'/>
+            <h4 className='apiName'>tree house bnb</h4>
+          </div>
+          {/* <i class="fa-solid fa-house"></i> */}
         </NavLink>
       </li>
       <div className='navRight'>

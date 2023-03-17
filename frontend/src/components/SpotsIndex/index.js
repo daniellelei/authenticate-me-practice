@@ -12,7 +12,10 @@ import * as sessionActions from "../../store/session";
 function SpotsIndex() {
     const dispatch = useDispatch();
     const spotsObj = useSelector(state=>state.spots.allSpots);
-    dispatch(sessionActions.restoreUser());
+    // console.log('before restore')
+    // const userObj = useSelector(state=>state.session.user);
+    // dispatch(sessionActions.restoreUser());
+    // console.log('after restore');
 
     useEffect(()=>{
         dispatch(loadAllSpots());

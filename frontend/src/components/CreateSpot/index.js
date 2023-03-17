@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addSpotThunk} from '../../store/spots';
 import { useHistory } from 'react-router-dom';
 const CreateSpot = () => {
+    
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
