@@ -9,10 +9,13 @@
 .navRight {
     display: flex;
     padding: 2em;
+    justify-content: center;
+    align-items: center;
 }
 
 .createSpot {
     margin: 2em;
+    
 }
 .icon{
     height:20px;
@@ -37,3 +40,10 @@
         sans-serif;
 }
 
+.hidden {
+    display: none
+}
+
+.createSpotLink {
+    text-decoration: none;
+}

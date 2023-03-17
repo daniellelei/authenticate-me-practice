@@ -8,7 +8,9 @@ import './Navigation.css';
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
-  
+  const clickCreate = (e) => {
+        e.preventDefault();
+    }
 
   return (
     <ul className='headNav'>
@@ -23,15 +25,17 @@ function Navigation({ isLoaded }){
       </li>
       <div className='navRight'>
       {sessionUser ?
-      (<li className='createSpot'>
-        <NavLink exact to='/spots/new'>Create a New Spot
-        </NavLink>
-      </li>
+      (
+        <button onClick={clickCreate} className='createSpot'>
+          <NavLink exact to='/spots/new' className='createSpotLink'>Create a New Spot
+          </NavLink>
+        </button>
+      
       ) : (null)}
       {isLoaded && (
-        <li className='profileButton'>
+        <div className='profileButton'>
           <ProfileButton user={sessionUser} />
-        </li>
+        </div>
       )}
       </div>
       

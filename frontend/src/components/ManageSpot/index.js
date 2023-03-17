@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
 import DeleteModal from '../DeleteSpotModal';
 import OpenModalButton from '../OpenModalButton/index'
-//import OpenModalMenuItem from './OpenModalMenuItem';
+
 
 
 const CurrentUserSpots = () => {

@@ -9,24 +9,30 @@ function LoginFormModal() {
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState([]);
+  
   const { closeModal } = useModal();
-  const [error1, setError1] = useState({});
+  
+  const [errors, setErrors] = useState([]);
+  const [showErrors, setShowErrors] = useState([]);
+  const [resErrors, setResErrors] = useState({});
 
   useEffect(()=>{
-    const err = {};
-    if(credential.length < 4) err.credential = 'userName length';
-    if(password.length < 6) err.password = 'password length'; 
-    setError1(err);
+    const err = [];
+    if(credential.length < 4) err.push = 'userName length';
+    if(password.length < 6) err.push = 'password length'; 
+    setErrors(err);
   },[credential, password])
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setShowErrors(errors);
     setErrors([]);
+    setResErrors([]);
+
+
     return dispatch(sessionActions.login({ credential, password }))
       .then(closeModal)
-      .catch(
-        async (res) => {
+      .catch(async (res) => {
           const data = await res.json();
           
           if (data.message) {
@@ -41,9 +47,8 @@ function LoginFormModal() {
       <h1 className="loginTitle">Log In</h1>
       <form onSubmit={handleSubmit} className='loginForm'>
         <ul>
-          {errors.map((error, idx) => (
-            <li key={idx}>{error}</li>
-          ))}
+          {showErrors.map((error, idx) => <li key={idx}>{error}</li>)}
+          {Boolean(Object.values(resErrors).length) ? <li>{Object.values(resErrors)}</li> : null}
         </ul>
         <input 
           className="loginInput"
@@ -64,7 +69,7 @@ function LoginFormModal() {
         <button 
         type="submit"
         className="loginButton"
-        disabled={Boolean(Object.values(error1).length)}>
+        disabled={Boolean(Object.values(errors).length)}>
           Log In</button>
       </form>
     </div>

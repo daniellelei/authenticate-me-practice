@@ -6,26 +6,31 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { useHistory } from "react-router-dom";
 import './Navigation.css'
+
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const history = useHistory();
+  
 
   const openMenu = () => {
     if (showMenu) return;
     setShowMenu(true);
   };
-
+  
   useEffect(() => {
     if (!showMenu) return;
 
     const closeMenu = (e) => {
+      
       if (!ulRef.current.contains(e.target)) {
         setShowMenu(false);
       }
     };
 
     document.addEventListener('click', closeMenu);
+    
 
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
@@ -35,9 +40,9 @@ function ProfileButton({ user }) {
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    history.push('/')
     closeMenu();
   };
-  const history = useHistory();
 
   const manageSpotsClick = (e) => {
     e.preventDefault();
