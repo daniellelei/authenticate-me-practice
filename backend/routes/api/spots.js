@@ -686,7 +686,9 @@ router.get(
             include:[
                 {model: User, attributes:['id', 'firstName', 'lastName']},
                 {model: ReviewImage, attributes:{exclude: ['createdAt', 'updatedAt', 'reviewId']}}
-            ]
+            ],
+            order: [['id', 'DESC']],
+
         })
 
         return res.json({

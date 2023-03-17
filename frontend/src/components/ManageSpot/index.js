@@ -1,7 +1,7 @@
 import React from 'react';
 import './ManageSpot.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSpotThunk, loadSpotsCurrentThunk } from '../../store/spots';
+import { deleteSpotThunk, loadSpotsCurrentThunk, clearCurrentSpotAction } from '../../store/spots';
 import { NavLink, useHistory, Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
@@ -16,12 +16,10 @@ const CurrentUserSpots = () => {
     const spotsObj = useSelector(state => state.spots.currentSpots);
     console.log('first spotObj', spotsObj)
     let spots = [];
-    const [curr, setCurr] = useState({});
-    
+
     useEffect(()=> {       
         dispatch(loadSpotsCurrentThunk());
-        console.log('useEffect ran')
-        setCurr(spotsObj)
+        return (()=> dispatch(clearCurrentSpotAction()))
     }, [dispatch])
 
     if(spotsObj!== null && spotsObj!==undefined){

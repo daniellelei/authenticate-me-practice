@@ -14,6 +14,7 @@ const LOAD_ONE_SPOT = 'spots/loadOneSpot';
 const ADD_SPOT = 'spots/AddSpot';
 const DELETE_SPOT = 'spots/deleteSpot';
 const LOAD_CURRENT_SPOTS = 'spots/loadCurrentSpots'
+const CLEAR_CURRENT_SPOTS = 'spots/clearCurrentSpots'
 
 export const loadSpots = (allSpots) => {
     return {
@@ -47,6 +48,11 @@ export const deleteSpot = (id) => {
     return {
         type: DELETE_SPOT,
         id
+    }
+}
+export const clearCurrentSpotAction = () =>{
+    return {
+        type: CLEAR_CURRENT_SPOTS,
     }
 }
 
@@ -150,7 +156,9 @@ const spotsReducer = (state = initialState, action) => {
         case LOAD_ONE_SPOT:
             return {...state, singleSpot: action.singleSpot};
         case LOAD_CURRENT_SPOTS:
-            return {currentSpots: {...action.current}}
+            return {...state, currentSpots: {...action.current}};
+        case CLEAR_CURRENT_SPOTS:
+            return {...state, currentSpots: {}};
         case ADD_SPOT:
             return {
                 ...state, 

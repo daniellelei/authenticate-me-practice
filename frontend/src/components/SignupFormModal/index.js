@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
 import './SignupForm.css';
 
 function SignupFormModal() {
   const dispatch = useDispatch();
+  const session = useSelector(state => state.session.user) 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -16,7 +17,7 @@ function SignupFormModal() {
   const [showErrors, setShowErrors] = useState([]);
   const [resErrors, setResErrors] = useState({});
   const { closeModal } = useModal();
-  
+  const [credential, setCredential] = useState('');
 
   useEffect(()=>{
     const err = [];
@@ -29,44 +30,44 @@ function SignupFormModal() {
     setErrors(err);
   }, [email, firstName, lastName, username, password, confirmPassword])
 
+  const emailOnChange = (e) => {
+    setEmail(e.target.value)
+    setCredential(e.target.value)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowErrors(errors);
     setErrors([]);
     setResErrors([]);
-    const credential = username;
+    
     if(password===confirmPassword){
       dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
-      .then(console.log('username', username))
-      .then(console.log('password', password))
-      .then(dispatch(sessionActions.login({credential, password})))
       .then(closeModal)
       .catch(async (res) => {
-          const data = await res.json();
+          const data = res.json();
           if (data && data.errors) {
             setResErrors(data.errors);
           }
         });
-      // return dispatch(sessionActions.login({ email,password }))
-      
-      // return dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
-      //   .then(closeModal)
-      //   .catch(async (res) => {
-      //     const data = await res.json();
-      //     if (data && data.errors) {
-      //       setResErrors(data.errors);
-      //     }
-      //   });
-      
-      
     } else {
       setResErrors(['Confirm Password field must be the same as the Password field'])
     }
+    // if(password===confirmPassword) {
+    //   const res = await dispatch(sessionActions.signup({email, username, firstName, lastName, password }))
+    //   console.log(res);
+      
+    //   // const data = await res.json();
+    //   // if(data && data.errors){
+    //   //   setResErrors(data.errors);
+    //   // } else {
+    //   //   await dispatch(sessionActions.login({credential, password}))
+    //   //   await closeModal();
+    //   // }
+      
+    // }
   }
-    
   
-
   return (
     <div className="signupModal">
       <h1>Sign Up</h1>
@@ -82,7 +83,8 @@ function SignupFormModal() {
               className="signUpInput"
               type="text"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              // onChange={(e) => setEmail(e.target.value)}
+              onChange={emailOnChange}
               required
             />
           </label>

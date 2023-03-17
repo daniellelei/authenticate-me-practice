@@ -79,6 +79,7 @@ const SingleSpot = () => {
                             <h4>{review.User.firstName}</h4>
                             <h4>{review.createdAt}</h4>
                             <p>{review.review}</p>
+                            {}
                             <OpenModalButton 
                                 buttonText= 'Delete'
                                 modalComponent={<DeleteReviewModal review={review} spotId={spotId} />}

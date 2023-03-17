@@ -1,5 +1,6 @@
 //This file will contain all the actions specific to the session 
 //user's information and the session user's Redux reducer.
+//Order: [[‘createdAt’, ‘DESC’]]
 import { csrfFetch } from './csrf';
 
 const SET_USER = 'session/setUser';
@@ -37,6 +38,7 @@ export const login = (user) => async (dispatch) => {
 export const restoreUser = () => async dispatch => {
   const response = await csrfFetch('/api/session');
   const data = await response.json();
+  console.log('restoreUser', data);
   dispatch(setUser(data.user));
   return response;
 };
@@ -54,6 +56,7 @@ export const signup = (user) => async dispatch => {
     }),
   });
   const data = await response.json();
+  console.log('signup', data)
   dispatch(setUser(data.user));
   return response;
 };

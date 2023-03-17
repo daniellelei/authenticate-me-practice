@@ -38,7 +38,9 @@ export const loadReviewThunk = (id) => async (dispatch) => {
     if(response.ok){
         const reviewRes = await response.json();
         let reviews = reviewRes.Reviews;
-        reviews = normalize(reviews)
+       
+        //reviews = normalize(reviews)
+        //console.log('loadReviewThunk', reviews);
         dispatch(loadReviewAction(reviews));
         return reviews;
     }
@@ -51,6 +53,7 @@ export const addReviewThunk = (review, id) => async (dispatch) => {
     })
     if(response.ok) {
         const reviewRes = await response.json();
+        console.log('addReviewThunk', reviewRes);
         dispatch(addReviewAction(reviewRes));
     }
 }
