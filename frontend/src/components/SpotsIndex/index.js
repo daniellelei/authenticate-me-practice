@@ -6,12 +6,13 @@ import {Route, Switch, NavLink} from 'react-router-dom';
 import { loadAllSpots } from '../../store/spots';
 import SingleSpot from '../SingleSpot';
 import './SpotsIndex.css'
+import * as sessionActions from "../../store/session";
 
 
 function SpotsIndex() {
     const dispatch = useDispatch();
     const spotsObj = useSelector(state=>state.spots.allSpots);
-    
+    dispatch(sessionActions.restoreUser());
 
     useEffect(()=>{
         dispatch(loadAllSpots());

@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import DeleteModal from '../DeleteSpotModal';
 import OpenModalButton from '../OpenModalButton/index'
 import CreateReviewModal from "../CreateReviewModal";
+import DeleteReviewModal from "../DeleteReviewModal";
 
 
 const SingleSpot = () => {
@@ -78,6 +79,10 @@ const SingleSpot = () => {
                             <h4>{review.User.firstName}</h4>
                             <h4>{review.createdAt}</h4>
                             <p>{review.review}</p>
+                            <OpenModalButton 
+                                buttonText= 'Delete'
+                                modalComponent={<DeleteReviewModal review={review} spotId={spotId} />}
+                            />
                         </div>
                         
                     ))}

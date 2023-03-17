@@ -60,7 +60,7 @@ export const loadAllSpots = () => async (dispatch) => {
         return Spots;
     }
 }
-
+//////////   Thunks      ///////////////////////
 export const loadOneSpotThunk = (spotId) => async (dispatch) => {
     
     const response = await fetch(`/api/spots/${spotId}`);

@@ -10,7 +10,10 @@ export const normalize = (array) =>{
 
 const LOAD_REVIEWS = 'review/load';
 const ADD_REVIEW = 'review/addReview';
+const DELETE_REVIEW = 'review/deleteReview';
 
+
+//////////   Actions    /////////////////////
 export const loadReviewAction = (reviews) => {
     return {
         type: LOAD_REVIEWS,
@@ -23,7 +26,13 @@ export const addReviewAction = (review) => {
         review
     }
 }
-
+export const deleteReviewAction = (id) => {
+    return{
+        type: DELETE_REVIEW,
+        id
+    }
+}
+//////////   Thunks      ///////////////////////
 export const loadReviewThunk = (id) => async (dispatch) => {
     const response = await fetch(`/api/spots/${id}/reviews`)
     if(response.ok){
@@ -42,11 +51,17 @@ export const addReviewThunk = (review, id) => async (dispatch) => {
     })
     if(response.ok) {
         const reviewRes = await response.json();
-        //const newReviewsRes = await fetch(`/api/spots/${reviewRes.spotId}/reviews`)
-        //const newReview = newReviewsRes.json();
-
         dispatch(addReviewAction(reviewRes));
-        //return newReview;
+    }
+}
+export const deleteReviewThunk = (id) => async (dispatch) => {
+    const deleteRes = await csrfFetch(`/api/reviews/${id}`, {
+        method: 'DELETE'
+    })
+    if(deleteRes.ok) {
+        const deleteMessage = await deleteRes.json();
+        dispatch(deleteReviewAction(id));
+        return deleteMessage
     }
 }
 
@@ -61,6 +76,10 @@ const reviewsReducer = (state = initialState, action) => {
             return {...state, 
             reviews: {...action.reviews},
         }
+        case DELETE_REVIEW:
+            const newState = {...state}
+            delete newState.reviews[action.id];
+            return newState;
         default:
             return state;
     }

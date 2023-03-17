@@ -39,7 +39,7 @@ function SignupFormModal() {
       dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
       .then(closeModal)
       .then(console.log('before login'))
-      .then(dispatch(sessionActions.login({ email,password })))
+      .then(dispatch(sessionActions.restoreUser()))
       .then(console.log('after login'))
       .catch(async (res) => {
           const data = await res.json();
