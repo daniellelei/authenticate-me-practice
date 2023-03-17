@@ -10,11 +10,13 @@ function DeleteModal ({spot}) {
     const {closeModal} = useModal();
     const history = useHistory();
 
-    const ClickYes = (e) => {
+    const ClickYes = async (e) => {
         e.preventDefault();
-        dispatch(spotActions.deleteSpotThunk(spot.id))
-        closeModal()
-        history.push('/spots/current');
+        await dispatch(spotActions.deleteSpotThunk(spot.id))
+        await closeModal()
+        await dispatch(spotActions.loadSpotsCurrentThunk());
+        await dispatch(spotActions.loadAllSpots())
+        
     }
 
     const ClickNo = (e) => {
