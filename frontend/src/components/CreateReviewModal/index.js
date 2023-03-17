@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {useModal} from '../../context/Modal';
 import * as ReviewActions from '../../store/reviews'
+import  {loadReviewThunk}  from "../../store/reviews";
+import { loadOneSpotThunk } from "../../store/spots";
 
 const CreateReviewModal = ({spot}) => {
     const [review, setReview] = useState('');
@@ -16,11 +18,11 @@ const CreateReviewModal = ({spot}) => {
             review,
             stars
         }
-        let reviewRes = await dispatch(ReviewActions.addReviewThunk(newReview, id))
-        if(reviewRes){
-            await closeModal();
-            await reset();
-        }
+        await dispatch(ReviewActions.addReviewThunk(newReview, id))
+        await closeModal();
+        await reset();
+        await dispatch(loadReviewThunk(id));
+        await dispatch(loadOneSpotThunk(id))
     }
 
     const reset = () => {

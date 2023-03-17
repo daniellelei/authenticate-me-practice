@@ -42,10 +42,11 @@ export const addReviewThunk = (review, id) => async (dispatch) => {
     })
     if(response.ok) {
         const reviewRes = await response.json();
-        const newReviewsRes = await fetch(`/api/spots/${reviewRes.spotId}/reviews`)
-        const newReview = newReviewsRes.json();
-        dispatch(addReviewAction(newReview));
-        return newReview;
+        //const newReviewsRes = await fetch(`/api/spots/${reviewRes.spotId}/reviews`)
+        //const newReview = newReviewsRes.json();
+
+        dispatch(addReviewAction(reviewRes));
+        //return newReview;
     }
 }
 
