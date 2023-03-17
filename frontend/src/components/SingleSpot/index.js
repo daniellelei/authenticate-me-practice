@@ -16,8 +16,28 @@ const SingleSpot = () => {
     const spot = useSelector(state=>state.spots.singleSpot);
     let reviews = useSelector(state => state.reviews.reviews);
     let user = useSelector(state=>state.session.user);
-    reviews = Object.values(reviews);
+    reviews = Object.values(reviews);//array
+    //console.log('reviews', reviews)
 
+    
+
+    const displayPostReviewButton = (user, reviews, spot) => {
+        if( user===null || user===undefined ) return false;
+        for( let r of reviews){
+            if(r.userId === user.id)
+            return false;
+        }
+        if(user.id === spot.ownerId) return false;
+
+        return true;
+    }
+    const displayDelReviewButton = (user, review) => {
+        if( user===null || user===undefined ) return false;
+        if (user.id === review.userId) return true;
+        return false;
+    }
+
+    
     useEffect(()=>{
         dispatch(loadOneSpotThunk(spotId));
         dispatch(loadReviewThunk(spotId));
@@ -37,6 +57,8 @@ const SingleSpot = () => {
     }
     let images = spot.SpotImages;
     images = imagesRender(images);
+
+    
     
     return (
         <div className="wholePage">
@@ -69,10 +91,12 @@ const SingleSpot = () => {
 
                 <div className="reviews">
                     <div>
+                        {displayPostReviewButton(user, reviews, spot) ? 
                         <OpenModalButton 
                             buttonText= 'Post a review'
                             modalComponent={<CreateReviewModal spot={spot}/>}
-                        />
+                        /> : null
+                        }
 
                     </div>
                     {reviews.map((review)=> (
@@ -80,7 +104,7 @@ const SingleSpot = () => {
                             <h4>{review.User.firstName}</h4>
                             <h4>{review.createdAt}</h4>
                             <p>{review.review}</p>
-                            {user.id===review.userId ? 
+                            {displayDelReviewButton(user, review) ? 
                             <OpenModalButton 
                                 buttonText= 'Delete'
                                 modalComponent={<DeleteReviewModal review={review} spotId={spotId} />}
