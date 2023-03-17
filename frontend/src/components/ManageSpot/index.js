@@ -25,6 +25,10 @@ const CurrentUserSpots = () => {
     if(spotsObj!== null && spotsObj!==undefined){
         spots = Object.values(spotsObj);
     }
+
+    const clickUpdate = (e) => {
+        e.preventDefault();
+    }
     
     if(!spots.length) return (
         <div>
@@ -35,6 +39,7 @@ const CurrentUserSpots = () => {
     
         return (
             <div className='currentSpotsPage'>
+                <h1>Manage Spots</h1>
                 <nav className='currentSpots'>
                     {spots.map((spot) => (
                         <div className='currSingleSpot'>
@@ -49,15 +54,18 @@ const CurrentUserSpots = () => {
                                     </div>
                             </NavLink>
                                 <div>
-                                    <Link key={spot.id} to={`/spots/${spot.id}/edit`}>
-                                        <p>Update</p>
-                                    </Link>
+                                    <button onClick={clickUpdate}>
+                                        <Link key={spot.id} to={`/spots/${spot.id}/edit`}>
+                                        Update
+                                        </Link>
+                                    </button>
                                     
+                                    
+                                    
+
                                     <OpenModalButton 
                                         buttonText= 'Delete'
                                         modalComponent={<DeleteModal spot={spot}/>}
-                                        // onButtonClick={() => console.log("Greeting initiated")}
-                                        // onModalClose={() => console.log("Greeting completed")}
                                     />
                                 </div>
                         </div>

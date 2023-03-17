@@ -17,7 +17,7 @@ function SignupFormModal() {
   const [showErrors, setShowErrors] = useState([]);
   const [resErrors, setResErrors] = useState({});
   const { closeModal } = useModal();
-  const [credential, setCredential] = useState('');
+  
 
   useEffect(()=>{
     const err = [];
@@ -29,11 +29,6 @@ function SignupFormModal() {
     //if(password!==confirmPassword) err.push('Confirm Password field must be the same as the Password field')
     setErrors(err);
   }, [email, firstName, lastName, username, password, confirmPassword])
-
-  const emailOnChange = (e) => {
-    setEmail(e.target.value)
-    setCredential(e.target.value)
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -53,19 +48,7 @@ function SignupFormModal() {
     } else {
       setResErrors(['Confirm Password field must be the same as the Password field'])
     }
-    // if(password===confirmPassword) {
-    //   const res = await dispatch(sessionActions.signup({email, username, firstName, lastName, password }))
-    //   console.log(res);
-      
-    //   // const data = await res.json();
-    //   // if(data && data.errors){
-    //   //   setResErrors(data.errors);
-    //   // } else {
-    //   //   await dispatch(sessionActions.login({credential, password}))
-    //   //   await closeModal();
-    //   // }
-      
-    // }
+  
   }
   
   return (
@@ -84,7 +67,7 @@ function SignupFormModal() {
               type="text"
               value={email}
               // onChange={(e) => setEmail(e.target.value)}
-              onChange={emailOnChange}
+              onChange={(e)=> setEmail(e.target.value)}
               required
             />
           </label>
