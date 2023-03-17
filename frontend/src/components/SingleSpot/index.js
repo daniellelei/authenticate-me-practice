@@ -15,6 +15,7 @@ const SingleSpot = () => {
     const dispatch = useDispatch();
     const spot = useSelector(state=>state.spots.singleSpot);
     let reviews = useSelector(state => state.reviews.reviews);
+    let user = useSelector(state=>state.session.user);
     reviews = Object.values(reviews);
 
     useEffect(()=>{
@@ -79,11 +80,13 @@ const SingleSpot = () => {
                             <h4>{review.User.firstName}</h4>
                             <h4>{review.createdAt}</h4>
                             <p>{review.review}</p>
-                            {}
+                            {user.id===review.userId ? 
                             <OpenModalButton 
                                 buttonText= 'Delete'
                                 modalComponent={<DeleteReviewModal review={review} spotId={spotId} />}
-                            />
+                            /> : null
+                            }
+                            
                         </div>
                         
                     ))}
