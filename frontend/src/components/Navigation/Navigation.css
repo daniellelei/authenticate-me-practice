@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: coral;
+    background-color: rgb(236, 145, 175);
     height:120px;
 }
 
@@ -18,26 +18,36 @@
     
 }
 .icon{
-    height:20px;
-    width: 20px;
+    height:50px;
+    width: 40px;
     margin:1em;
+    
 }
 .iconName{
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+}
+ul{
+    list-style-type: none;
 }
 
 .apiName {
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 400;
     color: white;
-    font-family: Circular,
-        -apple-system,
-        BlinkMacSystemFont,
-        Roboto,
-        Helvetica Neue,
-        sans-serif;
+}
+.profile-dropdown {
+    background-color: white;
+    padding:1.4em;
+    
+    box-shadow: 2px 2px 2px 2px rgb(204, 189, 189);
+    border-radius: 10px;
+    display: block;
+    position: absolute;
+    top: 90px;
+    right: 48px;
+    padding-right: 5em;
 }
 
 .hidden {
@@ -47,3 +57,20 @@
 .createSpotLink {
     text-decoration: none;
 }
+
+.profileButton1 {
+    padding:0.5em;
+    display: block;
+    position: absolute;
+    top: 48px;
+    right:48px;
+    border-radius: 8px;
+    border:1px solid white;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+}
+
+li {
+    margin:1em;
+    width:100%;
+}
+    

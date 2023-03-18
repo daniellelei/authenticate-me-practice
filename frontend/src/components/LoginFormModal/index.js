@@ -49,7 +49,7 @@ function LoginFormModal() {
     dispatch(sessionActions.login({credential, password}))
     .then(closeModal) 
   }
-
+  const loginButtonClassName = "loginButton" + (!Boolean(Object.values(errors).length) ? "" : " disable");
   return (
     <div className="loginModal">
       <h1 className="loginTitle">Log In</h1>
@@ -58,25 +58,29 @@ function LoginFormModal() {
           {/* {showErrors.map((error, idx) => <li key={idx}>{error}</li>)} */}
           {Boolean(Object.values(resErrors).length) ? <li>{Object.values(resErrors)}</li> : null}
         </ul>
-        <input 
-          className="loginInput"
-          placeholder="Username or Email"
-          type="text"
-          value={credential}
-          onChange={(e) => setCredential(e.target.value)}
-          required
-        />
-        <input
-          className="loginInput"
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="inputField">
+          <input 
+            className="loginInput"
+            placeholder="Username or Email"
+            type="text"
+            value={credential}
+            onChange={(e) => setCredential(e.target.value)}
+            required
+          />
+        </div >
+        <div className="inputField">
+          <input
+            className="loginInput"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
         <button 
         type="submit"
-        className="loginButton"
+        className={loginButtonClassName}
         disabled={Boolean(Object.values(errors).length)}>
           Log In</button>
         <button
