@@ -2,6 +2,7 @@ import './CreateSpot.css'
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {addSpotThunk} from '../../store/spots';
+import * as spotsActions from '../../store/spots';
 import { useHistory } from 'react-router-dom';
 const CreateSpot = () => {
     
@@ -17,45 +18,53 @@ const CreateSpot = () => {
     const [image3, setImage3] = useState('');
     const [image4, setImage4] = useState('');
     const [image5, setImage5] = useState('');
-    const [errors, setErrors] = useState({});
-    const [showErrors, setShowErrors] = useState({})
+    const [errors, setErrors] = useState([]);
+    //const [showErrors, setShowErrors] = useState([])
+    const [resErrors, setResErrors] = useState({});
+    const [hasSubmited, setHasSubmitted] = useState(false);
 
     const dispatch = useDispatch();
     const history = useHistory();
 
     useEffect(()=>{
-        const err = {};
-        if(!address.length) err.address = 'Address is required'
-        if(!city.length) err.city = 'City is required'
-        if(!state.length) err.state = 'State is required'
-        if(!country.length) err.country = 'Country is required'
-        if(description.length < 30) err.description = 'Description needs a minimum of 30 characters'
-        if(!name.length) err.name = 'Name is required'
-        if(!price) err.price = 'Price is required'
-        if(!image1.length) err.imageMin = 'Preview image is required'
+        const err = [];
+        if(!address.length) err.push  ('Address is required')
+        if(!city.length) err.push  ('City is required')
+        if(!state.length) err.push  ('State is required')
+        if(!country.length) err.push  ('Country is required')
+        if(description.length < 30) err.push ( 'Description needs a minimum of 30 characters')
+        if(!name.length) err.push  ('Name is required')
+        if(!price) err.push  ('Price is required')
+        if(!image1.length) err.push  ('Preview image is required')
         if(image1 &&!image1.includes('.png') && 
         !image1.includes('.jpg') && 
-        !image1.includes('.jpeg')) err.image1 = 'Image URL must end in .png, .jpg, or .jpeg'
+        !image1.includes('.jpeg')) err.push ('Image URL must end in .png, .jpg, or .jpeg')
         if(image2 && !image2.includes('.png') && 
         !image2.includes('.jpg') && 
-        !image2.includes('.jpeg')) err.image2 = 'Image URL must end in .png, .jpg, or .jpeg'
+        !image2.includes('.jpeg')) err.push  ('Image URL must end in .png, .jpg, or .jpeg')
         if(image3 && !image3.includes('.png') && 
         !image3.includes('.jpg') && 
-        !image3.includes('.jpeg')) err.image3 = 'Image URL must end in .png, .jpg, or .jpeg'
+        !image3.includes('.jpeg')) err.push  ('Image URL must end in .png, .jpg, or .jpeg')
         if(image4 &&!image4.includes('.png') && 
         !image4.includes('.jpg') && 
-        !image4.includes('.jpeg')) err.image4 = 'Image URL must end in .png, .jpg, or .jpeg'
+        !image4.includes('.jpeg')) err.push  ('Image URL must end in .png, .jpg, or .jpeg')
         if(image5 &&!image5.includes('.png') && 
         !image5.includes('.jpg') && 
-        !image5.includes('.jpeg')) err.image5 = 'Image URL must end in .png, .jpg, or .jpeg'
+        !image5.includes('.jpeg')) err.push  ('Image URL must end in .png, .jpg, or .jpeg')
         setErrors(err);
     },[address, city, state, country, name, description, price, image1, image2, image3, image4, image5])
-
-    const handleSubmit = async (e) => {
+    const clickSubmit = (e) => {
         e.preventDefault();
-        setShowErrors(errors);
-        setErrors({});
-        
+        setHasSubmitted(true);
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('errors', errors)
+        //setShowErrors(errors);
+        //setErrors([]);
+        console.log('after showError', errors);
+        //console.log('showError', showErrors)
+        setResErrors({});
         const newSpot = {
             address,
             city,
@@ -65,20 +74,28 @@ const CreateSpot = () => {
             description,
             price,
         };
-        if(!Boolean(Object.values(showErrors).length)){
+        if(!errors.length){
             let images = [];
             images.push(image1);
             if(image2) images.push(image2);
             if(image3) images.push(image3);
             if(image4) images.push(image4);
             if(image5) images.push(image5);
-            let createdSpot = await dispatch(addSpotThunk(newSpot,images));
-            if(createdSpot) {
-                history.push(`/spots/${createdSpot.id}`)
-                reset();
+            dispatch(addSpotThunk(newSpot,images))
+            .catch (async (res) => {
+                const data = await res.json();
+                console.log('inside catch', data)
+                if(data && data.errors) {
+                    setResErrors(data.errors);
+                    setHasSubmitted(false);
+                } else if(data){
+                    history.push(`/spots/${data.id}`)
+                    reset();
+                }
+            })
             }
         } 
-    };
+    
 
     const reset = () => {
         setAddress('');
@@ -88,13 +105,21 @@ const CreateSpot = () => {
         setName('');
         setDescription('');
         setPrice(0);
-        setErrors({});
-        setShowErrors({});
+        setErrors([]);
+        //setShowErrors([]);
+        setResErrors({});
+        setHasSubmitted(false);
     };
 
     return (
         <div className='createSpotPage'>
             <form onSubmit={handleSubmit} className='createForm'>
+                <ul>
+                    {hasSubmited ? 
+                    errors.map((error, idx) => <li key={idx}>{error}</li>) :
+                    null}
+                    {Boolean(Object.values(resErrors).length) ? <li>{Object.values(resErrors)}</li> : null}
+                </ul>
                 <div className='title'>
                 <h1>Create a New Spot</h1>   
                 </div>
@@ -104,7 +129,7 @@ const CreateSpot = () => {
                     <div>
                         <div className='labelError'>
                             <label>Country</label>
-                            <p className='error'>{showErrors.country}</p>
+                            {/* <p className='error'>{showErrors.country}</p> */}
                         </div>
                         <input
                         type = 'text'
@@ -117,7 +142,7 @@ const CreateSpot = () => {
                     <div>
                         <div className='labelError'>
                             <label>Street Address</label>
-                            <p className='error'>{showErrors.address}</p>
+                            {/* <p className='error'>{showErrors.address}</p> */}
                         </div>
                         <input
                         type = 'text'
@@ -131,7 +156,7 @@ const CreateSpot = () => {
                         <div className='city'>
                             <div className='labelError'>
                                 <label>City</label>
-                                <p className='error'>{showErrors.city}</p>
+                                {/* <p className='error'>{showErrors.city}</p> */}
                             </div>
                             <input
                             type = 'text'
@@ -144,7 +169,7 @@ const CreateSpot = () => {
                         <div className='city'>
                             <div className='labelError'>
                                 <label>State</label>
-                                <p className='error'>{showErrors.state}</p>
+                                {/* <p className='error'>{showErrors.state}</p> */}
                             </div>
                             <input
                             type = 'text'
@@ -170,7 +195,7 @@ const CreateSpot = () => {
                     name = 'description'
                     >
                     </textarea>
-                    <p className='error'>{showErrors.description}</p>
+                    {/* <p className='error'>{showErrors.description}</p> */}
                 </div>
                 <div className='section'>
                     <div className='titleCaption'>
@@ -202,7 +227,7 @@ const CreateSpot = () => {
                         >
                         </input>
                     </div>
-                    <p className='error'>{showErrors.price}</p>
+                    {/* <p className='error'>{showErrors.price}</p> */}
                 </div>
                 <div className='section'>
                     <h2>Liven up your spot with photos</h2>
@@ -215,8 +240,8 @@ const CreateSpot = () => {
                     name = 'image1'
                     >
                     </input>
-                    {showErrors.image1? <p className='error'>{showErrors.image1}</p> :null}
-                    {showErrors.imageMin ? <p className='error'>{showErrors.imageMin}</p> : null}
+                    {/* {showErrors.image1? <p className='error'>{showErrors.image1}</p> :null}
+                    {showErrors.imageMin ? <p className='error'>{showErrors.imageMin}</p> : null} */}
                     <input
                     type = 'text'
                     onChange={(e)=>setImage2(e.target.value)}
@@ -225,7 +250,7 @@ const CreateSpot = () => {
                     name = 'image2'
                     >
                     </input>
-                    <p className='error'>{showErrors.image2}</p>
+                    {/* <p className='error'>{showErrors.image2}</p> */}
                     <input
                     type = 'text'
                     onChange={(e)=>setImage3(e.target.value)}
@@ -234,7 +259,7 @@ const CreateSpot = () => {
                     name = 'image3'
                     >
                     </input>
-                    <p className='error'>{showErrors.image3}</p>
+                    {/* <p className='error'>{showErrors.image3}</p> */}
                     <input
                     type = 'text'
                     onChange={(e)=>setImage4(e.target.value)}
@@ -243,7 +268,7 @@ const CreateSpot = () => {
                     name = 'image4'
                     >
                     </input>
-                    <p className='error'>{showErrors.image4}</p>
+                    {/* <p className='error'>{showErrors.image4}</p> */}
                     <input
                     type = 'text'
                     onChange={(e)=>setImage5(e.target.value)}
@@ -252,10 +277,11 @@ const CreateSpot = () => {
                     name = 'image5'
                     >
                     </input>
-                    <p className='error'>{showErrors.image5}</p>
+                    {/* <p className='error'>{showErrors.image5}</p> */}
                 </div>
                 <div>
                     <button type='submit'
+                    onClick={clickSubmit}
                     // disabled={Boolean(Object.values(errors).length)}
                     >Create Spot</button>
                 </div>

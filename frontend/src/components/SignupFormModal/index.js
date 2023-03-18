@@ -21,27 +21,31 @@ function SignupFormModal() {
 
   useEffect(()=>{
     const err = [];
-    if(!email.includes('@')) err.push('invalid email');
-    if(!firstName.length) err.push('First name is required');
+    if(!email.length) err.push('Invalid email');
+    if(!firstName.length ) err.push('First name is required');
     if(!lastName.length) err.push('Last name is required');
     if(username.length < 4) err.push ('username needs to be at least 4 characters.')
     if(password.length < 6) err.push('password needs to be at least 6 characters.');
-    //if(password!==confirmPassword) err.push('Confirm Password field must be the same as the Password field')
+    if(password!==confirmPassword) err.push('Confirm Password field must be the same as the Password field')
     setErrors(err);
   }, [email, firstName, lastName, username, password, confirmPassword])
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowErrors(errors);
+    // console.log('errors', errors);
+    // setShowErrors(errors);
+    // console.log('showError', showErrors);
     setErrors([]);
-    setResErrors([]);
+    setResErrors({});
     
     if(password===confirmPassword){
       dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
       .then(closeModal)
       .catch(async (res) => {
-          const data = res.json();
+          const data = await res.json();
+          console.log('catch', data)
           if (data && data.errors) {
+            console.log('data.errors', data.errors)
             setResErrors(data.errors);
           }
         });
@@ -56,7 +60,7 @@ function SignupFormModal() {
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit} className='signUpForm'>
         <ul>
-          {showErrors.map((error, idx) => <li key={idx}>{error}</li>)}
+          {/* {showErrors.map((error, idx) => <li key={idx}>{error}</li>)} */}
           {Boolean(Object.values(resErrors).length) ? <li>{Object.values(resErrors)}</li> : null}
         </ul>
         <div className="signUpLabel">
@@ -134,7 +138,7 @@ function SignupFormModal() {
         </div>
         <button 
         type="submit"
-        
+        disabled={Boolean(Object.values(errors).length)}
         >Sign Up</button>
       </form>
     </div>

@@ -25,7 +25,7 @@ function LoginFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowErrors(errors);
+    
     setErrors([]);
     setResErrors([]);
 
@@ -36,18 +36,26 @@ function LoginFormModal() {
           const data = await res.json();
           
           if (data.message) {
-            setErrors([data.message])
+            setResErrors([data.message])
           };
         }
       );
   };
+
+  const clickDemo =  (e) => {
+    e.preventDefault();
+    let credential = 'demoUser';
+    let password = 'demoUser';
+    dispatch(sessionActions.login({credential, password}))
+    .then(closeModal) 
+  }
 
   return (
     <div className="loginModal">
       <h1 className="loginTitle">Log In</h1>
       <form onSubmit={handleSubmit} className='loginForm'>
         <ul>
-          {showErrors.map((error, idx) => <li key={idx}>{error}</li>)}
+          {/* {showErrors.map((error, idx) => <li key={idx}>{error}</li>)} */}
           {Boolean(Object.values(resErrors).length) ? <li>{Object.values(resErrors)}</li> : null}
         </ul>
         <input 
@@ -71,6 +79,10 @@ function LoginFormModal() {
         className="loginButton"
         disabled={Boolean(Object.values(errors).length)}>
           Log In</button>
+        <button
+        className="loginButton"
+        onClick={clickDemo}
+        >Demo User</button>
       </form>
     </div>
   );
