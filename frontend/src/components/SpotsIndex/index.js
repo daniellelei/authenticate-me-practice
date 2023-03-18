@@ -28,12 +28,17 @@ function SpotsIndex() {
             <nav>
                {spots.map((spot) => (
                 <div className='spot'>
-                    <NavLink key={spot.id} to={`/spots/${spot.id}`}>
+                    <NavLink key={spot.id} to={`/spots/${spot.id}`} 
+                    className='spotNav'
+                    >
                         <img src={spot.previewImage} alt={spot.name} /> 
                         <div className='spoti'>
                             <div className = 'info'>
                               <h4> {spot.city}, {spot.state} </h4>
-                              <h4> ${spot.price} night </h4>   
+                              <div className='price-night'>
+                                <h4 className='price'> ${spot.price} </h4>   
+                                <h4>night</h4>
+                              </div>
                             </div>
                             <div className='rating'>
                                 {!spot.avgRating ? 
