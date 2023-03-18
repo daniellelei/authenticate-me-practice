@@ -70,7 +70,7 @@ const EditSpot = () => {
         e.preventDefault();
         // setShowErrors(errors);
         // setErrors({});
-        console.log(errors);
+        //console.log(errors);
         await setHasSubmitted(true);
         await setResErrors({});
 
@@ -104,9 +104,7 @@ const EditSpot = () => {
         <div className='createSpotPage'>
             <h1>Update Spot</h1>   
             <form onSubmit={handleSubmit} className='createForm'>
-                {console.log('hasSubmitted',hasSubmitted)}
-                {console.log('errors',errors)}
-                {console.log('resErrors',resErrors)}
+                
                 {/* <ul>
                     {hasSubmitted ? 
                     errors.map((error, idx) => <li key={idx}>{error}</li>) :

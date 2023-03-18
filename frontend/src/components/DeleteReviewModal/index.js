@@ -9,9 +9,9 @@ function DeleteReviewModal (props) {
     const { closeModal } = useModal();
 
     const review = props.review
-    console.log('from delete modal review: ', review);
+    //console.log('from delete modal review: ', review);
     const spotId = props.spotId
-    console.log('from delete modal spotId', spotId);
+    //console.log('from delete modal spotId', spotId);
 
     const clickYes = async (e) => {
         e.preventDefault();

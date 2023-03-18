@@ -53,8 +53,9 @@ export const addReviewThunk = (review, id) => async (dispatch) => {
     })
     if(response.ok) {
         const reviewRes = await response.json();
-        console.log('addReviewThunk', reviewRes);
+        //console.log('addReviewThunk', reviewRes);
         dispatch(addReviewAction(reviewRes));
+        return reviewRes;
     }
 }
 export const deleteReviewThunk = (id) => async (dispatch) => {

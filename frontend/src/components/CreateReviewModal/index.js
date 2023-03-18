@@ -10,6 +10,7 @@ const CreateReviewModal = ({spot}) => {
     const [review, setReview] = useState('');
     const [stars, setStars] = useState(0);
     const [errors, setErrors] = useState({});
+    const [errorRes, setErrorRes] = useState({});
     const id = spot.id;
 
     const dispatch = useDispatch();
@@ -28,7 +29,12 @@ const CreateReviewModal = ({spot}) => {
             review,
             stars
         }
-        await dispatch(ReviewActions.addReviewThunk(newReview, id))
+        const addReviewRes = await dispatch(ReviewActions.addReviewThunk(newReview, id))
+        //const addReviewData = await addReviewRes.json();
+        if(addReviewRes.message){
+            //console.log(addReviewRes.message)
+            await setErrorRes(addReviewRes)
+        }
         await closeModal();
         await reset();
         await dispatch(loadReviewThunk(id));
@@ -38,6 +44,8 @@ const CreateReviewModal = ({spot}) => {
     const reset = () => {
         setReview('');
         setStars(0);
+        setErrorRes({});
+        setErrors({});
     }
 
     const onChange = (stars) => {
@@ -48,7 +56,10 @@ const CreateReviewModal = ({spot}) => {
     return (
         <div className="reviewModal">
             <form onSubmit={handleSubmit}>
-                <label>How is your staying?</label>
+                <label>How was your stay?</label>
+                {Boolean(Object.values(errorRes).length) ? 
+                <p className="error">{errorRes}</p> : null
+                }
                 <textarea
                 cols='30'
                 rows='5'

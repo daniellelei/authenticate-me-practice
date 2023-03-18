@@ -114,7 +114,7 @@ export const loadSpotsCurrentThunk = () => async (dispatch) => {
     if(response.ok) {
         const spotsRes = await response.json();
         let Spots = spotsRes.Spots;
-        console.log('from thunk', Spots)
+        //console.log('from thunk', Spots)
         if(Spots){
             Spots = normalize(Spots)
             dispatch(loadCurrentSpots(Spots));

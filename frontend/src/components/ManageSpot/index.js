@@ -14,7 +14,7 @@ const CurrentUserSpots = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const spotsObj = useSelector(state => state.spots.currentSpots);
-    console.log('first spotObj', spotsObj)
+    //console.log('first spotObj', spotsObj)
     let spots = [];
 
     useEffect(()=> {       
