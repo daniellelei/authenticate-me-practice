@@ -13,10 +13,6 @@
     align-items: center;
 }
 
-.createSpot {
-    margin: 2em;
-    
-}
 .icon{
     height:50px;
     width: 40px;
@@ -56,16 +52,31 @@ ul{
 
 .createSpotLink {
     text-decoration: none;
+    color:black;
+    font-size: 1.1em;
 }
 
 .profileButton1 {
     padding:0.5em;
     display: block;
     position: absolute;
-    top: 48px;
+    top: 50px;
     right:48px;
     border-radius: 8px;
     border:1px solid white;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+}
+.createSpot {
+    color:black;
+    margin: 2em;
+    margin-right: 3em;
+    display: block;
+    position: absolute;
+    top: 25px;
+    right: 60px;
+    padding: 0.5em;
+    border-radius: 8px;
+    border: 1px solid white;
     box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
 }
 
@@ -73,4 +84,14 @@ li {
     margin:1em;
     width:100%;
 }
+
+.dropDown-Button{
+    padding: 0.8em;
+    background-color: palevioletred;
+    width: 89%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+    color: white;
+    margin: 0.1em;
     
+}

@@ -116,7 +116,7 @@ const CreateSpot = () => {
                 <div className='section'>
                     <h2>Where's your place located?</h2>
                     <p>* Guests will only get your exact address once they booked a reservation.</p>
-                    <div>
+                    <div className='eachInputDiv'>
                         <div className='labelError'>
                             <label>Country</label>
                             {hasSubmitted?
@@ -125,13 +125,14 @@ const CreateSpot = () => {
                         </div>
                         <input
                         type = 'text'
+                        className='spotInputField'
                         onChange={(e)=>setCountry(e.target.value)}
                         value = {country}
                         placeholder = 'country'
                         name = 'country'
                     ></input>
                     </div>
-                    <div>
+                    <div className='eachInputDiv'>
                         <div className='labelError'>
                             <label>Street Address</label>
                             {hasSubmitted?
@@ -139,6 +140,7 @@ const CreateSpot = () => {
                             }
                         </div>
                         <input
+                        className='spotInputField'
                         type = 'text'
                         onChange={(e)=>setAddress(e.target.value)}
                         value = {address}
@@ -147,13 +149,14 @@ const CreateSpot = () => {
                         ></input>
                     </div>
                     <div className='cityState'>
-                        <div className='city'>
+                        <div className='eachInputDiv'>
                             <div className='labelError'>
-                                <label>City</label>
+                                <label className='cityLabel'>City</label>
                                 {hasSubmitted? 
                                 <p className='error'>{errors.city}</p> : null}
                             </div>
                             <input
+                            className='spotInputField cityinPut'
                             type = 'text'
                             onChange={(e)=>setCity(e.target.value)}
                             value = {city}
@@ -161,14 +164,15 @@ const CreateSpot = () => {
                             name = 'city'
                             ></input>
                         </div>
-                        <div className='city'>
+                        <div className='eachInputDiv'>
                             <div className='labelError'>
-                                <label>State</label>
+                                <label className='cityLabel'>State</label>
                                 {hasSubmitted? 
                                 <p className='error'>{errors.state}</p> : null}
                             </div>
                             <input
                             type = 'text'
+                            className='spotInputField stateinPut'
                             onChange={(e)=>setState(e.target.value)}
                             value = {state}
                             placeholder = 'state'
@@ -184,7 +188,7 @@ const CreateSpot = () => {
                     </div>
                     <textarea
                     rows = '8'
-                    cols = '50'
+                    cols = '44'
                     onChange={(e) => setDescription(e.target.value)}
                     value = {description}
                     placeholder = 'Please write at least 30 characters'
@@ -201,6 +205,7 @@ const CreateSpot = () => {
                     </div>
                     <input
                     type = 'text'
+                    className='spotInputField'
                     onChange={(e)=>setName(e.target.value)}
                     value = {name}
                     placeholder = 'Name of your spot'
@@ -219,6 +224,7 @@ const CreateSpot = () => {
                         <p>$ </p>
                         <input
                         type = 'text'
+                        className='spotInputField'
                         onChange={(e)=>setPrice(e.target.value)}
                         value = {price}
                         placeholder = 'Price per night (USD)'
@@ -234,6 +240,7 @@ const CreateSpot = () => {
                     <p>Submit a link to at least one photo to publish your spot.</p>
                     <input
                     type = 'text'
+                    className='spotInputField'
                     onChange={(e)=>setImage1(e.target.value)}
                     value={image1}
                     placeholder= 'Preview Image URL'
@@ -248,6 +255,7 @@ const CreateSpot = () => {
                     {showErrors.imageMin ? <p className='error'>{showErrors.imageMin}</p> : null} */}
                     <input
                     type = 'text'
+                    className='spotInputField'
                     onChange={(e)=>setImage2(e.target.value)}
                     value={image2}
                     placeholder= 'Image URL'
@@ -258,6 +266,7 @@ const CreateSpot = () => {
                         <p className='error'>{errors.image2}</p> : null}
                     <input
                     type = 'text'
+                    className='spotInputField'
                     onChange={(e)=>setImage3(e.target.value)}
                     value={image3}
                     placeholder= 'Image URL'
@@ -268,6 +277,7 @@ const CreateSpot = () => {
                         <p className='error'>{errors.image3}</p> : null}
                     <input
                     type = 'text'
+                    className='spotInputField'
                     onChange={(e)=>setImage4(e.target.value)}
                     value={image4}
                     placeholder= 'Image URL'
@@ -278,6 +288,7 @@ const CreateSpot = () => {
                         <p className='error'>{errors.image4}</p> : null}
                     <input
                     type = 'text'
+                    className='spotInputField'
                     onChange={(e)=>setImage5(e.target.value)}
                     value={image5}
                     placeholder= 'Image URL'
@@ -287,8 +298,9 @@ const CreateSpot = () => {
                     {hasSubmitted? 
                         <p className='error'>{errors.image5}</p> : null}
                 </div>
-                <div>
+                <div className='submitDiv'>
                     <button type='submit'
+                    className='createSubmit'
                     // disabled={Boolean(Object.values(errors).length)}
                     >Create Spot</button>
                 </div>
