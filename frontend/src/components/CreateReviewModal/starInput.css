@@ -1,0 +1,16 @@
+.rating-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+.rating-input .filled {
+    color: red;
+}
+
+.rating-input .empty {
+    color: pink;
+    
+}

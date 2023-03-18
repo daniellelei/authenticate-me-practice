@@ -13,7 +13,7 @@ const setTokenCookie = (res, user) => {
     secret,
     { expiresIn: parseInt(expiresIn) } // 604,800 seconds = 1 week
   );
-
+  //console.log('setTokenCookie, token: ', token)
   const isProduction = process.env.NODE_ENV === "production";
 
   // Set the token cookie
@@ -29,22 +29,29 @@ const setTokenCookie = (res, user) => {
 
 const restoreUser = (req, res, next) => {
   // token parsed from cookies
+  //console.log('restoreUser function running')
   const { token } = req.cookies;
   req.user = null;
+  //console.log('restoreUser Token: ',token)
 
   return jwt.verify(token, secret, null, async (err, jwtPayload) => {
+    
     if (err) {
+      //console.log('if err running, then next', err)
+      
       return next();
     }
 
     try {
       const { id } = jwtPayload.data;
       req.user = await User.scope('currentUser').findByPk(id);
+      //console.log('after query', req.user)
     } catch (e) {
+      //console.log('catch running')
       res.clearCookie('token');
       return next();
     }
-
+    //console.log('req.user', req.user)
     if (!req.user) res.clearCookie('token');
 
     return next();

@@ -1,0 +1,44 @@
+.spots-index{
+    font-family: sans-serif;
+}
+
+nav {
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin:2em;
+}
+
+img {
+    width: 380px;
+    height:380px;
+    object-fit: cover;
+}
+.spot{
+    margin: 1em;
+}
+.spoti {
+    display: flex;
+    justify-content: space-between;
+    
+}
+.ratingStar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+h4 {
+    font-weight: lighter;
+}
+
+.spotRate {
+    margin:0.5em
+}
+
+.reserve {
+    padding:1em;
+    color:white;
+}

@@ -1,0 +1,49 @@
+.headNav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: coral;
+    height:120px;
+}
+
+.navRight {
+    display: flex;
+    padding: 2em;
+    justify-content: center;
+    align-items: center;
+}
+
+.createSpot {
+    margin: 2em;
+    
+}
+.icon{
+    height:20px;
+    width: 20px;
+    margin:1em;
+}
+.iconName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.apiName {
+    font-size: 22px;
+    font-weight: 400;
+    color: white;
+    font-family: Circular,
+        -apple-system,
+        BlinkMacSystemFont,
+        Roboto,
+        Helvetica Neue,
+        sans-serif;
+}
+
+.hidden {
+    display: none
+}
+
+.createSpotLink {
+    text-decoration: none;
+}

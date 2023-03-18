@@ -1,0 +1,12 @@
+.reviewModal{
+    padding: 1em;
+}
+
+.submitReviewButton{
+    display: flex;
+    justify-content: center;
+}
+
+label {
+    padding: 1em;
+}
