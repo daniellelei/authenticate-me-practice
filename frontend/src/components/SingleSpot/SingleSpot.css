@@ -1,13 +1,10 @@
-.wholePage {
-    font-family: sans-serif;
-   
-}
 
 .singleSpot {
     display: flex;
     flex-direction: column;
     justify-content:center;
-    align-items:flex-start
+    align-items:flex-start;
+    margin: 5em;
 }
 
 .images {
@@ -15,26 +12,40 @@
     grid-template-areas: 
     "a a b c"
     "a a d e";
-    width: 100%;
-    margin: 2em;
+    /* width: 100%; */
+    /* margin: 2em; */
 }
 
 .img0 {
     grid-area: a;
-    height: 48em;
-    width: 48em;
+    height: 20em;
+    width: 26rem;
+    margin:0.1em;
+    
 }
 .img1 {
     grid-area: b;
+    height: 10em;
+    width: 13em;
+    margin:0.1em;
 }
 .img2 {
     grid-area: c;
+    height: 10em;
+    width: 13em;
+    margin: 0.1em;
 }
 .img3 {
     grid-area: d;
+    height: 10em;
+    width: 13em;
+    margin: 0.1em;
 }
 .img4 {
     grid-area: e;
+    height: 10em;
+    width: 13em;
+    margin: 0.1em;
 }
 
 .details{

@@ -11,29 +11,54 @@ nav {
 }
 
 img {
-    width: 380px;
-    height:380px;
+    width: 280px;
+    height:280px;
     object-fit: cover;
+    border-radius: 15px;
+    overflow: hidden;
 }
 .spot{
     margin: 1em;
+
+}
+.spotNav {
+    text-decoration: none;
 }
 .spoti {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     
+}
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.rating{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    padding:0.8em;
 }
 .ratingStar {
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    height: 100%;
 }
-
+.price-night {
+    display: flex;
+}
 h4 {
     font-weight: lighter;
 }
-
+.price {
+    font-weight: bold;
+    margin:0.5em;
+}
 .spotRate {
     margin:0.5em
 }
