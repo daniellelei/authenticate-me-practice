@@ -45,6 +45,11 @@ const SingleSpot = () => {
         return false;
     }
 
+    const displayReviewNum = (user) => {
+        if ( user===null || user===undefined ) return true;
+        return false;
+    }
+
     
     useEffect(()=>{
         dispatch(loadOneSpotThunk(spotId));
@@ -96,23 +101,25 @@ const SingleSpot = () => {
                 </div>
                 <div className="belowImage">
                     <div className="details">
-                        <span>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</span>
-                        <p>{spot.description}</p>
+                        <span className="hostName">Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</span>
+                        <p className="description">{spot.description}</p>
                     </div>
                     <div className="callOut">
                         <div className="price">
-                            <p>${spot.price} night</p>
-                            <p>
-                                {spot.avgStarRating==='No reviews yet' ? 
-                                <h4> New </h4> : 
-                                (<div className='ratingStar'>
-                                    <i class="fa-sharp fa-solid fa-star"></i>
-                                    <h4 className='spotRate'>{Number.parseFloat(spot.avgStarRating).toFixed(1)}</h4>
-                                    <h4> · </h4>
-                                    <h4>{reviewNum(spot.numReviews)}</h4>
-                                    
-                                </div>)}
-                            </p>
+                            <div className="priceOnly">
+                                <p className="priceP">${spot.price}</p>
+                                <p className="night">night</p>
+                            </div>
+                            {spot.avgStarRating==='No reviews yet' ? 
+                            <h4> New </h4> : (
+                            <div className="priceReview">
+                                <i class="fa-sharp fa-solid fa-star"></i>
+                                <h4 className='spotRate'>{Number.parseFloat(spot.avgStarRating).toFixed(1)}</h4>
+                                <h4> · </h4>
+                                <h4 className='reviewNum'>{reviewNum(spot.numReviews)}</h4>
+                            </div>
+                            )}
+                            
                             
                             {/* <p>{spot.avgStarRating}<i class="fa-sharp fa-solid fa-star"></i>  {spot.numReviews}reviews</p> */}
                         </div>
@@ -122,6 +129,16 @@ const SingleSpot = () => {
 
                 <div className="reviews">
                     <div>
+                        {spot.avgStarRating==='No reviews yet' ? 
+                            <h4> New </h4> : (
+                            <div className="priceReview">
+                                <i class="fa-sharp fa-solid fa-star"></i>
+                                <h4 className='spotRate'>{Number.parseFloat(spot.avgStarRating).toFixed(1)}</h4>
+                                <h4> · </h4>
+                                <h4 className='reviewNum'>{reviewNum(spot.numReviews)}</h4>
+                            </div>
+                            )}
+                        
                         {displayFirstReview (user, reviews, spot) ? 
                         <h4>Be the first to post a review!</h4> : null
                         }
@@ -135,9 +152,9 @@ const SingleSpot = () => {
                     </div>
                     {reviews.map((review)=> (
                         <div>
-                            <h4>{review.User.firstName}</h4>
-                            <h4>{reviewMonthYear(review.createdAt)}</h4>
-                            <p>{review.review}</p>
+                            <h4 className="reviewer">{review.User.firstName}</h4>
+                            <h4 className="reviewTime">{reviewMonthYear(review.createdAt)}</h4>
+                            <h4 className="reviewContent">{review.review}</h4>
                             {displayDelReviewButton(user, review) ? 
                             <OpenModalButton 
                                 buttonText= 'Delete'

@@ -1,28 +1,44 @@
 /* Define all your CSS styling rules for the LoginFormPage component in the LoginForm.css file. */
+
 .loginModal {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 1em;
+    border-radius: 8px;
 }
 .loginForm {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     padding:1em;
     width:300px;
 }
-
+.inputField{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    
+}
 .loginInput {
-    padding:0.2em;
+    padding:1em;
     margin:1em;
-
+    border-radius: 8px;
+    border: 1px solid grey;
 }
 .loginButton {
-    padding: 0.2em;
-    background-color: coral;
-    width: 100%;
+    padding: 1em;
+    background-color: palevioletred;
+    width: 83%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
     color:white;
+    margin: 1em;
+}
+
+.disable{
+    background-color: pink;
 }

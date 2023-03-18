@@ -34,7 +34,7 @@ function SpotsIndex() {
                         <img src={spot.previewImage} alt={spot.name} /> 
                         <div className='spoti'>
                             <div className = 'info'>
-                              <h4> {spot.city}, {spot.state} </h4>
+                              <h4 className='cityState'> {spot.city}, {spot.state} </h4>
                               <div className='price-night'>
                                 <h4 className='price'> ${spot.price} </h4>   
                                 <h4>night</h4>

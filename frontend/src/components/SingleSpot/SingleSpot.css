@@ -4,10 +4,11 @@
     flex-direction: column;
     justify-content:center;
     align-items:flex-start;
-    margin: 5em;
+    margin: 2em;
 }
 
 .images {
+    margin-top: 1em;
     display: grid;
     grid-template-areas: 
     "a a b c"
@@ -18,48 +19,62 @@
 
 .img0 {
     grid-area: a;
-    height: 20em;
-    width: 26rem;
-    margin:0.1em;
+    height: 22.5em;
+    width: 30rem;
+    margin:0.2em;
+    border-radius: 15px 0 0 15px;
     
 }
 .img1 {
     grid-area: b;
-    height: 10em;
-    width: 13em;
-    margin:0.1em;
+    height: 11em;
+    width: 14em;
+    margin:0.2em;
+    border-radius: 0 0 0 0;
 }
 .img2 {
     grid-area: c;
-    height: 10em;
-    width: 13em;
-    margin: 0.1em;
+    height: 11em;
+    width: 14em;
+    margin: 0.2em;
+    border-radius: 0 15px 0 0;
 }
 .img3 {
     grid-area: d;
-    height: 10em;
-    width: 13em;
-    margin: 0.1em;
+    height: 11em;
+    width: 14em;
+    margin: 0.2em;
+    border-radius: 0 0 0 0;
 }
 .img4 {
     grid-area: e;
-    height: 10em;
-    width: 13em;
-    margin: 0.1em;
+    height: 11em;
+    width: 14em;
+    margin: 0.2em;
+    border-radius: 0 0 15px 0;
 }
 
 .details{
     width: 60%;
 }
+.hostName {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+.description {
+    font-size: 1.1em;
+}
 
 .callOut {
-    width: 30%;
-    border: 1px solid black;
+    width: 33%;
+    border: 2px solid black;
+    box-shadow: 5px 5px rgb(204, 189, 189);
     border-radius: 0.5em;
-    padding: 1em;
+    padding: 0 1.5em 1.5em 1.5em;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
@@ -70,9 +85,13 @@
     margin: 1em;
 }
 
+
 .reserve {
-    background-color: coral;
+    background-color: palevioletred;
     width: 100%;
+    border: white;
+    border-radius: 2px;
+    box-shadow: 5px 5px rgb(204, 189, 189);
 }
 
 .price {
@@ -80,4 +99,62 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.priceReview{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding: 1em 1em 1em 1em; */
+}
+.reviews{
+    margin:1em;
+}
+.reviews div {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.spotRate{
+    margin-right: 1em;
+}
+
+.reviewNum{
+    margin-left: 0.5em;
+}
+.priceOnly{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.priceP {
+    font-size: 1.5em;
+    margin-right:0.1em
+}
+.night{
+    font-weight: lighter;
+}
+
+.numReview {
+    font-size: 1.5em;
+}
+.reviewer {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+.reviewTime {
+    font-size:0.8em;
+    color: grey;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.reviewContent {
+    font-size:0.9em;
+    margin-top: 0.5em;
+    margin-bottom: 1.5em;
+}
+
+*{
+    font-family: 'Quicksand',
+        sans-serif;
 }
