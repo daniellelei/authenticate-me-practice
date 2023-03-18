@@ -23,6 +23,7 @@ const SingleSpot = () => {
 
     const displayPostReviewButton = (user, reviews, spot) => {
         if( user===null || user===undefined ) return false;
+
         for( let r of reviews){
             if(r.userId === user.id)
             return false;
@@ -30,6 +31,13 @@ const SingleSpot = () => {
         if(user.id === spot.ownerId) return false;
 
         return true;
+    }
+    const displayFirstReview = (user, reviews, spot) => {
+        if( user===null || user===undefined ) return false;
+        if(Boolean(reviews.length)) return false;
+        if(user.id === spot.ownerId) return false;
+        return true;
+
     }
     const displayDelReviewButton = (user, review) => {
         if( user===null || user===undefined ) return false;
@@ -58,6 +66,18 @@ const SingleSpot = () => {
     let images = spot.SpotImages;
     images = imagesRender(images);
 
+    const reviewNum = (num) => {
+        if(num === 1 ) return ` 1 review`
+        else return ` ${num} reviews`
+    }
+
+    const reviewMonthYear = (moment) => {
+        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        let created = new Date(moment);
+        let result = `${months[created.getMonth()]} ${created.getFullYear()}`
+        return result;
+    }
+
     
     
     return (
@@ -82,8 +102,19 @@ const SingleSpot = () => {
                     <div className="callOut">
                         <div className="price">
                             <p>${spot.price} night</p>
+                            <p>
+                                {spot.avgStarRating==='No reviews yet' ? 
+                                <h4> New </h4> : 
+                                (<div className='ratingStar'>
+                                    <i class="fa-sharp fa-solid fa-star"></i>
+                                    <h4 className='spotRate'>{Number.parseFloat(spot.avgStarRating).toFixed(1)}</h4>
+                                    <h4> · </h4>
+                                    <h4>{reviewNum(spot.numReviews)}</h4>
+                                    
+                                </div>)}
+                            </p>
                             
-                            <p>{spot.avgStarRating}<i class="fa-sharp fa-solid fa-star"></i>  {spot.numReviews}reviews</p>
+                            {/* <p>{spot.avgStarRating}<i class="fa-sharp fa-solid fa-star"></i>  {spot.numReviews}reviews</p> */}
                         </div>
                         <button onClick={clickReserve} className="reserve">Reserve</button>
                     </div>
@@ -91,6 +122,9 @@ const SingleSpot = () => {
 
                 <div className="reviews">
                     <div>
+                        {displayFirstReview (user, reviews, spot) ? 
+                        <h4>Be the first to post a review!</h4> : null
+                        }
                         {displayPostReviewButton(user, reviews, spot) ? 
                         <OpenModalButton 
                             buttonText= 'Post a review'
@@ -102,7 +136,7 @@ const SingleSpot = () => {
                     {reviews.map((review)=> (
                         <div>
                             <h4>{review.User.firstName}</h4>
-                            <h4>{review.createdAt}</h4>
+                            <h4>{reviewMonthYear(review.createdAt)}</h4>
                             <p>{review.review}</p>
                             {displayDelReviewButton(user, review) ? 
                             <OpenModalButton 

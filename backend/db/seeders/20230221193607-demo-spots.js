@@ -23,7 +23,7 @@ module.exports = {
 
     },
     {
-      ownerId: 3, 
+      ownerId: 2, 
       address: "100 Valley Blvd",
       city: "Branson",
       state: "Missouri",
@@ -36,7 +36,7 @@ module.exports = {
 
     },
     {
-      ownerId: 4, 
+      ownerId: 3, 
       address: "564 Hellman Ave",
       city: "Crane Hill",
       state: "Alabama",

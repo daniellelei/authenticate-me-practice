@@ -85,6 +85,10 @@ export const addSpotThunk = (spot, images) => async (dispatch) => {
         body: JSON.stringify(spot)
     })
     const spotRes = await response1.json();
+    if(spotRes.errors){
+        return spotRes
+    }
+    
     //console.log(spotRes.id);
     //post an image
     for(let i of images){
@@ -126,13 +130,16 @@ export const editSpotThunk = (payload) => async (dispatch) => {
         header: {'Content-Type' : 'application/json'},
         body: JSON.stringify(payload)
     })
-
-    if(editResponse.ok) {
-        const updatedSpotRes = await csrfFetch(`/api/spots/${payload.id}`)
-        const updatedSpot = await updatedSpotRes.json()
-        dispatch(loadOneSpot(updatedSpot));
-        return updatedSpot;
+    const edit = await editResponse.json();
+    if(edit.errors){
+        return edit
     }
+
+    const updatedSpotRes = await csrfFetch(`/api/spots/${payload.id}`)
+    const updatedSpot = await updatedSpotRes.json()
+    dispatch(loadOneSpot(updatedSpot));
+    return updatedSpot;
+    
 }
 
 //delete spot thunk

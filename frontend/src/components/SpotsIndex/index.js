@@ -40,7 +40,7 @@ function SpotsIndex() {
                                 <h4> New </h4> : 
                                 (<div className='ratingStar'>
                                     <i class="fa-sharp fa-solid fa-star"></i>
-                                    <h4 className='spotRate'>{spot.avgRating}</h4>
+                                    <h4 className='spotRate'>{spot.avgRating.toFixed(1)}</h4>
                                 </div>)}
                             </div>
                         </div>

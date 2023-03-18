@@ -24,7 +24,9 @@ const EditSpot = () => {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState(0);
     const [errors, setErrors] = useState({});
-    const [showErrors, setShowErrors] = useState({})
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+    const [resErrors, setResErrors] = useState({});
+    //const [showErrors, setShowErrors] = useState({})
 
     useEffect(()=>{
         if(spot) {
@@ -55,7 +57,7 @@ const EditSpot = () => {
         if(!country.length) err.country = 'Country is required'
         if(description.length < 30) err.description = 'Description needs a minimum of 30 characters'
         if(!name.length) err.name = 'Name is required'
-        if(!price) err.price = 'Price is required'
+        if(!price || price <= 0) err.price = 'Price is required and needs to be greater than 0'
         
         setErrors(err);
     },[address, city, state, country, name, description, price])
@@ -66,8 +68,12 @@ const EditSpot = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setShowErrors(errors);
-        setErrors({});
+        // setShowErrors(errors);
+        // setErrors({});
+        console.log(errors);
+        await setHasSubmitted(true);
+        await setResErrors({});
+
 
         const payload ={
             ...spot,
@@ -79,10 +85,15 @@ const EditSpot = () => {
             description,
             price
         };
+        if(!Boolean(Object.values(errors).length)) {
+            let updatedSpot = await dispatch(editSpotThunk(payload));
+            if(!updatedSpot.errors) {
+                history.push(`/spots/${updatedSpot.id}`)
+                await setHasSubmitted(false);
+            } else {
+                await setResErrors(updatedSpot.errors);
+            }
 
-        let updatedSpot = await dispatch(editSpotThunk(payload));
-        if(updatedSpot) {
-            history.push(`/spots/${updatedSpot.id}`)
         }
     }
 
@@ -91,9 +102,18 @@ const EditSpot = () => {
  
     return (
         <div className='createSpotPage'>
+            <h1>Update Spot</h1>   
             <form onSubmit={handleSubmit} className='createForm'>
+                {console.log('hasSubmitted',hasSubmitted)}
+                {console.log('errors',errors)}
+                {console.log('resErrors',resErrors)}
+                {/* <ul>
+                    {hasSubmitted ? 
+                    errors.map((error, idx) => <li key={idx}>{error}</li>) :
+                    null}
+                    {Boolean(Object.values(resErrors).length) ? <li>{Object.values(resErrors)}</li> : null}
+                </ul> */}
                 <div className='title'>
-                <h1>Update Spot</h1>   
                 </div>
                 <div className='section'>
                     <h2>Where's your place located?</h2>
@@ -101,7 +121,9 @@ const EditSpot = () => {
                     <div>
                         <div className='labelError'>
                             <label>Country</label>
-                            <p className='error'>{showErrors.country}</p>
+                            {hasSubmitted?
+                            <p className='error'>{errors.country}</p> : null
+                            }
                         </div>
                         <input
                         type = 'text'
@@ -114,7 +136,9 @@ const EditSpot = () => {
                     <div>
                         <div className='labelError'>
                             <label>Street Address</label>
-                            <p className='error'>{showErrors.address}</p>
+                            {hasSubmitted?
+                            <p className='error'>{errors.address}</p> : null
+                            }
                         </div>
                         <input
                         type = 'text'
@@ -128,7 +152,9 @@ const EditSpot = () => {
                         <div className='city'>
                             <div className='labelError'>
                                 <label>City</label>
-                                <p className='error'>{showErrors.city}</p>
+                                {hasSubmitted? 
+                                <p className='error'>{errors.city}</p> : null}
+                                
                             </div>
                             <input
                             type = 'text'
@@ -141,7 +167,8 @@ const EditSpot = () => {
                         <div className='city'>
                             <div className='labelError'>
                                 <label>State</label>
-                                <p className='error'>{showErrors.state}</p>
+                                {hasSubmitted? 
+                                <p className='error'>{errors.state}</p> : null}
                             </div>
                             <input
                             type = 'text'
@@ -167,7 +194,9 @@ const EditSpot = () => {
                     name = 'description'
                     >
                     </textarea>
-                    <p className='error'>{showErrors.description}</p>
+                    {hasSubmitted? 
+                        <p className='error'>{errors.description}</p> : null}
+                    
                 </div>
                 <div className='section'>
                     <div className='titleCaption'>
@@ -182,6 +211,8 @@ const EditSpot = () => {
                     name = 'name'
                     >
                     </input>
+                    {hasSubmitted? 
+                        <p className='error'>{errors.name}</p> : null}
                 </div>
                 <div className='section'>
                     <div className='titleCaption'>
@@ -199,7 +230,8 @@ const EditSpot = () => {
                         >
                         </input>
                     </div>
-                    <p className='error'>{showErrors.price}</p>
+                    {hasSubmitted ? 
+                        <p className='error'>{errors.price}</p> : null}
                 </div>
                 <div>
                     <button type='submit'
