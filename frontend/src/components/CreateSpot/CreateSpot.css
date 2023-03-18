@@ -12,7 +12,7 @@
     align-items: flex-start;
 }
 .createForm{
-    background-color: antiquewhite;
+    
     width: 35%;
     padding: 2em;
     display: flex;
@@ -25,16 +25,19 @@
 }
 
 .section{
+    padding:1em;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-start;
-    width:100%
+    width:100%;
+    border-bottom:1px solid black;
 }
 
 .cityState {
     display: flex;
     justify-content: space-between;
+
 }
 
 .city {
@@ -50,8 +53,14 @@ label {
     align-items: center;
 }
 
-input {
+.spotInputField {
     width: 100%;
+    margin-bottom:1em;
+    padding:0.6em;
+    border: white;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+
 }
 
 .titleCaption{
@@ -63,4 +72,38 @@ input {
 .dollorSign{
     display: flex;
 }
-
+.eachInputDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 95%;
+}
+label{
+    padding-left: 0;
+    padding-bottom: 0;
+}
+.cityLabel{
+    font-weight: lighter;
+}
+.cityinPut {
+    margin-right: 1em;
+    width:80%
+}
+.stateinPut {
+    width: 50%
+}
+.submitDiv {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.createSubmit {
+    padding: 1em;
+    background-color: palevioletred;
+    width: 83%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+    color: white;
+    margin: 1em;
+}
