@@ -3,7 +3,7 @@ import * as ReviewActions from '../../store/reviews';
 import { useDispatch, useSelector } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import { loadOneSpotThunk } from '../../store/spots';
-
+import './DeleteReviewModal.css'
 function DeleteReviewModal (props) {
     const dispatch = useDispatch();
     const { closeModal } = useModal();
@@ -27,12 +27,22 @@ function DeleteReviewModal (props) {
     }
 
     return (
-        <div>
-            <h1>Confirm Delete</h1>
+        <div className='deleteModal'>
+            <div className='deleteTitle'>
+                <h1>Confirm Delete</h1>
+            </div>
             <h4>Are you sure you want to delete this review?</h4>
             <div>
-                <button onClick={clickYes}>Yes (Delete Review)</button>
-                <button onClick={clickNo}>No (Keep Review)</button>
+                <div className='submitDiv de'>
+                    <button onClick={clickYes}
+                    className='createSubmit'
+                    >Yes (Delete Review)</button>
+                </div>
+                <div className='submitDiv de'>
+                    <button onClick={clickNo}
+                    className='createSubmit'
+                    >No (Keep Review)</button>
+                </div>
             </div>
         </div>
     )
