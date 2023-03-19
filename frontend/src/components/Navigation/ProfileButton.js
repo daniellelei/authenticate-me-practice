@@ -47,6 +47,7 @@ function ProfileButton({ user }) {
   const manageSpotsClick = (e) => {
     e.preventDefault();
     history.push('/spots/current')
+    closeMenu();
   }
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");

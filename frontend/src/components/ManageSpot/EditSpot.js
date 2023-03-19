@@ -116,7 +116,7 @@ const EditSpot = () => {
                 <div className='section'>
                     <h2>Where's your place located?</h2>
                     <p>* Guests will only get your exact address once they booked a reservation.</p>
-                    <div>
+                    <div className='eachInputDiv'>
                         <div className='labelError'>
                             <label>Country</label>
                             {hasSubmitted?
@@ -125,13 +125,14 @@ const EditSpot = () => {
                         </div>
                         <input
                         type = 'text'
+                        className='spotInputField'
                         onChange={updateCountry}
                         value = {country}
                         placeholder = 'country'
                         name = 'country'
                     ></input>
                     </div>
-                    <div>
+                    <div className='eachInputDiv'>
                         <div className='labelError'>
                             <label>Street Address</label>
                             {hasSubmitted?
@@ -140,6 +141,7 @@ const EditSpot = () => {
                         </div>
                         <input
                         type = 'text'
+                        className='spotInputField'
                         onChange={updateAddress}
                         value = {address}
                         placeholder = 'address'
@@ -147,14 +149,15 @@ const EditSpot = () => {
                         ></input>
                     </div>
                     <div className='cityState'>
-                        <div className='city'>
+                        <div className='eachInputDiv'>
                             <div className='labelError'>
-                                <label>City</label>
+                                <label className='cityLabel'>City</label>
                                 {hasSubmitted? 
                                 <p className='error'>{errors.city}</p> : null}
                                 
                             </div>
                             <input
+                            className='spotInputField cityinPut'
                             type = 'text'
                             onChange={updateCity}
                             value = {city}
@@ -162,14 +165,15 @@ const EditSpot = () => {
                             name = 'city'
                             ></input>
                         </div>
-                        <div className='city'>
+                        <div className='eachInputDiv'>
                             <div className='labelError'>
-                                <label>State</label>
+                                <label className='cityLabel'>State</label>
                                 {hasSubmitted? 
                                 <p className='error'>{errors.state}</p> : null}
                             </div>
                             <input
                             type = 'text'
+                            className='spotInputField stateinPut'
                             onChange={updateState}
                             value = {state}
                             placeholder = 'state'
@@ -185,7 +189,7 @@ const EditSpot = () => {
                     </div>
                     <textarea
                     rows = '8'
-                    cols = '50'
+                    cols = '44'
                     onChange={updateDescription}
                     value = {description}
                     placeholder = 'Please write at least 30 characters'
@@ -203,6 +207,7 @@ const EditSpot = () => {
                     </div>
                     <input
                     type = 'text'
+                    className='spotInputField'
                     onChange={updateName}
                     value = {name}
                     placeholder = 'Name of your spot'
@@ -221,6 +226,7 @@ const EditSpot = () => {
                         <p>$ </p>
                         <input
                         type = 'text'
+                        className='spotInputField'
                         onChange={updatePrice}
                         value = {price}
                         placeholder = 'Price per night (USD)'
@@ -231,8 +237,9 @@ const EditSpot = () => {
                     {hasSubmitted ? 
                         <p className='error'>{errors.price}</p> : null}
                 </div>
-                <div>
+                <div className='submitDiv'>
                     <button type='submit'
+                    className='createSubmit'
                     // disabled={Boolean(Object.values(errors).length)}
                     >Update Spot</button>
                 </div>

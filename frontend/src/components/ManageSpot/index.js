@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import CreateSpot from '../CreateSpot';
 import DeleteModal from '../DeleteSpotModal';
 import OpenModalButton from '../OpenModalButton/index'
-
+// import '../SpotsIndex/SpotsIndex.css';
 
 
 const CurrentUserSpots = () => {
@@ -38,31 +38,48 @@ const CurrentUserSpots = () => {
     );
     
         return (
-            <div className='currentSpotsPage'>
-                <h1>Manage Spots</h1>
-                <nav className='currentSpots'>
+            <div >
+                <div className='topm'>
+                <h1>Manage Your Spots</h1>
+                <button>Create a New Spot</button>
+                </div>
+                <div className='spots-indexm'>
+                <nav>
                     {spots.map((spot) => (
-                        <div className='currSingleSpot'>
-                            <NavLink key={spot.id} to={`/spots/${spot.id}`}>
+                        <div className='spotm'>
+                            <NavLink key={spot.id} to={`/spots/${spot.id}`}
+                            className='spotNavm'>
                                 <img src={spot.previewImage} alt={spot.name} />
-                                <div>
-                                    <h4>{spot.city}, {spot.state}</h4>
-                                    <h4> ${spot.price} night </h4> 
-                                </div>
-                                <div className='rating'>
-                                        {!spot.avgRating ? <h4> New </h4> : <h4>{spot.avgRating}</h4>}
+                                <div className='belowImagem'>
+                                    <div className='spotim'>
+                                        <div className = 'infom'>
+                                            <h4 className='cityStatem'>{spot.city}, {spot.state}</h4>
+                                        </div>
+                                        <div className='price-nightm'>
+                                            <h4 className='pricem'> ${spot.price}</h4> 
+                                            <h4 className='nightm'>night</h4>
+                                        </div>
                                     </div>
+                                    <div className='ratingm'>
+                                            {!spot.avgRating ? 
+                                            <h4 className='revm'> New </h4> : 
+                                            (<div className='ratingStarm revm'>
+                                                <i class="fa-sharp fa-solid fa-star"></i>
+                                                <h4 className='spotRatem'>{Number.parseFloat(spot.avgRating).toFixed(1)}</h4>
+                                            </div>)}
+                                        </div>
+                                </div>
                             </NavLink>
                                 <div>
-                                    <button onClick={clickUpdate}>
-                                        <Link key={spot.id} to={`/spots/${spot.id}/edit`}>
+                                    <button onClick={clickUpdate}
+                                    className='buttonUpdate'
+                                    >
+                                        <Link key={spot.id} to={`/spots/${spot.id}/edit`}
+                                        style={{textDecoration: 'none'}}
+                                        className='linkUpdate'>
                                         Update
                                         </Link>
                                     </button>
-                                    
-                                    
-                                    
-
                                     <OpenModalButton 
                                         buttonText= 'Delete'
                                         modalComponent={<DeleteModal spot={spot}/>}
@@ -71,6 +88,8 @@ const CurrentUserSpots = () => {
                         </div>
                     ))}
                 </nav>
+                </div>
+                
             </div>
         )
 
