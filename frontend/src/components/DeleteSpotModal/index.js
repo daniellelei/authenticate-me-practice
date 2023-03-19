@@ -25,12 +25,20 @@ function DeleteModal ({spot}) {
     }
 
     return (
-        <div>
+        <div className='deleteModal'>
             <h1>Confirm Delete</h1>
             <h4>Are you sure you want to remove this spot from the listing?</h4>
             <div>
-                <button onClick={ClickYes}>Yes (Delete Spot)</button>
-                <button onClick={ClickNo}>No (Keep Spot)</button>
+                <div className='submitDiv de'>
+                    <button onClick={ClickYes}
+                    className='createSubmit'
+                    >Yes (Delete Spot)</button>
+                </div>
+                <div className='submitDiv de'>
+                    <button onClick={ClickNo}
+                    className='createSubmit'
+                    >No (Keep Spot)</button>
+                </div>
             </div>
         </div>
     )

@@ -52,11 +52,11 @@ const CreateReviewModal = ({spot}) => {
         setStars(parseInt(stars));
     };
 
-
+    const loginButtonClassName = "loginButton" + (!Boolean(Object.values(errors).length) ? "" : " disable");
     return (
         <div className="reviewModal">
             <form onSubmit={handleSubmit}>
-                <label>How was your stay?</label>
+                <label className="reviewPrompt">How was your stay?</label>
                 {Boolean(Object.values(errorRes).length) ? 
                 <p className="error">{errorRes}</p> : null
                 }
@@ -70,10 +70,12 @@ const CreateReviewModal = ({spot}) => {
                 ></textarea>
                 <div className="starsInput">
                     <StarsRatingInput disabled={false} onChange={onChange} rating={stars} />
+                    <h4>stars</h4>
                 </div>
-                <div className="submitReviewButton">
+                <div className='submitDiv'>
                     <button
                     type='submit'
+                    className={loginButtonClassName}
                     disabled={Boolean(Object.values(errors).length)}
                     >Submit Your Review</button>
                 </div>

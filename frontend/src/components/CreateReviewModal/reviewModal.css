@@ -1,12 +1,20 @@
 .reviewModal{
-    padding: 1em;
+    padding: 2em;
 }
 
-.submitReviewButton{
+/* .submitReviewButton{
     display: flex;
     justify-content: center;
 }
 
 label {
     padding: 1em;
+} */
+
+.starsInput{
+    display: flex;
+    justify-content: center;
+}
+.reviewPrompt{
+    margin-bottom: 1em;
 }

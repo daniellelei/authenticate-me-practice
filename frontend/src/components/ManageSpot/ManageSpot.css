@@ -1,5 +1,102 @@
-.currentSpots {
+nav {
     display: flex;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
+    margin: 1em;
+}
+
+img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.topm{
+    margin:1.5em;
+}
+
+.spotm {
+    margin: 0.5em;
+}
+
+
+
+.spotNavm {
+    text-decoration: none;
+    color: black;
+}
+.belowImagem{
+    display: flex;
+    justify-content: space-between;
+
+}
+.spotim {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 1em;
+
+}
+
+.infom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.cityStatem {
+    font-weight: bold;
+    margin-top:1em;
+}
+
+.ratingm {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0.8em;
+}
+
+.ratingStarm {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* height: 100%; */
+}
+
+.price-nightm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h4 {
+    font-weight: lighter;
+}
+
+.pricem {
+    font-weight: bold;
+    margin: 0.5em;
+}
+
+.spotRatem {
+    margin-top: 0;
+    
+}
+
+.reservem {
+    padding: 1em;
+    color: white;
+}
+.revm {
+    margin-top: 0;
+}
+.linkUpdate{
+    color:black;
+}
+.buttonUpdate{
+    margin-right:1em;
 }
