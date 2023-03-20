@@ -48,11 +48,12 @@ const CurrentUserSpots = () => {
                     {spots.map((spot) => (
                         <div className='spotm'>
                             <NavLink key={spot.id} to={`/spots/${spot.id}`}
-                            className='spotNavm'>
+                            className='spotNavm tooltip'>
                                 <img src={spot.previewImage} alt={spot.name} />
                                 <div className='belowImagem'>
                                     <div className='spotim'>
                                         <div className = 'infom'>
+                                            <h4 className='tooltip tooltiptext'>{spot.name}</h4>
                                             <h4 className='cityStatem'>{spot.city}, {spot.state}</h4>
                                         </div>
                                         <div className='price-nightm'>

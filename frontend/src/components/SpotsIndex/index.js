@@ -29,11 +29,12 @@ function SpotsIndex() {
                {spots.map((spot) => (
                 <div className='spot'>
                     <NavLink key={spot.id} to={`/spots/${spot.id}`} 
-                    className='spotNav'
+                    className='spotNav tooltip'
                     >
                         <img src={spot.previewImage} alt={spot.name} /> 
                         <div className='spoti'>
                             <div className = 'info'>
+                              <h4 className='tooltip tooltiptext'>{spot.name}</h4>
                               <h4 className='cityState'> {spot.city}, {spot.state} </h4>
                               <div className='price-night'>
                                 <h4 className='price'> ${spot.price} </h4>   
