@@ -93,6 +93,9 @@
     border-radius: 2px;
     box-shadow: 5px 5px rgb(204, 189, 189);
 }
+.reserve:hover {
+    background-color: rgb(216, 74, 121);
+}
 
 .price {
     width: 100%;
