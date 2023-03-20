@@ -29,6 +29,9 @@ const CurrentUserSpots = () => {
     const clickUpdate = (e) => {
         e.preventDefault();
     }
+    const clickCreate = (e) => {
+        e.preventDefault();
+    }
     
     if(!spots.length) return (
         <div>
@@ -41,7 +44,9 @@ const CurrentUserSpots = () => {
             <div >
                 <div className='topm'>
                 <h1>Manage Your Spots</h1>
-                <button>Create a New Spot</button>
+                <button onClick={clickCreate} className='createSpotbuttonm'
+                ><NavLink exact to='/spots/new' className='createSpotLinkm'>Create a New Spot
+          </NavLink></button>
                 </div>
                 <div className='spots-indexm'>
                 <nav>
@@ -73,7 +78,7 @@ const CurrentUserSpots = () => {
                             </NavLink>
                                 <div>
                                     <button onClick={clickUpdate}
-                                    className='buttonUpdate'
+                                    className='createSpotbuttonm buttonUpdate'
                                     >
                                         <Link key={spot.id} to={`/spots/${spot.id}/edit`}
                                         style={{textDecoration: 'none'}}

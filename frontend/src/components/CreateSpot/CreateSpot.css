@@ -106,4 +106,8 @@ label{
     box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
     color: white;
     margin: 1em;
+    border: 1px solid pink;
+}
+.createSubmit:hover {
+    background-color: rgb(216, 74, 121);
 }

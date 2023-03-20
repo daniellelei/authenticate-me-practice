@@ -95,8 +95,28 @@ h4 {
     margin-top: 0;
 }
 .linkUpdate{
-    color:black;
+    color: white;
 }
 .buttonUpdate{
     margin-right:1em;
+    color:white;
+}
+.createSpotLinkm{
+    text-decoration: none;
+    color: white;
+    font-size: 1.1em;
+}
+.createSpotbuttonm {
+    background-color: palevioletred;
+    color:white;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+    border: 1px solid pink;
+    padding: 0.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 8px;
+}
+
+.createSpotbuttonm:hover {
+    background-color: rgb(216, 74, 121);
 }
