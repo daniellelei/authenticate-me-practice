@@ -59,7 +59,31 @@ module.exports = {
       name: "SkyCabin",
       description: "Whether you have come for unprecedented adventure or uninterrupted serenity, here at SkyCabin, the experience you are seeking is always within reach. ",
       price: 143,
-    }
+    },
+    {
+      ownerId: 5, 
+      address: "123 Atlantic Ave",
+      city: "Asheville",
+      state: "North Carolina",
+      country: "United States",
+      lat: 12.5657773,
+      lng: 109.3344542,
+      name: "Sanctuary - Earth & Sky Dwellings",
+      description: "Take in the rustic, fairy tale vibe of this custom-made treehouse in the midst of towering white oaks.  ",
+      price: 200,
+    },
+    {
+      ownerId: 5, 
+      address: "100 Valley Ave",
+      city: "Trenton",
+      state: "Georgia",
+      country: "United States",
+      lat: 12.5657773,
+      lng: 109.3344542,
+      name: "Whippoorwill Retreat Treehouse",
+      description: "Whippoorwill Retreat is nestled in treetops on Sand Mountain, 20 min. from Chattanooga, Tn. ",
+      price: 100,
+    },
    ],{})
   },
 
