@@ -18,7 +18,7 @@ function Navigation({ isLoaded }){
         <NavLink style={{textDecoration: 'none'}} exact to="/">
           <div className='iconName'>
             <img className='icon' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQHXghE1x-7D3JKBWy-qZZP2zxh-el3fA9ai-tgntpPw&s'/>
-            <h4 className='apiName'>tree house bnb</h4>
+            <h4 className='apiName'>treehouse bnb</h4>
           </div>
           {/* <i class="fa-solid fa-house"></i> */}
         </NavLink>

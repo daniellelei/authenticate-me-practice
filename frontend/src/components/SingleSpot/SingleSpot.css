@@ -10,46 +10,49 @@
 .images {
     margin-top: 1em;
     display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: 50% 50%;
     grid-template-areas: 
     "a a b c"
     "a a d e";
-    /* width: 100%; */
-    /* margin: 2em; */
+    margin-bottom: 0;
+    
+    
 }
 
 .img0 {
     grid-area: a;
-    height: 22.5em;
-    width: 30rem;
+    width: 99%;
+    height:100%;
     margin:0.2em;
     border-radius: 15px 0 0 15px;
     
 }
 .img1 {
     grid-area: b;
-    height: 11em;
-    width: 14em;
+    height: 99%;
+    width: 99%;
     margin:0.2em;
     border-radius: 0 0 0 0;
 }
 .img2 {
     grid-area: c;
-    height: 11em;
-    width: 14em;
+    height: 99%;
+    width: 99%;
     margin: 0.2em;
     border-radius: 0 15px 0 0;
 }
 .img3 {
     grid-area: d;
-    height: 11em;
-    width: 14em;
+    height: 99%;
+    width: 99%;
     margin: 0.2em;
     border-radius: 0 0 0 0;
 }
 .img4 {
     grid-area: e;
-    height: 11em;
-    width: 14em;
+    height: 99%;
+        width: 99%;
     margin: 0.2em;
     border-radius: 0 0 15px 0;
 }
