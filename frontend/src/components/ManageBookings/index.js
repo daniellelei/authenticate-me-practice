@@ -12,11 +12,38 @@ const CurrentUserBookings = () => {
     useEffect(()=>{
         dispatch(bookingsAction.thunkGetCurrentBookings())
 
-        // return () => {
-        //     dispatch(bookingsAction.action)
-        // }
+        return () => {
+            dispatch(bookingsAction.actionClearCurrentBookings())
+        }
     }, [dispatch])
-    return ()
+
+
+    let currentBookingsArr = [];
+    if(currentBookings) currentBookingsArr=Object.values(currentBookings)
+
+    if (!currentBookings || !user) return (
+        <div>Loading...</div>
+    )
+    return (
+        <div>
+
+            <div>
+                <h1>My Bookings</h1>
+                <div>
+                    {
+                        currentBookingsArr.map ((b)=>(
+                            <div>
+                                <p>{b.id}</p>
+                                <p>{b.Spot.name}</p>
+                            </div>
+                        ))
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    )
 
 }
 export default CurrentUserBookings;
