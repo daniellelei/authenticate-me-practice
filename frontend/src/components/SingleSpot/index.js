@@ -3,13 +3,13 @@ import './SingleSpot.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loadOneSpotThunk } from "../../store/spots";
 import { loadReviewThunk } from "../../store/reviews";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import DeleteModal from '../DeleteSpotModal';
 import OpenModalButton from '../OpenModalButton/index'
 import CreateReviewModal from "../CreateReviewModal";
 import DeleteReviewModal from "../DeleteReviewModal";
-
-
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 const SingleSpot = () => {
     const { spotId }  = useParams();
     const dispatch = useDispatch();
@@ -18,6 +18,9 @@ const SingleSpot = () => {
     let user = useSelector(state=>state.session.user);
     reviews = Object.values(reviews);//array
     //console.log('reviews', reviews)
+
+    const [date, setDate] = useState(new Date());
+
 
     
 
@@ -96,14 +99,13 @@ const SingleSpot = () => {
                     {images.map((image) => (
                         <img key={image.id} className={image.ind} src={image.url} />
                     ))}
-
-                   
                 </div>
                 <div className="belowImage">
                     <div className="details">
                         <span className="hostName">Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</span>
                         <p className="description">{spot.description}</p>
                     </div>
+                    
                     <div className="callOut">
                         <div className="price">
                             <div className="priceOnly">
@@ -167,6 +169,26 @@ const SingleSpot = () => {
                     ))}
                 </div>
             </div>
+            <div className='calendar-container'>
+                        <Calendar
+                            onChange={setDate}
+                            value={date}
+                            selectRange={true}
+                        />
+                    </div>
+                    {date.length > 0 ? (
+                        <p className='text-center'>
+                        <span className='bold'>Start:</span>{' '}
+                        {date[0].toDateString()}
+                        &nbsp;|&nbsp;
+                        <span className='bold'>End:</span> {date[1].toDateString()}
+                        </p>
+                    ) : (
+                        <p className='text-center'>
+                        <span className='bold'>Default selected date:</span>{' '}
+                        {date.toDateString()}
+                        </p>
+                    )}
         </div>
     )
 
