@@ -24,6 +24,19 @@ export const actionGetSpotBookings = (bookings) => {
     }
 }
 
+export const actionClearCurrentBookings = () => {
+    return {
+        type:CLEAR_CURRENT_BOOKINGS
+    }
+}
+export const actionClearSpotBookings = () => {
+    return {
+        type: CLEAR_SPOT_BOOKINGS
+    }
+}
+
+
+
 export const thunkGetCurrentBookings = () => async (dispatch) =>{
     const response = await csrfFetch(`/api/bookings/current`)
     if (response.ok) {
@@ -59,6 +72,10 @@ const bookingsReducer = (state = initialState, action) => {
                 allSpotBookings[booking.id] = booking;
             })
             return {...state, spotBookings: {...allSpotBookings}}
+        case CLEAR_CURRENT_BOOKINGS:
+            return{...state, currentBookings:{}}
+        case CLEAR_SPOT_BOOKINGS:
+            return {...state, spotBookings:{}}
 
         default:
             return state;

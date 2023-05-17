@@ -9,6 +9,7 @@ import SingleSpot from "./components/SingleSpot";
 import CreateSpot from "./components/CreateSpot";
 import CurrentUserSpots from "./components/ManageSpot";
 import EditSpot from "./components/ManageSpot/EditSpot";
+import CurrentUserBookings from "./components/ManageBookings";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,9 @@ function App() {
           </Route>
           <Route exact path = '/spots/:spotId'>
             <SingleSpot />
+          </Route>
+          <Route exact path = '/bookings/current'>
+            <CurrentUserBookings />
           </Route>
           
           <Route>
