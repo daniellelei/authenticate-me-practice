@@ -49,6 +49,11 @@ function ProfileButton({ user }) {
     history.push('/spots/current')
     closeMenu();
   }
+  const manageBookingsClick = (e) => {
+    e.preventDefault();
+    history.push('/bookings/current')
+    closeMenu();
+  }
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
@@ -71,6 +76,11 @@ function ProfileButton({ user }) {
               <button onClick={manageSpotsClick}
               className='dropDown-Button'
               >Manage Spots</button>
+            </li>
+            <li>
+              <button onClick={manageBookingsClick}
+              className='dropDown-Button'
+              >Manage Bookings</button>
             </li>
             <li>
               <button onClick={logout}

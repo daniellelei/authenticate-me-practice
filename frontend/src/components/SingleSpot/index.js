@@ -3,13 +3,14 @@ import './SingleSpot.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loadOneSpotThunk } from "../../store/spots";
 import { loadReviewThunk } from "../../store/reviews";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import DeleteModal from '../DeleteSpotModal';
 import OpenModalButton from '../OpenModalButton/index'
 import CreateReviewModal from "../CreateReviewModal";
 import DeleteReviewModal from "../DeleteReviewModal";
-
-
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import * as bookingsAction from "../../store/bookings"
 const SingleSpot = () => {
     const { spotId }  = useParams();
     const dispatch = useDispatch();
@@ -18,6 +19,9 @@ const SingleSpot = () => {
     let user = useSelector(state=>state.session.user);
     reviews = Object.values(reviews);//array
     //console.log('reviews', reviews)
+    const spotBookings = useSelector(state=>state.bookings.spotBookings)
+    const [date, setDate] = useState(new Date());
+
 
     
 
@@ -54,6 +58,10 @@ const SingleSpot = () => {
     useEffect(()=>{
         dispatch(loadOneSpotThunk(spotId));
         dispatch(loadReviewThunk(spotId));
+        dispatch(bookingsAction.thunkGetSpotBookings(spot))
+        return ()=>{
+            dispatch(bookingsAction.actionClearSpotBookings())
+        }
     }, [dispatch])
     if(!spot) return null;
 
@@ -83,7 +91,8 @@ const SingleSpot = () => {
         return result;
     }
 
-    
+    let spotBookingsArr = [];
+    if(spotBookings) spotBookingsArr=Object.values(spotBookings)
     
     return (
         <div className="wholePage">
@@ -96,14 +105,13 @@ const SingleSpot = () => {
                     {images.map((image) => (
                         <img key={image.id} className={image.ind} src={image.url} />
                     ))}
-
-                   
                 </div>
                 <div className="belowImage">
                     <div className="details">
                         <span className="hostName">Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</span>
                         <p className="description">{spot.description}</p>
                     </div>
+                    
                     <div className="callOut">
                         <div className="price">
                             <div className="priceOnly">
@@ -167,6 +175,44 @@ const SingleSpot = () => {
                     ))}
                 </div>
             </div>
+            <div>
+                <h4>Booking for this spot</h4>
+                <div>
+                    {!spotBookingsArr.length ? <h4>There is no booking for this spot yet.</h4> :
+                        spotBookingsArr.map ((b)=> (
+                            <div key={b}>
+                                
+                                <p>Start Date: {b.startDate}</p>
+                                <p>End Date: {b.endDate}</p>
+                                
+
+                            </div>
+                        ))
+                    }
+                </div>
+
+            </div>
+            <div className='calendar-container'>
+                        <Calendar
+                            onChange={setDate}
+                            value={date}
+                            selectRange={true}
+                        />
+            </div>
+            {date.length > 0 ? (
+                <p className='text-center'>
+                <span className='bold'>Start:</span>{' '}
+                {date[0].toDateString()}
+                &nbsp;|&nbsp;
+                <span className='bold'>End:</span> {date[1].toDateString()}
+                </p>
+            ) : (
+                <p className='text-center'>
+                <span className='bold'>Default selected date:</span>{' '}
+                {date.toDateString()}
+                </p>
+            )}
+            
         </div>
     )
 
