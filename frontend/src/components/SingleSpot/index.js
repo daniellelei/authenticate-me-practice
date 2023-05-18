@@ -153,6 +153,17 @@ const SingleSpot = () => {
         }
         return Dates
     }
+    const nightCounter = (startDate, endDate) => {
+        if(endDate === null) return 0
+        let start = new Date(startDate)
+        start = Date.parse(start)
+        let end = new Date(endDate)
+        end = Date.parse(end)
+        let i = 0;
+        i = (end - start) / 86400000;
+        return i
+        
+    }
 
     
     
@@ -190,7 +201,7 @@ const SingleSpot = () => {
                             </div>
                             )}
                         </div>
-                            <div className="dropDownSection" ref={ulRef}>
+                            <div style={{fontSize:"12px"}} className="dropDownSection" ref={ulRef}>
                             <div className="CheckInCheckOut">
                                 <div className="checkIn" onClick={openDropDown}>
                                     <p>CHECK-IN</p>  
@@ -216,8 +227,58 @@ const SingleSpot = () => {
                                     />
                                 </div>
                             </div>
-                        <button onClick={clickReserve} className="reserve">Reserve</button>
+                        <button onClick={clickReserve} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>
+                        <div className="FeeInfo">
+                            {nightCounter(date[0].startDate, date[0].endDate) === 0
+                            ? null
+                            : (
+                                <div>
+                                    <div className="priceDetail">
+                                        <p>${spot.price} x {nightCounter(date[0].startDate, date[0].endDate)} nights</p>
+                                        <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate)}</p>
+                                    </div>
+                                    <div className="priceDetail">
+                                        <p>service fee</p>
+                                        <p>$68</p>
+                                    </div>
+                                    <div className="totalPrice">
+                                        <p>Total before taxes</p>
+                                        <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate)+68}</p>
+                                    </div>
+                                </div>
+                            )
+                            }
+                        </div>
                     </div>
+                </div>
+
+                <div>
+                    <div>
+                        <h3>{nightCounter(date[0].startDate, date[0].endDate)===0 
+                        ? (<div>
+                            <h2>Select checkout date</h2>
+                            <p>Add your travel dates for exact pricing</p>
+                        </div>) 
+                        :(
+                            <div>
+                                <h2>{nightCounter(date[0].startDate, date[0].endDate)} nights in {spot.city}</h2>
+                                <p>{selectedDateMonthYear(date[0].startDate)} - {selectedDateMonthYear(date[0].endDate)}</p>
+                            </div>
+                        )}</h3>
+                    </div>
+                    <DateRange
+                       minDate={new Date()}
+                        editableDateInputs={true}
+                        showSelectionPreview={true}
+                        onChange={item => setDate([item.selection])}
+                        moveRangeOnFirstSelection={false}
+                        months={2}
+                        calendarFocus="forward"
+                        direction="horizontal"
+                        ranges={date}
+                        preventSnapRefocus={true}
+                        disabledDates={spotBookingDate(spotBookingsArr)}
+                    />
                 </div>
 
                 <div className="reviews">
@@ -260,28 +321,9 @@ const SingleSpot = () => {
                     ))}
                 </div>
             </div>
-            <div>
-                <h4>Booking for this spot</h4>
-                <div>
-                    {!spotBookingsArr.length ? <h4>There is no booking for this spot yet.</h4> :
-                        spotBookingsArr.map ((b)=> (
-                            <div key={b}>
-                                
-                                <p>Start Date: {b.startDate}</p>
-                                <p>End Date: {b.endDate}</p>
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-            <DateRange
-                minDate={new Date()}
-                editableDateInputs={true}
-                onChange={item => setDate([item.selection])}
-                moveRangeOnFirstSelection={false}
-                ranges={date}
-                disabledDates={spotBookingDate(spotBookingsArr)}
-            />
+
+            
+            
             
         </div>
     )
