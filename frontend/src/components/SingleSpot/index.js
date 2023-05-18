@@ -31,6 +31,9 @@ const SingleSpot = () => {
         key: 'selection'
         }
     ]);
+    console.log('date', date)
+    console.log('start date', date[0].startDate)
+    console.log('end date', date[0].endDate)
     const [showDropDown, setShowDropDown] = useState(false);
     const openDropDown = () => {
         if(showDropDown) return;
@@ -52,7 +55,7 @@ const SingleSpot = () => {
 
   
     // const closeMenu = () => setShowDropDown(false);
-    console.log('showDropDown', showDropDown)
+    // console.log('showDropDown', showDropDown)
 
 
     
@@ -121,6 +124,12 @@ const SingleSpot = () => {
         let result = `${months[created.getMonth()]} ${created.getFullYear()}`
         return result;
     }
+    const selectedDateMonthYear = (moment) => {
+        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        let created = new Date(moment);
+        let result = `${created.getDate()}/${months[created.getMonth()]}/${created.getFullYear()}`
+        return result;
+    }
 
     let spotBookingsArr = [];
     if(spotBookings) spotBookingsArr=Object.values(spotBookings)
@@ -180,10 +189,15 @@ const SingleSpot = () => {
                                 <h4 className='reviewNum'>{reviewNum(spot.numReviews)}</h4>
                             </div>
                             )}
+                        </div>
                             <div className="dropDownSection" ref={ulRef}>
-                            <div>
-                                <div onClick={openDropDown}>CHECK-IN</div>
-                                <div onClick={openDropDown}>CHECK-OUT</div>
+                            <div className="CheckInCheckOut">
+                                <div className="checkIn" onClick={openDropDown}>
+                                    <p>CHECK-IN</p>  
+                                    {selectedDateMonthYear(date[0].startDate)}</div>
+                                <div className="checkOut" onClick={openDropDown}>  
+                                <p>CHECK-OUT</p>
+                                {date[0].endDate===null? `Continuous`: selectedDateMonthYear(date[0].endDate)}</div>
                             </div>
                                 <div className={showDropDownName} >
                                    <h1>Choose a date</h1> 
@@ -194,7 +208,7 @@ const SingleSpot = () => {
                                         onChange={item => setDate([item.selection])}
                                         moveRangeOnFirstSelection={false}
                                         months={2}
-                                        calendarFocus="backwards"
+                                        calendarFocus="forward"
                                         direction="horizontal"
                                         ranges={date}
                                         preventSnapRefocus={true}
@@ -202,7 +216,6 @@ const SingleSpot = () => {
                                     />
                                 </div>
                             </div>
-                        </div>
                         <button onClick={clickReserve} className="reserve">Reserve</button>
                     </div>
                 </div>
