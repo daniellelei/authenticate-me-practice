@@ -8,8 +8,11 @@ import DeleteModal from '../DeleteSpotModal';
 import OpenModalButton from '../OpenModalButton/index'
 import CreateReviewModal from "../CreateReviewModal";
 import DeleteReviewModal from "../DeleteReviewModal";
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+// import Calendar from 'react-calendar';
+// import 'react-calendar/dist/Calendar.css';
+import {DateRange} from 'react-date-range'
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as bookingsAction from "../../store/bookings"
 const SingleSpot = () => {
     const { spotId }  = useParams();
@@ -20,8 +23,16 @@ const SingleSpot = () => {
     reviews = Object.values(reviews);//array
     //console.log('reviews', reviews)
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
-    const [date, setDate] = useState(new Date()); //array of date
-    console.log('date', date)
+    // const [date, setDate] = useState(new Date()); //array of date
+    // console.log('date', date)
+    const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: null,
+      key: 'selection'
+    }
+  ]);
+  console.log('selected dates', state)
 
 
     
@@ -114,7 +125,7 @@ const SingleSpot = () => {
         return Dates
     }
 
-    console.log('disabled date', spotBookingDate(spotBookingsArr))
+    
     
     return (
         <div className="wholePage">
@@ -206,49 +217,54 @@ const SingleSpot = () => {
                                 
                                 <p>Start Date: {b.startDate}</p>
                                 <p>End Date: {b.endDate}</p>
-                                
-
                             </div>
                         ))
                     }
                 </div>
-
             </div>
-            <div className='calendar-container'>
-                        <Calendar
-                            // minDate={new Date()}
-                            onChange={setDate}
-                            value={date}
-                            selectRange={true}
-                            tileDisabled={ ({date, view}) =>
-                                // ({date})=> spotBookingDate(spotBookingsArr).includes(date.getDate()) 
-                                (view === 'month') && // Block day tiles only
-                                spotBookingDate(spotBookingsArr).some(disabledDate =>
-                                date.getFullYear() === disabledDate.getFullYear() &&
-                                date.getMonth() === disabledDate.getMonth() &&
-                                date.getDate() === disabledDate.getDate()
-                                )
-
-                        }
-                        />
-            </div>
-            {date.length > 0 ? (
-                <p className='text-center'>
-                <span className='bold'>Start:</span>{' '}
-                {date[0].toDateString()}
-                &nbsp;|&nbsp;
-                <span className='bold'>End:</span> {date[1].toDateString()}
-                </p>
-            ) : (
-                <p className='text-center'>
-                <span className='bold'>Default selected date:</span>{' '}
-                {date.toDateString()}
-                </p>
-            )}
+            <DateRange
+                minDate={new Date()}
+                editableDateInputs={true}
+                onChange={item => setState([item.selection])}
+                moveRangeOnFirstSelection={false}
+                ranges={state}
+                disabledDates={spotBookingDate(spotBookingsArr)}
+/>
             
         </div>
     )
-
+    
 }
 
 export default SingleSpot;
+{/* {date.length > 0 ? (
+    <p className='text-center'>
+    <span className='bold'>Start:</span>{' '}
+    {date[0].toDateString()}
+    &nbsp;|&nbsp;
+    <span className='bold'>End:</span> {date[1].toDateString()}
+    </p>
+) : (
+    <p className='text-center'>
+    <span className='bold'>Default selected date:</span>{' '}
+    {date.toDateString()}
+    </p>
+)}
+<div className='calendar-container'>
+        <Calendar
+            // minDate={new Date()}
+            onChange={setDate}
+            value={date}
+            selectRange={true}
+            tileDisabled={ ({date, view}) =>
+                // ({date})=> spotBookingDate(spotBookingsArr).includes(date.getDate()) 
+                (view === 'month') && // Block day tiles only
+                spotBookingDate(spotBookingsArr).some(disabledDate =>
+                date.getFullYear() === disabledDate.getFullYear() &&
+                date.getMonth() === disabledDate.getMonth() &&
+                date.getDate() === disabledDate.getDate()
+                )
+
+        }
+        />
+</div> */}
