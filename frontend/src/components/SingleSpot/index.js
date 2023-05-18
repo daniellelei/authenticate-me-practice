@@ -40,12 +40,6 @@ const SingleSpot = () => {
         if(!showDropDown) return;
         const closeMenu =(e)=> {
             if(!ulRef.current?.contains(e.target)) {
-                console.log('showDropDown', showDropDown)
-                console.log("ulRef", ulRef)
-                console.log('ulRef.current', ulRef.current)
-                console.log('e.target', e.target)
-                console.log('!ulRef.current.contain(e.target)', !ulRef.current?.contains(e.target))
-                console.log('showDropDown', showDropDown)
                 setShowDropDown(false)
             }
         }
@@ -186,22 +180,27 @@ const SingleSpot = () => {
                                 <h4 className='reviewNum'>{reviewNum(spot.numReviews)}</h4>
                             </div>
                             )}
-                            <div ref={ulRef}>
+                            <div className="dropDownSection" ref={ulRef}>
                             <div>
                                 <div onClick={openDropDown}>CHECK-IN</div>
                                 <div onClick={openDropDown}>CHECK-OUT</div>
                             </div>
                                 <div className={showDropDownName} >
                                    <h1>Choose a date</h1> 
-                                    </div>
-                                {/* <DateRange
-                                    minDate={new Date()}
-                                    editableDateInputs={true}
-                                    onChange={item => setDate([item.selection])}
-                                    moveRangeOnFirstSelection={false}
-                                    ranges={date}
-                                    disabledDates={spotBookingDate(spotBookingsArr)}
-                                /> */}
+                                    <DateRange
+                                        minDate={new Date()}
+                                        editableDateInputs={true}
+                                        showSelectionPreview={true}
+                                        onChange={item => setDate([item.selection])}
+                                        moveRangeOnFirstSelection={false}
+                                        months={2}
+                                        calendarFocus="backwards"
+                                        direction="horizontal"
+                                        ranges={date}
+                                        preventSnapRefocus={true}
+                                        disabledDates={spotBookingDate(spotBookingsArr)}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <button onClick={clickReserve} className="reserve">Reserve</button>
