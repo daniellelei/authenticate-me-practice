@@ -35,9 +35,9 @@ const SingleSpot = () => {
     ]);
     const [startDate, setStartDate] = useState(date[0].startDate)
     const [endDate, setEndDate] = useState(date[0].endDate)
-    console.log('date', date)
-    console.log('start date', date[0].startDate)
-    console.log('end date', date[0].endDate)
+    // console.log('date', date)
+    // console.log('start date', date[0].startDate)
+    // console.log('end date', date[0].endDate)
     const [showDropDown, setShowDropDown] = useState(false);
     const openDropDown = () => {
         if(showDropDown) return;
@@ -134,8 +134,10 @@ const SingleSpot = () => {
 
     const spotBookingDate = (spotBookingsArr) => {
         let Dates = []
-        
+        // console.log('spotBoookingsArr', spotBookingsArr)
+        if(!spotBookingsArr.length) return []
         for (let s of spotBookingsArr){
+            // console.log('inside spotBookingDate function,', s.startDate)
             let start = new Date(s.startDate.replace('-', ' '))
             let end = new Date(s.endDate.replace('-', ' '))
             let startParsed = Date.parse(start)
@@ -169,8 +171,8 @@ const SingleSpot = () => {
         let endString = date[0].endDate.toISOString()
         setStartDate(startString.substring(0,10))
         setEndDate(endString.substring(0,10))
-        console.log('startDate', startDate)
-        console.log('endDate', endDate)
+        console.log('startDate when reserve', startDate)
+        console.log('endDate when reserve', endDate)
 
         const newBooking = {
             startDate,
@@ -325,7 +327,7 @@ const SingleSpot = () => {
 
                     </div>
                     {reviews.map((review)=> (
-                        <div>
+                        <div key={review.id}>
                             <h4 className="reviewer">{review.User.firstName}</h4>
                             <h4 className="reviewTime">{reviewMonthYear(review.createdAt)}</h4>
                             <h4 className="reviewContent">{review.review}</h4>

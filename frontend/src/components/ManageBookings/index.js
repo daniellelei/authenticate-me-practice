@@ -32,7 +32,7 @@ const CurrentUserBookings = () => {
                 <div>
                     {
                         currentBookingsArr.map ((b)=>(
-                            <div>
+                            <div key={b.id}>
                                 <p>Booking Id: {b.id}</p>
                                 <p>{b.Spot.name}</p>
                                 <p>Start Date: {b.startDate}</p>

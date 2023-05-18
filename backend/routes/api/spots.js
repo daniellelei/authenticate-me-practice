@@ -813,7 +813,7 @@ router.get(
         // if it is not owner
         const allbookings = await Booking.findAll({
             where:{spotId: req.params.spotId},
-            attributes:['spotId', 'startDate', 'endDate']
+            attributes:['id','spotId', 'startDate', 'endDate']
         })
         return res.status(200).json({
             Bookings: allbookings

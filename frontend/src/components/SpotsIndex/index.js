@@ -27,7 +27,7 @@ function SpotsIndex() {
         <div className='spots-index'>
             <nav>
                {spots.map((spot) => (
-                <div className='spot'>
+                <div className='spot' key={spot.id}>
                     <NavLink key={spot.id} to={`/spots/${spot.id}`} 
                     className='spotNav tooltip'
                     >
