@@ -3,7 +3,7 @@ import './SingleSpot.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loadOneSpotThunk } from "../../store/spots";
 import { loadReviewThunk } from "../../store/reviews";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import DeleteModal from '../DeleteSpotModal';
 import OpenModalButton from '../OpenModalButton/index'
 import CreateReviewModal from "../CreateReviewModal";
@@ -17,22 +17,48 @@ import * as bookingsAction from "../../store/bookings"
 const SingleSpot = () => {
     const { spotId }  = useParams();
     const dispatch = useDispatch();
+    const ulRef = useRef();
     const spot = useSelector(state=>state.spots.singleSpot);
     let reviews = useSelector(state => state.reviews.reviews);
     let user = useSelector(state=>state.session.user);
     reviews = Object.values(reviews);//array
-    //console.log('reviews', reviews)
+    
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
-    // const [date, setDate] = useState(new Date()); //array of date
-    // console.log('date', date)
-    const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: null,
-      key: 'selection'
+    const [date, setDate] = useState([
+        {
+        startDate: new Date(),
+        endDate: null,
+        key: 'selection'
+        }
+    ]);
+    const [showDropDown, setShowDropDown] = useState(false);
+    const openDropDown = () => {
+        if(showDropDown) return;
+        setShowDropDown(true);
     }
-  ]);
-  console.log('selected dates', state)
+    useEffect(()=> {
+        if(!showDropDown) return;
+        const closeMenu =(e)=> {
+            if(!ulRef.current?.contains(e.target)) {
+                console.log('showDropDown', showDropDown)
+                console.log("ulRef", ulRef)
+                console.log('ulRef.current', ulRef.current)
+                console.log('e.target', e.target)
+                console.log('!ulRef.current.contain(e.target)', !ulRef.current?.contains(e.target))
+                console.log('showDropDown', showDropDown)
+                setShowDropDown(false)
+            }
+        }
+        document.addEventListener("click", closeMenu);
+
+        return ()=>document.removeEventListener("click", closeMenu)
+    }, [showDropDown])
+
+    const showDropDownName = "dropdown" + (showDropDown ? "" : " hidden");
+
+  
+    // const closeMenu = () => setShowDropDown(false);
+    console.log('showDropDown', showDropDown)
 
 
     
@@ -160,9 +186,23 @@ const SingleSpot = () => {
                                 <h4 className='reviewNum'>{reviewNum(spot.numReviews)}</h4>
                             </div>
                             )}
-                            
-                            
-                            {/* <p>{spot.avgStarRating}<i class="fa-sharp fa-solid fa-star"></i>  {spot.numReviews}reviews</p> */}
+                            <div ref={ulRef}>
+                            <div>
+                                <div onClick={openDropDown}>CHECK-IN</div>
+                                <div onClick={openDropDown}>CHECK-OUT</div>
+                            </div>
+                                <div className={showDropDownName} >
+                                   <h1>Choose a date</h1> 
+                                    </div>
+                                {/* <DateRange
+                                    minDate={new Date()}
+                                    editableDateInputs={true}
+                                    onChange={item => setDate([item.selection])}
+                                    moveRangeOnFirstSelection={false}
+                                    ranges={date}
+                                    disabledDates={spotBookingDate(spotBookingsArr)}
+                                /> */}
+                            </div>
                         </div>
                         <button onClick={clickReserve} className="reserve">Reserve</button>
                     </div>
@@ -225,11 +265,11 @@ const SingleSpot = () => {
             <DateRange
                 minDate={new Date()}
                 editableDateInputs={true}
-                onChange={item => setState([item.selection])}
+                onChange={item => setDate([item.selection])}
                 moveRangeOnFirstSelection={false}
-                ranges={state}
+                ranges={date}
                 disabledDates={spotBookingDate(spotBookingsArr)}
-/>
+            />
             
         </div>
     )
