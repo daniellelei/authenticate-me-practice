@@ -20,11 +20,11 @@ const SingleSpot = () => {
     reviews = Object.values(reviews);//array
     //console.log('reviews', reviews)
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(new Date()); //array of date
+    console.log('date', date)
 
 
     
-
     const displayPostReviewButton = (user, reviews, spot) => {
         if( user===null || user===undefined ) return false;
 
@@ -58,7 +58,7 @@ const SingleSpot = () => {
     useEffect(()=>{
         dispatch(loadOneSpotThunk(spotId));
         dispatch(loadReviewThunk(spotId));
-        dispatch(bookingsAction.thunkGetSpotBookings(spot))
+        dispatch(bookingsAction.thunkGetSpotBookings(spotId))
         return ()=>{
             dispatch(bookingsAction.actionClearSpotBookings())
         }
@@ -93,6 +93,28 @@ const SingleSpot = () => {
 
     let spotBookingsArr = [];
     if(spotBookings) spotBookingsArr=Object.values(spotBookings)
+
+    const spotBookingDate = (spotBookingsArr) => {
+        let Dates = []
+        
+        for (let s of spotBookingsArr){
+            let start = new Date(s.startDate.replace('-', ' '))
+            let end = new Date(s.endDate.replace('-', ' '))
+            let startParsed = Date.parse(start)
+            let endParsed = Date.parse(end)
+            let i = startParsed;
+            while (i < endParsed) {
+                i = i + 86400000
+                let nextday = new Date(i)
+                Dates.push(nextday)
+            }
+            Dates.push(start);
+            Dates.push(end);
+        }
+        return Dates
+    }
+
+    console.log('disabled date', spotBookingDate(spotBookingsArr))
     
     return (
         <div className="wholePage">
@@ -194,9 +216,20 @@ const SingleSpot = () => {
             </div>
             <div className='calendar-container'>
                         <Calendar
+                            // minDate={new Date()}
                             onChange={setDate}
                             value={date}
                             selectRange={true}
+                            tileDisabled={ ({date, view}) =>
+                                // ({date})=> spotBookingDate(spotBookingsArr).includes(date.getDate()) 
+                                (view === 'month') && // Block day tiles only
+                                spotBookingDate(spotBookingsArr).some(disabledDate =>
+                                date.getFullYear() === disabledDate.getFullYear() &&
+                                date.getMonth() === disabledDate.getMonth() &&
+                                date.getDate() === disabledDate.getDate()
+                                )
+
+                        }
                         />
             </div>
             {date.length > 0 ? (

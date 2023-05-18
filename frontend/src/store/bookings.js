@@ -45,8 +45,8 @@ export const thunkGetCurrentBookings = () => async (dispatch) =>{
     }
 }
 
-export const thunkGetSpotBookings = (spot) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spot.id}/bookings`)
+export const thunkGetSpotBookings = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/bookings`)
     if (response.ok) {
         const bookingRes = await response.json();
         await dispatch(actionGetSpotBookings(bookingRes.Bookings))
