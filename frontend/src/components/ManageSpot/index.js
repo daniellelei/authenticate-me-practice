@@ -70,7 +70,7 @@ const CurrentUserSpots = () => {
                                             {!spot.avgRating ? 
                                             <h4 className='revm'> New </h4> : 
                                             (<div className='ratingStarm revm'>
-                                                <i class="fa-sharp fa-solid fa-star"></i>
+                                                <i className="fa-sharp fa-solid fa-star"></i>
                                                 <h4 className='spotRatem'>{Number.parseFloat(spot.avgRating).toFixed(1)}</h4>
                                             </div>)}
                                         </div>

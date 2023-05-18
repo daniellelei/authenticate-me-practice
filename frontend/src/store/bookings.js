@@ -1,3 +1,4 @@
+// import booking from '../../../backend/db/models/booking';
 import {csrfFetch} from './csrf';
 import Cookies from 'js-cookie';
 
@@ -34,7 +35,12 @@ export const actionClearSpotBookings = () => {
         type: CLEAR_SPOT_BOOKINGS
     }
 }
-
+export const actionAddBooking = (booking) => {
+    return {
+        type: ADD_BOOKING,
+        booking
+    }
+}
 
 
 export const thunkGetCurrentBookings = () => async (dispatch) =>{
@@ -52,6 +58,20 @@ export const thunkGetSpotBookings = (spotId) => async (dispatch) => {
         await dispatch(actionGetSpotBookings(bookingRes.Bookings))
     }
 }
+
+export const thunkAddBooking = (spotId, dates) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/bookings`, {
+        method: 'POST',
+        header: {'Content-Type': "application/json"},
+        body:JSON.stringify(dates)
+    })
+    if(response.ok){
+        const bookingRes = await response.json();
+        dispatch(actionAddBooking(bookingRes))
+        return bookingRes;
+    }
+}
+
 
 const initialState = {
     currentBookings:{},
@@ -76,6 +96,12 @@ const bookingsReducer = (state = initialState, action) => {
             return{...state, currentBookings:{}}
         case CLEAR_SPOT_BOOKINGS:
             return {...state, spotBookings:{}}
+        case ADD_BOOKING:
+            return {
+                ...state,
+                currentBookings:action.booking,
+                spotBookings:action.booking,
+            };
 
         default:
             return state;

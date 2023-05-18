@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import './SingleSpot.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loadOneSpotThunk } from "../../store/spots";
@@ -17,11 +17,13 @@ import * as bookingsAction from "../../store/bookings"
 const SingleSpot = () => {
     const { spotId }  = useParams();
     const dispatch = useDispatch();
+    const history = useHistory()
     const ulRef = useRef();
     const spot = useSelector(state=>state.spots.singleSpot);
     let reviews = useSelector(state => state.reviews.reviews);
     let user = useSelector(state=>state.session.user);
     reviews = Object.values(reviews);//array
+    const [resErrors, setResErrors] = useState({});
     
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
     const [date, setDate] = useState([
@@ -31,6 +33,8 @@ const SingleSpot = () => {
         key: 'selection'
         }
     ]);
+    const [startDate, setStartDate] = useState(date[0].startDate)
+    const [endDate, setEndDate] = useState(date[0].endDate)
     console.log('date', date)
     console.log('start date', date[0].startDate)
     console.log('end date', date[0].endDate)
@@ -52,12 +56,6 @@ const SingleSpot = () => {
     }, [showDropDown])
 
     const showDropDownName = "dropdown" + (showDropDown ? "" : " hidden");
-
-  
-    // const closeMenu = () => setShowDropDown(false);
-    // console.log('showDropDown', showDropDown)
-
-
     
     const displayPostReviewButton = (user, reviews, spot) => {
         if( user===null || user===undefined ) return false;
@@ -165,6 +163,28 @@ const SingleSpot = () => {
         
     }
 
+    const handleReserve = async (e) => {
+        e.preventDefault();
+        let startString = date[0].startDate.toISOString()
+        let endString = date[0].endDate.toISOString()
+        setStartDate(startString.substring(0,10))
+        setEndDate(endString.substring(0,10))
+        console.log('startDate', startDate)
+        console.log('endDate', endDate)
+
+        const newBooking = {
+            startDate,
+            endDate,
+        };
+        const bookingRes = await dispatch(bookingsAction.thunkAddBooking(spotId, newBooking))
+        if(!bookingRes.errors){
+            history.push(`/bookings/current`)
+        } else {
+            await setResErrors(bookingRes.errors);
+            console.log('resError', resErrors)
+        }
+    }
+
     
     
     return (
@@ -194,7 +214,7 @@ const SingleSpot = () => {
                             {spot.avgStarRating==='No reviews yet' ? 
                             <h4> New </h4> : (
                             <div className="priceReview">
-                                <i class="fa-sharp fa-solid fa-star"></i>
+                                <i className="fa-sharp fa-solid fa-star"></i>
                                 <h4 className='spotRate'>{Number.parseFloat(spot.avgStarRating).toFixed(1)}</h4>
                                 <h4> · </h4>
                                 <h4 className='reviewNum'>{reviewNum(spot.numReviews)}</h4>
@@ -227,7 +247,7 @@ const SingleSpot = () => {
                                     />
                                 </div>
                             </div>
-                        <button onClick={clickReserve} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>
+                        <button onClick={handleReserve} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>
                         <div className="FeeInfo">
                             {nightCounter(date[0].startDate, date[0].endDate) === 0
                             ? null
@@ -286,7 +306,7 @@ const SingleSpot = () => {
                         {spot.avgStarRating==='No reviews yet' ? 
                             <h4> New </h4> : (
                             <div className="priceReview">
-                                <i class="fa-sharp fa-solid fa-star"></i>
+                                <i className="fa-sharp fa-solid fa-star"></i>
                                 <h4 className='spotRate'>{Number.parseFloat(spot.avgStarRating).toFixed(1)}</h4>
                                 <h4> · </h4>
                                 <h4 className='reviewNum'>{reviewNum(spot.numReviews)}</h4>
