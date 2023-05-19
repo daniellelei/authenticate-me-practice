@@ -17,11 +17,21 @@ const CurrentUserBookings = () => {
             dispatch(bookingsAction.actionClearCurrentBookings())
         }
     }, [dispatch])
-
-
+    console.log(currentBookings)
+    
     let currentBookingsArr = [];
     if(currentBookings) currentBookingsArr=Object.values(currentBookings)
-
+    
+    if (!currentBookingsArr.length){
+        return (
+            <div  className='manageBookingPage'>
+                <h1>
+                    Wanna add a booking?
+                </h1>
+                <h4>* Your booking history is empty</h4>
+            </div>
+        )
+    }
     if (!currentBookings || !user) return (
         <div>Loading...</div>
     )

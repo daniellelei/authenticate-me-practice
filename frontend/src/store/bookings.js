@@ -49,6 +49,13 @@ export const actionEditBooking = (booking) => {
     }
 }
 
+export const actionDeleteBooking = (bookingId) => {
+    return {
+        type: DELETE_BOOKING,
+        bookingId
+
+    }
+}
 
 export const thunkGetCurrentBookings = () => async (dispatch) =>{
     const response = await csrfFetch(`/api/bookings/current`)
@@ -92,6 +99,18 @@ export const thunkEditBooking = (bookingId, dates) => async (dispatch)=>{
     }
 }
 
+export const thunkDeleteBooking = (bookingId) => async(dispatch)=> {
+    console.log('inside deletebooking thunk', bookingId)
+    const response = await csrfFetch(`/api/bookings/${bookingId}`, {
+        method: 'DELETE'
+    })
+    if(response.ok) {
+        await dispatch(actionDeleteBooking(bookingId));
+        return await response.json();
+    }
+    return await response.json();
+}
+
 
 const initialState = {
     currentBookings:{},
@@ -128,6 +147,11 @@ const bookingsReducer = (state = initialState, action) => {
                 currentBookings:{...state.currentBookings, [action.booking.id]: action.booking},
                 spotBookings:{...state.spotBookings,[action.booking.id]: action.booking},
             }
+        case DELETE_BOOKING:
+            const newState = {...state};
+            delete newState.currentBookings[action.bookingId];
+            delete newState.spotBookings[action.bookingId];
+            return newState;
 
         default:
             return state;

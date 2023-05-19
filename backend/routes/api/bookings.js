@@ -23,11 +23,16 @@ async (req, res) =>{
         attributes:['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
         include:Spot
     })
-    if(!allbookings.length){
-        return res.status(404).json({
-            "message": "You don't have a booking yet",
-            "statusCode": 404
-        })
+    // if(!allbookings.length){
+    //     return res.status(404).json({
+    //         "message": "You don't have a booking yet",
+    //         "statusCode": 404
+    //     })
+    // }
+    if(!allbookings.length) {
+        return res.json({
+        Bookings: allbookings
+    })
     }
     const spots = [];
     for(let b of allbookings){
@@ -284,9 +289,18 @@ router.delete(
         }
 
         const currentBooking = await Booking.findOne({
-            where:{id:bookingId}
+            where:{
+                id:bookingId
+            },
+            attributes:['id']
         });
-        await currentBooking.destroy();
+       
+        // await currentBooking.destroy();
+        await Booking.destroy(
+            {
+                where:{id:bookingId}
+            }
+        )
         return res.status(200).json({
             "message": "Successfully deleted",
             "statusCode": 200
