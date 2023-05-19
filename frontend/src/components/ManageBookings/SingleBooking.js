@@ -37,6 +37,10 @@ const SingleBooking = ({booking}) => {
         if(showDropDown) return;
         setShowDropDown(true);
     }
+    const closedEdit = (e) => {
+        e.preventDefault();
+        setShowDropDown(false);
+    }
 
     if (!booking || !user) return (
         <div>Loading...</div>
@@ -58,7 +62,7 @@ const SingleBooking = ({booking}) => {
                         <h1>{booking.Spot.name}</h1>
                         <p>{booking.Spot.city}, {booking.Spot.state}</p>
                         <EditBooking booking={booking}/>
-                        <button>Cancel</button>
+                        <button onClick={closedEdit}>Cancel</button>
                     </div>
                     <button className='bookingButton'>Delete</button>
                 </div>
