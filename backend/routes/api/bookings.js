@@ -252,8 +252,7 @@ router.delete(
         const {bookingId} = req.params;
         
         const booking = await Booking.findOne({
-            where:{id:bookingId},
-            attributes:['userId', 'spotId']
+            where:{id:bookingId}
         })
         
         //cannot find booking 
@@ -276,7 +275,9 @@ router.delete(
         }
 
         //Bookings that have been started can't be deleted
-        const{startDate, endDate} = req.body;
+        
+        const startDate = booking.startDate;
+        const endDate = booking.endDate;
         let newStart = new Date(startDate);
         let newEnd = new Date(endDate);
         let currentDate = new Date();

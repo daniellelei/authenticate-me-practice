@@ -127,11 +127,11 @@ const EditBooking = ({booking, showDropDown, setShowDropDown}) => {
                     />
                 </div>
             </div>
-            <div className="FeeInfo">
+            <div className="FeeInfoEdit">
                 {nightCounter(date[0].startDate, date[0].endDate) === 0
                 ? null
                 : (
-                    <div>
+                    <div >
                         <div className="priceDetail">
                             <p>${spot.price} x {nightCounter(date[0].startDate, date[0].endDate)} nights</p>
                             <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate)}</p>
@@ -145,6 +145,8 @@ const EditBooking = ({booking, showDropDown, setShowDropDown}) => {
                             <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate)+68}</p>
                         </div>
                             <button onClick={handleUpdate}
+                            className='createSpotbuttonm '
+                            style={{transform:"translateX(130px)"}}
                         >Update</button>
                     </div>
                 )

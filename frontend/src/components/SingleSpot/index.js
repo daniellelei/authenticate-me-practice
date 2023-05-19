@@ -233,6 +233,13 @@ const SingleSpot = () => {
                                 {date[0].endDate===null? `Continuous`: selectedDateMonthYear(date[0].endDate)}</div>
                             </div>
                                 <div className={showDropDownName} >
+                                    <i className="fa-solid fa-xmark fa-xl"
+                                    onClick={(e)=> {
+                                        e.preventDefault()
+                                        setShowDropDown(false);
+                                    }}
+                                    style={{transform:"translateY(-15px)", cursor:'pointer'}}
+                                    ></i>
                                    <h1>Choose a date</h1> 
                                     <DateRange
                                         minDate={new Date()}
@@ -254,6 +261,13 @@ const SingleSpot = () => {
                                         preventSnapRefocus={true}
                                         disabledDates={spotBookingDate(spotBookingsArr)}
                                     />
+                                    <button 
+                                     className='createSpotbuttonm '
+                                    onClick={(e)=> {
+                                        e.preventDefault()
+                                        setShowDropDown(false);
+                                    }}
+                                    >Select</button>
                                 </div>
                             </div>
                         <button onClick={handleReserve} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>

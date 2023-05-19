@@ -21,7 +21,10 @@ const DeleteBooking = ({booking, showDropDownDel, setShowDropDownDel}) => {
     return(
         <div>
             <h2>Are you sure to delete this booking?</h2>
-            <button onClick={confirmDelete}>Delete</button>
+            <button onClick={confirmDelete}
+            className='createSpotbuttonm '
+            style={{margin:"10px", padding:"10px 60px 10px 60px"}}
+            >Delete</button>
         </div>
     )
 
