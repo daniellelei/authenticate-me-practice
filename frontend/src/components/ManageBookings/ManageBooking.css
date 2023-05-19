@@ -1,0 +1,42 @@
+.manageBookingPage{
+    margin: 0 80px 0 80px;
+}
+
+.singleBooking {
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    width:800px;
+    padding: 30px;
+}
+
+.singleBookingLeft {
+    display: flex;
+    justify-content: space-between;
+    align-items: center ;
+    width:100%;
+    border: 1px solid green;
+    
+}
+
+.bookingButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+.bookingButton {
+    padding: 0.8em;
+    background-color: palevioletred;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+    color: white;
+    margin: 1em;
+    border-radius: 8px;
+    border: 1px solid pink;
+    width: 120px;
+    cursor: pointer;
+}
+.bookingButton:hover {
+    background-color: rgb(216, 74, 121);
+}

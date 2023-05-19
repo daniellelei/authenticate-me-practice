@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory, Link} from 'react-router-dom';
 import * as bookingsAction from '../../store/bookings'
 import SingleBooking from './SingleBooking';
+import './ManageBooking.css'
 const CurrentUserBookings = () => {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -25,23 +26,20 @@ const CurrentUserBookings = () => {
         <div>Loading...</div>
     )
     return (
-        <div>
-
+        
+        <div className='manageBookingPage'>
+            <h1>My Bookings</h1>
             <div>
-                <h1>My Bookings</h1>
-                <div>
-                    {
-                        currentBookingsArr.map ((b)=>(
-                            <div key={b.id}>
-                                <SingleBooking booking={b} />
-                            </div>
-                        ))
-                    }
-
-                </div>
+                {
+                    currentBookingsArr.map ((b)=>(
+                        <div key={b.id}>
+                            <SingleBooking booking={b} />
+                        </div>
+                    ))
+                }
             </div>
-
         </div>
+        
     )
 
 }
