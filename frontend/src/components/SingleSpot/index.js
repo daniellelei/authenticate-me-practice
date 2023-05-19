@@ -26,15 +26,27 @@ const SingleSpot = () => {
     const [resErrors, setResErrors] = useState({});
     
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
+    const [startDate, setStartDate] = useState(new Date())
+    const [endDate, setEndDate] = useState(null)
+    // const handleSelect = (ranges) => {
+    //     setStartDate(ranges.selection.startDate)
+    //     setEndDate(ranges.selection.endDate)
+        
+    // }
     const [date, setDate] = useState([
         {
-        startDate: new Date(),
-        endDate: null,
+        startDate: startDate,
+        endDate: endDate,
         key: 'selection'
         }
     ]);
-    const [startDate, setStartDate] = useState(date[0].startDate)
-    const [endDate, setEndDate] = useState(date[0].endDate)
+    // const selectionRange = {
+    //     startDate: startDate,
+    //     endDate:endDate,
+    //     key: "selection"
+    // }
+
+    
     // console.log('date', date)
     // console.log('start date', date[0].startDate)
     // console.log('end date', date[0].endDate)
@@ -138,8 +150,8 @@ const SingleSpot = () => {
         if(!spotBookingsArr.length) return []
         for (let s of spotBookingsArr){
             // console.log('inside spotBookingDate function,', s.startDate)
-            let start = new Date(s.startDate.replace('-', ' '))
-            let end = new Date(s.endDate.replace('-', ' '))
+            let start = new Date(s.startDate)
+            let end = new Date(s.endDate)
             let startParsed = Date.parse(start)
             let endParsed = Date.parse(end)
             let i = startParsed;
@@ -237,8 +249,15 @@ const SingleSpot = () => {
                                     <DateRange
                                         minDate={new Date()}
                                         editableDateInputs={true}
+                                        rangeColors={["#D87093"]}
                                         showSelectionPreview={true}
-                                        onChange={item => setDate([item.selection])}
+                                        onChange={item => {
+                                            console.log('onChange item', item)
+                                            console.log('onChange [item.selection]', [item.selection])
+                                            setDate([item.selection])
+                                            setStartDate([item.selection][0].startDate)
+                                            setEndDate([item.selection][0].endDate)
+                                        }}
                                         moveRangeOnFirstSelection={false}
                                         months={2}
                                         calendarFocus="forward"
@@ -291,8 +310,14 @@ const SingleSpot = () => {
                     <DateRange
                        minDate={new Date()}
                         editableDateInputs={true}
+                        rangeColors={["#D87093"]}
                         showSelectionPreview={true}
-                        onChange={item => setDate([item.selection])}
+                        onChange={item => {
+                            setDate([item.selection])
+                            setStartDate([item.selection][0].startDate)
+                            setEndDate([item.selection][0].endDate)
+
+                        }}
                         moveRangeOnFirstSelection={false}
                         months={2}
                         calendarFocus="forward"
