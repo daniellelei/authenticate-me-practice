@@ -6,7 +6,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as bookingsAction from '../../store/bookings'
 import { useHistory } from "react-router-dom";
 import './EditBooking.css'
-const EditBooking = ({booking, showDropDownName}) => {
+const EditBooking = ({booking, showDropDown, setShowDropDown}) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const spot = booking.Spot
@@ -27,7 +27,7 @@ const EditBooking = ({booking, showDropDownName}) => {
         return ()=>{
             dispatch(bookingsAction.actionClearSpotBookings())
         }
-    },[showDropDownName])
+    },[showDropDown])
 
     const selectedDateMonthYear = (moment) => {
         let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -91,6 +91,7 @@ const EditBooking = ({booking, showDropDownName}) => {
         };
         const bookingRes = await dispatch(bookingsAction.thunkEditBooking(booking.id, newBooking))
         if(!bookingRes.errors){
+            setShowDropDown(false)
             history.push(`/bookings/current`)
         } else {
             await setResErrors(bookingRes.errors);
