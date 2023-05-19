@@ -28,7 +28,7 @@
     align-items: center;
     width: 50%;
     position: relative;
-    border: 2px solid pink;
+    /* border: 2px solid pink; */
 }
 .bookingButton {
     padding: 0.8em;

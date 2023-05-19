@@ -80,7 +80,7 @@ export const thunkAddBooking = (spotId, dates) => async (dispatch) => {
 }
 
 export const thunkEditBooking = (bookingId, dates) => async (dispatch)=>{
-    const response = await csrfFetch(`/api/booking/${bookingId}`,{
+    const response = await csrfFetch(`/api/bookings/${bookingId}`,{
         method: 'PUT',
         header: {'Content-Type': 'application/json'},
         body:JSON.stringify(dates)
@@ -119,14 +119,14 @@ const bookingsReducer = (state = initialState, action) => {
         case ADD_BOOKING:
             return {
                 ...state,
-                currentBookings:action.booking,
-                spotBookings:action.booking,
+                currentBookings:{...state.currentBookings, [action.booking.id]: action.booking},
+                spotBookings:{...state.spotBookings,[action.booking.id]: action.booking},
             };
         case EDIT_BOOKING:
             return {
                 ...state,
-                currentBookings:action.booking,
-                spotBookings:action.booking,
+                currentBookings:{...state.currentBookings, [action.booking.id]: action.booking},
+                spotBookings:{...state.spotBookings,[action.booking.id]: action.booking},
             }
 
         default:

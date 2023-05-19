@@ -44,19 +44,21 @@ const EditBooking = ({booking, showDropDownName}) => {
         // console.log('spotBoookingsArr', spotBookingsArr)
         if(!spotBookingsArr.length) return []
         for (let s of spotBookingsArr){
-            
-            let start = new Date(Date.parse(s.startDate) + 86400000)
-            let end = new Date(Date.parse(s.endDate) + 86400000)
-            let startParsed = Date.parse(start)
-            let endParsed = Date.parse(end)
-            let i = startParsed;
-            while (i < endParsed) {
-                i = i + 86400000
-                let nextday = new Date(i)
-                Dates.push(nextday)
+            if(s.id !== booking.id) {
+                let start = new Date(Date.parse(s.startDate) + 86400000)
+                let end = new Date(Date.parse(s.endDate) + 86400000)
+                let startParsed = Date.parse(start)
+                let endParsed = Date.parse(end)
+                let i = startParsed;
+                while (i < endParsed) {
+                    i = i + 86400000
+                    let nextday = new Date(i)
+                    Dates.push(nextday)
+                }
+                Dates.push(start);
+                Dates.push(end);
             }
-            Dates.push(start);
-            Dates.push(end);
+            
             // console.log(`from editBooking blocked dates ${s.id}`,Dates)
         }
         return Dates

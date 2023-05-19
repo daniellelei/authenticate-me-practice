@@ -59,8 +59,8 @@ async (req, res) =>{
 }
 )
 
-//edit a booking
 
+//edit a booking
 
 router.put(
     '/:bookingId',
@@ -74,7 +74,8 @@ router.put(
         
         const booking = await Booking.findOne({
             where:{id:bookingId},
-            attributes:['userId', 'spotId', 'startDate', 'endDate']
+            attributes:['id','userId', 'spotId', 'startDate', 'endDate'],
+            // include:Spot
         })
         
         //cannot find booking 
@@ -212,8 +213,22 @@ router.put(
         })
         const bookingEdited = await Booking.findOne({
             where:{id:bookingId},
-            attributes:['id','spotId','userId','startDate','endDate','createdAt','updatedAt']
+            attributes:['id','spotId','userId','startDate','endDate','createdAt','updatedAt'],
+            include: Spot
         })
+        let spot = bookingEdited.Spot;
+        const image = await SpotImage.findAll({
+            where: {
+                spotId: spot.id,
+                preview:true
+            },
+            attributes:['url']
+        })
+        if (!image.length){
+            bookingEdited.dataValues.Spot.dataValues.previewImage = 'No preview image yet.'
+        }
+        let imgUrl = image[0].dataValues.url
+        bookingEdited.dataValues.Spot.dataValues.previewImage = imgUrl;
 
         return res.status(200).json(bookingEdited);
     }
