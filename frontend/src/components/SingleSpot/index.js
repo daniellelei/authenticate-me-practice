@@ -40,16 +40,7 @@ const SingleSpot = () => {
         key: 'selection'
         }
     ]);
-    // const selectionRange = {
-    //     startDate: startDate,
-    //     endDate:endDate,
-    //     key: "selection"
-    // }
-
     
-    // console.log('date', date)
-    // console.log('start date', date[0].startDate)
-    // console.log('end date', date[0].endDate)
     const [showDropDown, setShowDropDown] = useState(false);
     const openDropDown = () => {
         if(showDropDown) return;
@@ -108,11 +99,6 @@ const SingleSpot = () => {
         }
     }, [dispatch])
     if(!spot) return null;
-
-    const clickReserve = (e) => {
-        e.preventDefault();
-        window.alert('Feature Coming Soon')
-    }
 
     const imagesRender = (images) => {
         for (let i=0; i<images.length; i++){

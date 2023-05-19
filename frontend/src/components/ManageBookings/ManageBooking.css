@@ -27,6 +27,8 @@
     justify-content: center;
     align-items: center;
     width: 50%;
+    position: relative;
+    border: 2px solid pink;
 }
 .bookingButton {
     padding: 0.8em;
@@ -46,4 +48,18 @@
 .bookingImage {
     width: 500px;
     height:300px
+}
+
+.dropdownEdit {
+    background-color: rgb(255, 255, 255);
+    width: 730px;
+    height: 620px;
+    z-index: 5;
+    position: absolute;
+    top: -20px;
+    right: 0px;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
 }
