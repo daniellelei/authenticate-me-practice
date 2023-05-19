@@ -136,8 +136,10 @@ const SingleSpot = () => {
         if(!spotBookingsArr.length) return []
         for (let s of spotBookingsArr){
             // console.log('inside spotBookingDate function,', s.startDate)
-            let start = new Date(s.startDate)
-            let end = new Date(s.endDate)
+            // let start = new Date(s.startDate)
+            // let end = new Date(s.endDate)
+            let start = new Date(Date.parse(s.startDate) + 86400000)
+            let end = new Date(Date.parse(s.endDate) + 86400000)
             let startParsed = Date.parse(start)
             let endParsed = Date.parse(end)
             let i = startParsed;

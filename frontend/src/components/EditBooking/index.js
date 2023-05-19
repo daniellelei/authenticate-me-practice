@@ -6,7 +6,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as bookingsAction from '../../store/bookings'
 import { useHistory } from "react-router-dom";
 import './EditBooking.css'
-const EditBooking = ({booking}) => {
+const EditBooking = ({booking, showDropDownName}) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const spot = booking.Spot
@@ -27,7 +27,7 @@ const EditBooking = ({booking}) => {
         return ()=>{
             dispatch(bookingsAction.actionClearSpotBookings())
         }
-    },[dispatch])
+    },[showDropDownName])
 
     const selectedDateMonthYear = (moment) => {
         let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -44,9 +44,9 @@ const EditBooking = ({booking}) => {
         // console.log('spotBoookingsArr', spotBookingsArr)
         if(!spotBookingsArr.length) return []
         for (let s of spotBookingsArr){
-            // console.log('inside spotBookingDate function,', s.startDate)
-            let start = new Date(s.startDate)
-            let end = new Date(s.endDate)
+            
+            let start = new Date(Date.parse(s.startDate) + 86400000)
+            let end = new Date(Date.parse(s.endDate) + 86400000)
             let startParsed = Date.parse(start)
             let endParsed = Date.parse(end)
             let i = startParsed;
@@ -57,6 +57,7 @@ const EditBooking = ({booking}) => {
             }
             Dates.push(start);
             Dates.push(end);
+            // console.log(`from editBooking blocked dates ${s.id}`,Dates)
         }
         return Dates
     }
@@ -100,27 +101,28 @@ const EditBooking = ({booking}) => {
         <div className="editBooking">
             <div>
                 <h3>Choose a date</h3> 
-                <DateRange
-                    
-                    minDate={new Date()}
-                    editableDateInputs={true}
-                    rangeColors={["#D87093"]}
-                    showSelectionPreview={true}
-                    onChange={item => {
-                        console.log('onChange item', item)
-                        console.log('onChange [item.selection]', [item.selection])
-                        setDate([item.selection])
-                        setStartDate([item.selection][0].startDate)
-                        setEndDate([item.selection][0].endDate)
-                    }}
-                    moveRangeOnFirstSelection={false}
-                    months={2}
-                    calendarFocus="forward"
-                    direction="horizontal"
-                    ranges={date}
-                    preventSnapRefocus={true}
-                    disabledDates={spotBookingDate(spotBookingsArr)}
-                />
+                <div className="editform">
+                    <DateRange
+                        minDate={new Date()}
+                        editableDateInputs={true}
+                        rangeColors={["#D87093"]}
+                        showSelectionPreview={true}
+                        onChange={item => {
+                            console.log('onChange item', item)
+                            console.log('onChange [item.selection]', [item.selection])
+                            setDate([item.selection])
+                            setStartDate([item.selection][0].startDate)
+                            setEndDate([item.selection][0].endDate)
+                        }}
+                        moveRangeOnFirstSelection={false}
+                        months={2}
+                        calendarFocus="forward"
+                        direction="horizontal"
+                        ranges={date}
+                        preventSnapRefocus={true}
+                        disabledDates={spotBookingDate(spotBookingsArr)}
+                    />
+                </div>
             </div>
             <div className="FeeInfo">
                 {nightCounter(date[0].startDate, date[0].endDate) === 0

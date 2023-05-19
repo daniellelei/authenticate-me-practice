@@ -42,7 +42,7 @@ const SingleBooking = ({booking}) => {
         setShowDropDown(false);
     }
 
-    if (!booking || !user) return (
+    if (!booking || !user || !booking.Spot) return (
         <div>Loading...</div>
     )
 
@@ -50,8 +50,8 @@ const SingleBooking = ({booking}) => {
         <div className='singleBooking'>
             <div className='singleBookingLeft'>
                 <div>
-                    <h2>{booking.Spot.name}</h2>
-                    <p>{booking.Spot.city}, {booking.Spot.state}</p>
+                    <h2>{booking.Spot?.name}</h2>
+                    <p>{booking.Spot?.city}, {booking.Spot?.state}</p>
                     <p>{booking.startDate} - {booking.endDate}</p>
                 </div>
                 <div className='bookingButtons' ref={ulRef}>
@@ -59,9 +59,9 @@ const SingleBooking = ({booking}) => {
                     onClick={clickEdit}
                     >Edit</button>
                     <div className={showDropDownName}>
-                        <h2>{booking.Spot.name}</h2>
-                        <p>{booking.Spot.city}, {booking.Spot.state}</p>
-                        <EditBooking booking={booking}/>
+                        <h2>{booking.Spot?.name}</h2>
+                        <p>{booking.Spot?.city}, {booking.Spot?.state}</p>
+                        <EditBooking booking={booking} showDropDownName={showDropDownName}/>
                         <button onClick={closedEdit}>Cancel</button>
                     </div>
                     <button className='bookingButton'>Delete</button>

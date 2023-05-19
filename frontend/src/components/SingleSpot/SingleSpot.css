@@ -174,15 +174,15 @@
 
 .dropdown {
     background-color: rgb(255, 255, 255);
-        width: 730px;
-        height: 480px;
-        z-index: 5;
-        position: absolute;
-        top: 80px;
-        right: 0;
-        padding:50px;
-        border-radius: 15px;
-        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    width: 600px;
+    height: 420px;
+    z-index: 5;
+    position: absolute;
+    top: 80px;
+    right: 0;
+    padding:50px;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 .CheckInCheckOut {
     /* border: 1px solid black; */
