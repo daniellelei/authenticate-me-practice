@@ -52,7 +52,6 @@
 
 .dropdownEdit {
     background-color: rgb(255, 255, 255);
-    
     margin:2em;
     width: 800px;
     height: 600px;
@@ -64,4 +63,19 @@
     border-radius: 15px;
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 
+}
+
+.dropdownDel {
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    margin: 2em;
+    width: 460px;
+    height: 300px;
+    z-index: 5;
+    position: absolute;
+    top:-80px;
+    right: -100px;
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
