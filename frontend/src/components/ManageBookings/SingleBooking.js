@@ -15,7 +15,7 @@ const SingleBooking = ({booking}) => {
         <div className='singleBooking'>
             <div className='singleBookingLeft'>
                 <div>
-                    <h3>{booking.Spot.name}</h3>
+                    <h2>{booking.Spot.name}</h2>
                     <p>{booking.Spot.city}, {booking.Spot.state}</p>
                     <p>{booking.startDate} - {booking.endDate}</p>
                 </div>
@@ -27,6 +27,7 @@ const SingleBooking = ({booking}) => {
             </div>
             <div>
                 <img 
+                    className='bookingImage'
                     src={booking.Spot.previewImage}
                     alt = 'spotImage'
                 />

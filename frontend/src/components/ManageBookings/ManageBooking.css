@@ -1,13 +1,15 @@
 .manageBookingPage{
-    margin: 0 80px 0 80px;
+    margin: 0 10% 0 10%;
 }
 
 .singleBooking {
-    border: 1px solid red;
+    /* border: 1px solid red; */
     display: flex;
     justify-content: center;
-    width:800px;
+    /* width:1000px; */
     padding: 30px;
+    padding-left: 0;
+    border-bottom: 2px solid rgb(198, 198, 198);
 }
 
 .singleBookingLeft {
@@ -15,7 +17,7 @@
     justify-content: space-between;
     align-items: center ;
     width:100%;
-    border: 1px solid green;
+    /* border: 1px solid green; */
     
 }
 
@@ -39,4 +41,9 @@
 }
 .bookingButton:hover {
     background-color: rgb(216, 74, 121);
+}
+
+.bookingImage {
+    width: 500px;
+    height:300px
 }
