@@ -1,3 +1,4 @@
+// import booking from '../../../backend/db/models/booking';
 import {csrfFetch} from './csrf';
 import Cookies from 'js-cookie';
 
@@ -34,8 +35,27 @@ export const actionClearSpotBookings = () => {
         type: CLEAR_SPOT_BOOKINGS
     }
 }
+export const actionAddBooking = (booking) => {
+    return {
+        type: ADD_BOOKING,
+        booking
+    }
+}
 
+export const actionEditBooking = (booking) => {
+    return {
+        type: EDIT_BOOKING,
+        booking
+    }
+}
 
+export const actionDeleteBooking = (bookingId) => {
+    return {
+        type: DELETE_BOOKING,
+        bookingId
+
+    }
+}
 
 export const thunkGetCurrentBookings = () => async (dispatch) =>{
     const response = await csrfFetch(`/api/bookings/current`)
@@ -45,13 +65,52 @@ export const thunkGetCurrentBookings = () => async (dispatch) =>{
     }
 }
 
-export const thunkGetSpotBookings = (spot) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spot.id}/bookings`)
+export const thunkGetSpotBookings = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/bookings`)
     if (response.ok) {
         const bookingRes = await response.json();
         await dispatch(actionGetSpotBookings(bookingRes.Bookings))
     }
 }
+
+export const thunkAddBooking = (spotId, dates) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/bookings`, {
+        method: 'POST',
+        header: {'Content-Type': "application/json"},
+        body:JSON.stringify(dates)
+    })
+    if(response.ok){
+        const bookingRes = await response.json();
+        dispatch(actionAddBooking(bookingRes))
+        return bookingRes;
+    }
+}
+
+export const thunkEditBooking = (bookingId, dates) => async (dispatch)=>{
+    const response = await csrfFetch(`/api/bookings/${bookingId}`,{
+        method: 'PUT',
+        header: {'Content-Type': 'application/json'},
+        body:JSON.stringify(dates)
+    })
+    if(response.ok) {
+        const bookingRes = await response.json();
+        dispatch(actionEditBooking(bookingRes))
+        return bookingRes;
+    }
+}
+
+export const thunkDeleteBooking = (bookingId) => async(dispatch)=> {
+    console.log('inside deletebooking thunk', bookingId)
+    const response = await csrfFetch(`/api/bookings/${bookingId}`, {
+        method: 'DELETE'
+    })
+    if(response.ok) {
+        await dispatch(actionDeleteBooking(bookingId));
+        return await response.json();
+    }
+    return await response.json();
+}
+
 
 const initialState = {
     currentBookings:{},
@@ -76,6 +135,23 @@ const bookingsReducer = (state = initialState, action) => {
             return{...state, currentBookings:{}}
         case CLEAR_SPOT_BOOKINGS:
             return {...state, spotBookings:{}}
+        case ADD_BOOKING:
+            return {
+                ...state,
+                currentBookings:{...state.currentBookings, [action.booking.id]: action.booking},
+                spotBookings:{...state.spotBookings,[action.booking.id]: action.booking},
+            };
+        case EDIT_BOOKING:
+            return {
+                ...state,
+                currentBookings:{...state.currentBookings, [action.booking.id]: action.booking},
+                spotBookings:{...state.spotBookings,[action.booking.id]: action.booking},
+            }
+        case DELETE_BOOKING:
+            const newState = {...state};
+            delete newState.currentBookings[action.bookingId];
+            delete newState.spotBookings[action.bookingId];
+            return newState;
 
         default:
             return state;

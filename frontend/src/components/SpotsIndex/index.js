@@ -27,7 +27,7 @@ function SpotsIndex() {
         <div className='spots-index'>
             <nav>
                {spots.map((spot) => (
-                <div className='spot'>
+                <div className='spot' key={spot.id}>
                     <NavLink key={spot.id} to={`/spots/${spot.id}`} 
                     className='spotNav tooltip'
                     >
@@ -45,7 +45,7 @@ function SpotsIndex() {
                                 {!spot.avgRating ? 
                                 <h4> New </h4> : 
                                 (<div className='ratingStar'>
-                                    <i class="fa-sharp fa-solid fa-star"></i>
+                                    <i className="fa-sharp fa-solid fa-star"></i>
                                     <h4 className='spotRate'>{Number.parseFloat(spot.avgRating).toFixed(1)}</h4>
                                 </div>)}
                             </div>

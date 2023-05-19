@@ -24,7 +24,9 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        model: "Users"
+        references:{
+          model: "Users"
+        },
       },
       startDate: {
         type: Sequelize.DATEONLY,

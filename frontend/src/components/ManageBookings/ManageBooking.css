@@ -1,0 +1,81 @@
+.manageBookingPage{
+    margin: 0 10% 0 10%;
+}
+
+.singleBooking {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    /* width:1000px; */
+    padding: 30px;
+    padding-left: 0;
+    border-bottom: 2px solid rgb(198, 198, 198);
+}
+
+.singleBookingLeft {
+    display: flex;
+    justify-content: space-between;
+    align-items: center ;
+    width:100%;
+    /* border: 1px solid green; */
+    
+}
+
+.bookingButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    position: relative;
+    /* border: 2px solid pink; */
+}
+.bookingButton {
+    padding: 0.8em;
+    background-color: palevioletred;
+    box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+    color: white;
+    margin: 1em;
+    border-radius: 8px;
+    border: 1px solid pink;
+    width: 120px;
+    cursor: pointer;
+}
+.bookingButton:hover {
+    background-color: rgb(216, 74, 121);
+}
+
+.bookingImage {
+    width: 500px;
+    height:300px
+}
+
+.dropdownEdit {
+    background-color: rgb(255, 255, 255);
+    margin:2em;
+    width: 800px;
+    height: 600px;
+    z-index: 5;
+    position: absolute;
+    top: -40px;
+    right: -400px;
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+}
+
+.dropdownDel {
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    margin: 2em;
+    width: 460px;
+    height: 300px;
+    z-index: 5;
+    position: absolute;
+    top:-80px;
+    right: -100px;
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}

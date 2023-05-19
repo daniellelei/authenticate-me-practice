@@ -1,0 +1,14 @@
+.editBooking {
+    width:100%;
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+
+}
+
+.rdrCalendarWrapper{
+    font-size: 10px;
+}

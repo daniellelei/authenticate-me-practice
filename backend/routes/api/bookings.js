@@ -23,11 +23,16 @@ async (req, res) =>{
         attributes:['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
         include:Spot
     })
-    if(!allbookings.length){
-        return res.status(404).json({
-            "message": "You don't have a booking yet",
-            "statusCode": 404
-        })
+    // if(!allbookings.length){
+    //     return res.status(404).json({
+    //         "message": "You don't have a booking yet",
+    //         "statusCode": 404
+    //     })
+    // }
+    if(!allbookings.length) {
+        return res.json({
+        Bookings: allbookings
+    })
     }
     const spots = [];
     for(let b of allbookings){
@@ -47,10 +52,10 @@ async (req, res) =>{
         })
         
         if(!img.length){
-            allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
+            allbookings[b].dataValues.Spot.dataValues.previewImage = "No preview image yet"
         }
         let imgUrl = img[0].dataValues.url
-        allbookings[b].dataValues.Spot.dataValues.preiewImage = imgUrl;
+        allbookings[b].dataValues.Spot.dataValues.previewImage = imgUrl;
     }
     return res.json({
         Bookings: allbookings
@@ -59,8 +64,8 @@ async (req, res) =>{
 }
 )
 
-//edit a booking
 
+//edit a booking
 
 router.put(
     '/:bookingId',
@@ -74,7 +79,8 @@ router.put(
         
         const booking = await Booking.findOne({
             where:{id:bookingId},
-            attributes:['userId', 'spotId', 'startDate', 'endDate']
+            attributes:['id','userId', 'spotId', 'startDate', 'endDate'],
+            // include:Spot
         })
         
         //cannot find booking 
@@ -212,8 +218,22 @@ router.put(
         })
         const bookingEdited = await Booking.findOne({
             where:{id:bookingId},
-            attributes:['id','spotId','userId','startDate','endDate','createdAt','updatedAt']
+            attributes:['id','spotId','userId','startDate','endDate','createdAt','updatedAt'],
+            include: Spot
         })
+        let spot = bookingEdited.Spot;
+        const image = await SpotImage.findAll({
+            where: {
+                spotId: spot.id,
+                preview:true
+            },
+            attributes:['url']
+        })
+        if (!image.length){
+            bookingEdited.dataValues.Spot.dataValues.previewImage = 'No preview image yet.'
+        }
+        let imgUrl = image[0].dataValues.url
+        bookingEdited.dataValues.Spot.dataValues.previewImage = imgUrl;
 
         return res.status(200).json(bookingEdited);
     }
@@ -269,9 +289,18 @@ router.delete(
         }
 
         const currentBooking = await Booking.findOne({
-            where:{id:bookingId}
+            where:{
+                id:bookingId
+            },
+            attributes:['id']
         });
-        await currentBooking.destroy();
+       
+        // await currentBooking.destroy();
+        await Booking.destroy(
+            {
+                where:{id:bookingId}
+            }
+        )
         return res.status(200).json({
             "message": "Successfully deleted",
             "statusCode": 200

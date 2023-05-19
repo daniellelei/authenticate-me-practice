@@ -51,7 +51,7 @@ const CurrentUserSpots = () => {
                 <div className='spots-indexm'>
                 <nav>
                     {spots.map((spot) => (
-                        <div className='spotm'>
+                        <div className='spotm' key={spot}>
                             <NavLink key={spot.id} to={`/spots/${spot.id}`}
                             className='spotNavm tooltip'>
                                 <img src={spot.previewImage} alt={spot.name} />
@@ -70,7 +70,7 @@ const CurrentUserSpots = () => {
                                             {!spot.avgRating ? 
                                             <h4 className='revm'> New </h4> : 
                                             (<div className='ratingStarm revm'>
-                                                <i class="fa-sharp fa-solid fa-star"></i>
+                                                <i className="fa-sharp fa-solid fa-star"></i>
                                                 <h4 className='spotRatem'>{Number.parseFloat(spot.avgRating).toFixed(1)}</h4>
                                             </div>)}
                                         </div>
