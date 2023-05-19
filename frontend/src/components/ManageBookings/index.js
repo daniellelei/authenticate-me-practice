@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory, Link} from 'react-router-dom';
 import * as bookingsAction from '../../store/bookings'
-
+import SingleBooking from './SingleBooking';
 const CurrentUserBookings = () => {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -33,13 +33,7 @@ const CurrentUserBookings = () => {
                     {
                         currentBookingsArr.map ((b)=>(
                             <div key={b.id}>
-                                <p>Booking Id: {b.id}</p>
-                                <p>{b.Spot?.name}</p>
-                                <p>Start Date: {b.startDate}</p>
-                                <p>End Date: {b.endDate}</p>
-                                <p>Created at: {b.createdAt}</p>
-                                <p>Updated at: {b.updatedAt}</p>
-
+                                <SingleBooking booking={b} />
                             </div>
                         ))
                     }

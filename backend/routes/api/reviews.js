@@ -52,9 +52,9 @@ router.get(
         let imgUrl = imgJson.url
         
         if(!img.length){
-            allreviews[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
+            allreviews[b].dataValues.Spot.dataValues.previewImage = "No preview image yet"
         }
-        allreviews[b].dataValues.Spot.dataValues.preiewImage = imgUrl
+        allreviews[b].dataValues.Spot.dataValues.previewImage = imgUrl
     }
     return res.json({
         Reviews: allreviews

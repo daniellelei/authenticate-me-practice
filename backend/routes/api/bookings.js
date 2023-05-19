@@ -47,10 +47,10 @@ async (req, res) =>{
         })
         
         if(!img.length){
-            allbookings[b].dataValues.Spot.dataValues.preiewImage = "No preview image yet"
+            allbookings[b].dataValues.Spot.dataValues.previewImage = "No preview image yet"
         }
         let imgUrl = img[0].dataValues.url
-        allbookings[b].dataValues.Spot.dataValues.preiewImage = imgUrl;
+        allbookings[b].dataValues.Spot.dataValues.previewImage = imgUrl;
     }
     return res.json({
         Bookings: allbookings
