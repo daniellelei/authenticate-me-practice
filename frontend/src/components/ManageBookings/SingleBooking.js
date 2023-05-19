@@ -59,7 +59,7 @@ const SingleBooking = ({booking}) => {
                     onClick={clickEdit}
                     >Edit</button>
                     <div className={showDropDownName}>
-                        <h1>{booking.Spot.name}</h1>
+                        <h2>{booking.Spot.name}</h2>
                         <p>{booking.Spot.city}, {booking.Spot.state}</p>
                         <EditBooking booking={booking}/>
                         <button onClick={closedEdit}>Cancel</button>

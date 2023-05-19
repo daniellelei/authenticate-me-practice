@@ -3,12 +3,15 @@ import { useEffect, useState, useRef } from "react";
 import {DateRange} from 'react-date-range'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import * as bookingActions from '../../store/bookings'
-
+import * as bookingsAction from '../../store/bookings'
+import { useHistory } from "react-router-dom";
+import './EditBooking.css'
 const EditBooking = ({booking}) => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const spot = booking.Spot
     const user = useSelector(state=>state.session.user);
+    const [resErrors, setResErrors] = useState({}); 
     const [startDate, setStartDate] = useState(new Date())
     const [endDate, setEndDate] = useState(null)
     const [date, setDate] = useState([
@@ -20,9 +23,9 @@ const EditBooking = ({booking}) => {
     ]);
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
     useEffect(()=> {
-        dispatch(bookingActions.thunkGetSpotBookings(spot.id))
+        dispatch(bookingsAction.thunkGetSpotBookings(spot.id))
         return ()=>{
-            dispatch(bookingActions.actionClearSpotBookings())
+            dispatch(bookingsAction.actionClearSpotBookings())
         }
     },[dispatch])
 
@@ -70,34 +73,35 @@ const EditBooking = ({booking}) => {
         
     }
 
-    // const handleReserve = async (e) => {
-    //     e.preventDefault();
-    //     let startString = date[0].startDate.toISOString()
-    //     let endString = date[0].endDate.toISOString()
-    //     setStartDate(startString.substring(0,10))
-    //     setEndDate(endString.substring(0,10))
-    //     console.log('startDate when reserve', startDate)
-    //     console.log('endDate when reserve', endDate)
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        let startString = date[0].startDate.toISOString()
+        let endString = date[0].endDate.toISOString()
+        setStartDate(startString.substring(0,10))
+        setEndDate(endString.substring(0,10))
+        console.log('startDate when reserve', startDate)
+        console.log('endDate when reserve', endDate)
 
-    //     const newBooking = {
-    //         startDate,
-    //         endDate,
-    //     };
-    //     const bookingRes = await dispatch(bookingsAction.thunkAddBooking(spotId, newBooking))
-    //     if(!bookingRes.errors){
-    //         history.push(`/bookings/current`)
-    //     } else {
-    //         await setResErrors(bookingRes.errors);
-    //         console.log('resError', resErrors)
-    //     }
-    // }
+        const newBooking = {
+            startDate,
+            endDate,
+        };
+        const bookingRes = await dispatch(bookingsAction.thunkEditBooking(booking.id, newBooking))
+        if(!bookingRes.errors){
+            history.push(`/bookings/current`)
+        } else {
+            await setResErrors(bookingRes.errors);
+            console.log('resError', resErrors)
+        }
+    }
 
 
     return (
-        <div>
+        <div className="editBooking">
             <div>
                 <h3>Choose a date</h3> 
                 <DateRange
+                    
                     minDate={new Date()}
                     editableDateInputs={true}
                     rangeColors={["#D87093"]}
@@ -117,10 +121,29 @@ const EditBooking = ({booking}) => {
                     preventSnapRefocus={true}
                     disabledDates={spotBookingDate(spotBookingsArr)}
                 />
-
             </div>
-            <div>
-                <button>Update</button>
+            <div className="FeeInfo">
+                {nightCounter(date[0].startDate, date[0].endDate) === 0
+                ? null
+                : (
+                    <div>
+                        <div className="priceDetail">
+                            <p>${spot.price} x {nightCounter(date[0].startDate, date[0].endDate)} nights</p>
+                            <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate)}</p>
+                        </div>
+                        <div className="priceDetail">
+                            <p>service fee</p>
+                            <p>$68</p>
+                        </div>
+                        <div className="totalPrice">
+                            <p>Total before taxes</p>
+                            <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate)+68}</p>
+                        </div>
+                            <button onClick={handleUpdate}
+                        >Update</button>
+                    </div>
+                )
+                }
             </div>
         </div>
     )

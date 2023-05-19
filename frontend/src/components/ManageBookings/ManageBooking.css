@@ -52,12 +52,12 @@
 
 .dropdownEdit {
     background-color: rgb(255, 255, 255);
-    width: 730px;
+    width: 1030px;
     height: 620px;
     z-index: 5;
     position: absolute;
     top: -20px;
-    right: 0px;
+    right: -400px;
     padding: 50px;
     border-radius: 15px;
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);

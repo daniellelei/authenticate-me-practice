@@ -42,6 +42,13 @@ export const actionAddBooking = (booking) => {
     }
 }
 
+export const actionEditBooking = (booking) => {
+    return {
+        type: EDIT_BOOKING,
+        booking
+    }
+}
+
 
 export const thunkGetCurrentBookings = () => async (dispatch) =>{
     const response = await csrfFetch(`/api/bookings/current`)
@@ -68,6 +75,19 @@ export const thunkAddBooking = (spotId, dates) => async (dispatch) => {
     if(response.ok){
         const bookingRes = await response.json();
         dispatch(actionAddBooking(bookingRes))
+        return bookingRes;
+    }
+}
+
+export const thunkEditBooking = (bookingId, dates) => async (dispatch)=>{
+    const response = await csrfFetch(`/api/booking/${bookingId}`,{
+        method: 'PUT',
+        header: {'Content-Type': 'application/json'},
+        body:JSON.stringify(dates)
+    })
+    if(response.ok) {
+        const bookingRes = await response.json();
+        dispatch(actionEditBooking(bookingRes))
         return bookingRes;
     }
 }
@@ -102,6 +122,12 @@ const bookingsReducer = (state = initialState, action) => {
                 currentBookings:action.booking,
                 spotBookings:action.booking,
             };
+        case EDIT_BOOKING:
+            return {
+                ...state,
+                currentBookings:action.booking,
+                spotBookings:action.booking,
+            }
 
         default:
             return state;
