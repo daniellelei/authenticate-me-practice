@@ -1,5 +1,5 @@
 .manageBookingPage{
-    margin: 0 10% 0 10%;
+    margin: 0 12% 0 12%;
 }
 
 .singleBooking {
@@ -8,8 +8,10 @@
     justify-content: center;
     /* width:1000px; */
     padding: 30px;
-    padding-left: 0;
-    border-bottom: 2px solid rgb(198, 198, 198);
+    /* padding-left: 0; */
+    /* border-bottom: 2px solid rgb(198, 198, 198); */
+    margin-bottom: 30px;
+    background-color: rgba(243, 228, 236, 0.599);
 }
 
 .singleBookingLeft {
@@ -48,6 +50,7 @@
 .bookingImage {
     width: 500px;
     height:300px
+    
 }
 
 .dropdownEdit {

@@ -44,9 +44,9 @@ const CurrentUserBookings = () => {
     return (
         
         <div className='manageBookingPage'>
-            <h1>My Bookings</h1>
+            <h1 style={{marginBottom:"60px"}}>My Bookings</h1>
             <div>
-                <h2>Current and Upcoming Bookings</h2>
+                <h2 style={{borderBottom:"2px solid rgb(198, 198, 198)", padding:'15px'}}>Current and Upcoming Bookings</h2>
                 {
                     upcomingBooking(currentBookingsArr).map((u)=> (
                         <div key={u.id}>
@@ -57,7 +57,7 @@ const CurrentUserBookings = () => {
 
             </div>
             <div>
-                <h2>Past Bookings</h2>
+                <h2 style={{borderBottom:"2px solid rgb(198, 198, 198)", padding:'15px'}}>Past Bookings</h2>
                 {
                     pastBooking(currentBookingsArr).map ((b)=>(
                         <div key={b.id}>
