@@ -187,6 +187,11 @@ const SingleSpot = () => {
         }
     }
 
+    const checkOwner = (spot, user) => {
+        if(spot.ownerId === user.id) return true
+        return false
+    }
+
     
     
     return (
@@ -272,7 +277,7 @@ const SingleSpot = () => {
                                     >Select</button>
                                 </div>
                             </div>
-                        <button onClick={handleReserve} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>
+                        <button onClick={handleReserve} disabled={checkOwner(spot, user)} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>
                         <div className="FeeInfo">
                             {nightCounter(date[0].startDate, date[0].endDate) === 0
                             ? null
