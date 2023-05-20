@@ -41,7 +41,7 @@ const CurrentUserSpots = () => {
     );
     
         return (
-            <div >
+            <div style={{margin:"0 12% 0 12%"}}>
                 <div className='topm'>
                 <h1>Manage Your Spots</h1>
                 <button onClick={clickCreate} className='createSpotbuttonm'
