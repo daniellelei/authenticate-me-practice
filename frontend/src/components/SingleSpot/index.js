@@ -15,6 +15,9 @@ import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as bookingsAction from "../../store/bookings"
 const SingleSpot = () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate()+1)
     const { spotId }  = useParams();
     const dispatch = useDispatch();
     const history = useHistory()
@@ -26,7 +29,7 @@ const SingleSpot = () => {
     const [resErrors, setResErrors] = useState({});
     
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
-    const [startDate, setStartDate] = useState(new Date())
+    const [startDate, setStartDate] = useState(tomorrow)
     const [endDate, setEndDate] = useState(null)
     // const handleSelect = (ranges) => {
     //     setStartDate(ranges.selection.startDate)
@@ -191,7 +194,8 @@ const SingleSpot = () => {
         if(spot?.ownerId === user?.id) return true
         return false
     }
-      const loginButtonClassName = "loginButton" + (checkOwner(spot, user)) ? "" : " disable";
+    
+    const loginButtonClassName = "loginButton" + (checkOwner(spot, user)) ? "" : " disable";
 
     
     
@@ -250,7 +254,7 @@ const SingleSpot = () => {
                                     ></i>
                                    <h1>Choose a date</h1> 
                                     <DateRange
-                                        minDate={new Date()}
+                                        minDate={tomorrow}
                                         editableDateInputs={true}
                                         rangeColors={["#D87093"]}
                                         showSelectionPreview={true}
@@ -325,7 +329,7 @@ const SingleSpot = () => {
                         )}</h3>
                     </div>
                     <DateRange
-                       minDate={new Date()}
+                       minDate={tomorrow}
                         editableDateInputs={true}
                         rangeColors={["#D87093"]}
                         showSelectionPreview={true}
