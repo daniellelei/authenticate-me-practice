@@ -8,7 +8,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import EditBooking from '../EditBooking';
 import DeleteBooking from '../DeleteBooking';
 
-const SingleBooking = ({booking}) => {
+const SingleBooking = ({booking, bookingType}) => {
     const dispatch = useDispatch();
     const spot = booking.Spot
     
@@ -74,20 +74,28 @@ const SingleBooking = ({booking}) => {
         <div className='singleBooking'>
             <div className='singleBookingLeft'>
                 <div>
+                    
                     <h2>{booking.Spot?.name}</h2>
                     <p>{booking.Spot?.city}, {booking.Spot?.state}</p>
                     <p>{booking.startDate} - {booking.endDate}</p>
                 </div>
+                {bookingType==='past'? null : (
                 <div>
                     <div className='bookingButtons' ref={ulRef}>
                         <button className='bookingButton'
                         onClick={clickEdit}
                         >Edit</button>
                         <div className={showDropDownName}>
+                            <i className="fa-solid fa-xmark fa-xl"
+                                    onClick={closedEdit}
+                                    style={{transform:"translateX(760px)", cursor:'pointer'}}
+                                    ></i>
                             <h2>{booking.Spot?.name}</h2>
                             <p>{booking.Spot?.city}, {booking.Spot?.state}</p>
                             <EditBooking booking={booking} showDropDown={showDropDown} setShowDropDown={setShowDropDown}/>
-                            <button onClick={closedEdit}>Cancel</button>
+                            <button onClick={closedEdit}
+                            className='createSpotbuttonm '
+                            >Cancel</button>
                         </div>
                     </div>
                     <div className='bookingButtons' ref={ulRefDel}>
@@ -98,12 +106,15 @@ const SingleBooking = ({booking}) => {
                             {/* <h2>{booking.Spot?.name}</h2>
                             <p>{booking.Spot?.city}, {booking.Spot?.state}</p> */}
                             <DeleteBooking booking={booking} showDropDownDel={showDropDownDel} setShowDropDownDel={setShowDropDownDel}/>
-                            <button onClick={closedDelete}>Cancel</button>
+                            <button onClick={closedDelete}
+                            className='createSpotbuttonm '
+                            style={{margin:"10px", padding:"10px 60px 10px 60px"}}
+                            >Cancel</button>
                         </div>
                     </div>
-                    
-
                 </div>
+
+                )}
 
             </div>
             <div>

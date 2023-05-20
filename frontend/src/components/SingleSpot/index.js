@@ -187,12 +187,20 @@ const SingleSpot = () => {
         }
     }
 
+    const checkOwner = (spot, user) => {
+        if(spot?.ownerId === user?.id) return true
+        return false
+    }
+      const loginButtonClassName = "loginButton" + (checkOwner(spot, user)) ? "" : " disable";
+
     
     
     return (
         <div className="wholePage">
+            {/* <div className="sticky">I will stick to the screen when you reach my scroll position</div> */}
             <div className="singleSpot">
-                <h1 className="spotName">{spot.name}</h1>
+                <h1 className="spotName"
+                >{spot.name}</h1>
                 <div className="locationInfo">
                     <span>{spot.city}, {spot.state}, {spot.country} </span> 
                 </div>
@@ -233,6 +241,13 @@ const SingleSpot = () => {
                                 {date[0].endDate===null? `Continuous`: selectedDateMonthYear(date[0].endDate)}</div>
                             </div>
                                 <div className={showDropDownName} >
+                                    <i className="fa-solid fa-xmark fa-xl"
+                                    onClick={(e)=> {
+                                        e.preventDefault()
+                                        setShowDropDown(false);
+                                    }}
+                                    style={{transform:"translateY(-15px)", cursor:'pointer'}}
+                                    ></i>
                                    <h1>Choose a date</h1> 
                                     <DateRange
                                         minDate={new Date()}
@@ -254,9 +269,23 @@ const SingleSpot = () => {
                                         preventSnapRefocus={true}
                                         disabledDates={spotBookingDate(spotBookingsArr)}
                                     />
+                                    <button 
+                                     className='createSpotbuttonm '
+                                    onClick={(e)=> {
+                                        e.preventDefault()
+                                        setShowDropDown(false);
+                                    }}
+                                    >Select</button>
                                 </div>
                             </div>
-                        <button onClick={handleReserve} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>
+                            {checkOwner(spot, user)
+                            ? (
+                                <button className="reserve">Owner is not able to reserve</button>
+                            ) 
+                            : (
+                                <button onClick={handleReserve} disabled={checkOwner(spot, user)} className="reserve">{nightCounter(date[0].startDate, date[0].endDate)===0 ? `Check availability` : `Reserve` }</button>
+                            )}
+                        
                         <div className="FeeInfo">
                             {nightCounter(date[0].startDate, date[0].endDate) === 0
                             ? null

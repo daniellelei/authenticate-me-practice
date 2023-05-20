@@ -31,7 +31,7 @@ function SpotsIndex() {
                     <NavLink key={spot.id} to={`/spots/${spot.id}`} 
                     className='spotNav tooltip'
                     >
-                        <img src={spot.previewImage} alt={spot.name} /> 
+                        <img src={spot.previewImage} alt={spot.name} className='allSpotImg' /> 
                         <div className='spoti'>
                             <div className = 'info'>
                               <h4 className='tooltip tooltiptext'>{spot.name}</h4>
