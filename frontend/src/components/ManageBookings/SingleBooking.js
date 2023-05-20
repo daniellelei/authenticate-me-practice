@@ -77,7 +77,7 @@ const SingleBooking = ({booking, bookingType}) => {
                     
                     <h2>{booking.Spot?.name}</h2>
                     <p>{booking.Spot?.city}, {booking.Spot?.state}</p>
-                    <p>{booking.startDate} - {booking.endDate}</p>
+                    <p>from {booking.startDate} to {booking.endDate}</p>
                 </div>
                 {bookingType==='past'? null : (
                 <div>
