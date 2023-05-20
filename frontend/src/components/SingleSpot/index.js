@@ -191,8 +191,10 @@ const SingleSpot = () => {
     
     return (
         <div className="wholePage">
+            {/* <div className="sticky">I will stick to the screen when you reach my scroll position</div> */}
             <div className="singleSpot">
-                <h1 className="spotName">{spot.name}</h1>
+                <h1 className="spotName"
+                >{spot.name}</h1>
                 <div className="locationInfo">
                     <span>{spot.city}, {spot.state}, {spot.country} </span> 
                 </div>

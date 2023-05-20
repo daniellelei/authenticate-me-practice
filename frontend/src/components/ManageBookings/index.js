@@ -32,6 +32,12 @@ const CurrentUserBookings = () => {
             </div>
         )
     }
+    const upcomingBooking = (currentBookingsArr) => {
+        return currentBookingsArr.filter((c)=> Date.parse(c.endDate) + 86400000>= Date.parse(new Date()))
+    }
+    const pastBooking = (currentBookings) => {
+        return currentBookingsArr.filter((c)=> Date.parse(c.endDate) + 86400000 < Date.parse(new Date()))
+    }
     if (!currentBookings || !user) return (
         <div>Loading...</div>
     )
@@ -40,14 +46,27 @@ const CurrentUserBookings = () => {
         <div className='manageBookingPage'>
             <h1>My Bookings</h1>
             <div>
+                <h2>Current and Upcoming Bookings</h2>
                 {
-                    currentBookingsArr.map ((b)=>(
+                    upcomingBooking(currentBookingsArr).map((u)=> (
+                        <div key={u.id}>
+                            <SingleBooking booking={u} bookingType="upcoming"/>
+                        </div>
+                    ))
+                }
+
+            </div>
+            <div>
+                <h2>Past Bookings</h2>
+                {
+                    pastBooking(currentBookingsArr).map ((b)=>(
                         <div key={b.id}>
-                            <SingleBooking booking={b} />
+                            <SingleBooking booking={b} bookingType='past'/>
                         </div>
                     ))
                 }
             </div>
+            
         </div>
         
     )

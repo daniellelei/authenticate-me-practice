@@ -8,7 +8,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import EditBooking from '../EditBooking';
 import DeleteBooking from '../DeleteBooking';
 
-const SingleBooking = ({booking}) => {
+const SingleBooking = ({booking, bookingType}) => {
     const dispatch = useDispatch();
     const spot = booking.Spot
     
@@ -79,6 +79,7 @@ const SingleBooking = ({booking}) => {
                     <p>{booking.Spot?.city}, {booking.Spot?.state}</p>
                     <p>{booking.startDate} - {booking.endDate}</p>
                 </div>
+                {bookingType==='past'? null : (
                 <div>
                     <div className='bookingButtons' ref={ulRef}>
                         <button className='bookingButton'
@@ -111,9 +112,9 @@ const SingleBooking = ({booking}) => {
                             >Cancel</button>
                         </div>
                     </div>
-                    
-
                 </div>
+
+                )}
 
             </div>
             <div>
