@@ -59,7 +59,7 @@ const Maps = ({ apiKey }) => {
     <>
       {isLoaded && <GoogleMap
           mapContainerStyle={containerStyle}
-          zoom={8}
+          zoom={10}
           center={currentPosition}
           onUnmount={onUnmount}
           >
@@ -72,7 +72,7 @@ const Maps = ({ apiKey }) => {
                 fillOpacity: 1,
                 scale: .1,
                 strokeColor: 'gold',
-                strokeWeight: 2
+                strokeWeight: 0
               }}
               streetView={false} />
         </GoogleMap>}
