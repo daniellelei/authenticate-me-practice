@@ -14,6 +14,8 @@ import {DateRange} from 'react-date-range'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as bookingsAction from "../../store/bookings"
+import { GoogleMap } from "@react-google-maps/api";
+import MapContainer from '../Maps'
 const SingleSpot = () => {
     const today = new Date()
     const tomorrow = new Date(today)
@@ -31,11 +33,7 @@ const SingleSpot = () => {
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
     const [startDate, setStartDate] = useState(tomorrow)
     const [endDate, setEndDate] = useState(null)
-    // const handleSelect = (ranges) => {
-    //     setStartDate(ranges.selection.startDate)
-    //     setEndDate(ranges.selection.endDate)
-        
-    // }
+    
     const [date, setDate] = useState([
         {
         startDate: startDate,
@@ -196,6 +194,8 @@ const SingleSpot = () => {
     }
     
     const loginButtonClassName = "loginButton" + (checkOwner(spot, user)) ? "" : " disable";
+
+
 
     
     
@@ -387,6 +387,14 @@ const SingleSpot = () => {
                         </div>
                         
                     ))}
+                    <MapContainer />
+                    {/* <GoogleMap 
+                    onLoad = { map => {
+                        const bounds = new window.google.maps.LatLngBounds();
+                        map.fitBounds(bounds);
+                    }}
+                    onUnmount={}
+                    /> */}
                 </div>
             </div>
 

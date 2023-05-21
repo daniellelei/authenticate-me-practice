@@ -1,6 +1,7 @@
 // frontend/src/components/Maps/Maps.js
 import React from 'react';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { useState, useCallback } from 'react';
 
 const containerStyle = {
   width: '400px',
@@ -18,6 +19,12 @@ const Maps = ({ apiKey }) => {
     googleMapsApiKey: apiKey,
   });
 
+  const [map, setMap] = useState(null)
+  
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null)
+  }, [])
+
   return (
     <>
       {isLoaded && (
@@ -25,6 +32,7 @@ const Maps = ({ apiKey }) => {
           mapContainerStyle={containerStyle}
           center={center}
           zoom={10}
+          onUnmount={onUnmount}
         />
       )}
     </>
