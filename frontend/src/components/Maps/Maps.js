@@ -26,20 +26,24 @@ const Maps = ({ apiKey }) => {
   Geocode.setLocationType('ROOFTOP')
   Geocode.enableDebug();
 
-  const [currentPosition, setCurrentPosition] = useState();
+  const [currentPosition, setCurrentPosition] = useState({
+    lat: spot.lat,
+    lng: spot.lng
+  });
+ 
 
-  const makeMap = (e) => {
-    e.preventDefault()
-    Geocode.fromAddress(address).then(
-      (response) => {
-        const {lat, lng} = response.results[0].geometry.location 
-        setCurrentPosition({lat, lng})
-      },
-      (error) => {
-        console.error(error);
-      }
-    )
-  }
+  // const makeMap = (e) => {
+  //   e.preventDefault()
+  //   Geocode.fromAddress(address).then(
+  //     (response) => {
+  //       const {lat, lng} = response.results[0].geometry.location 
+  //       setCurrentPosition({lat, lng})
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //     }
+  //   )
+  // }
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: apiKey,
@@ -66,7 +70,7 @@ const Maps = ({ apiKey }) => {
                 path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
                 fillColor: '#db8ba3',
                 fillOpacity: 1,
-                scale: .2,
+                scale: .1,
                 strokeColor: 'gold',
                 strokeWeight: 2
               }}
