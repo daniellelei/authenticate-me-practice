@@ -14,7 +14,13 @@ import {DateRange} from 'react-date-range'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as bookingsAction from "../../store/bookings"
+import * as spotsAction from "../../store/spots"
+import { GoogleMap } from "@react-google-maps/api";
+import MapContainer from '../Maps'
 const SingleSpot = () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate()+1)
     const { spotId }  = useParams();
     const dispatch = useDispatch();
     const history = useHistory()
@@ -26,13 +32,9 @@ const SingleSpot = () => {
     const [resErrors, setResErrors] = useState({});
     
     const spotBookings = useSelector(state=>state.bookings.spotBookings)
-    const [startDate, setStartDate] = useState(new Date())
+    const [startDate, setStartDate] = useState(tomorrow)
     const [endDate, setEndDate] = useState(null)
-    // const handleSelect = (ranges) => {
-    //     setStartDate(ranges.selection.startDate)
-    //     setEndDate(ranges.selection.endDate)
-        
-    // }
+    
     const [date, setDate] = useState([
         {
         startDate: startDate,
@@ -96,18 +98,27 @@ const SingleSpot = () => {
         dispatch(bookingsAction.thunkGetSpotBookings(spotId))
         return ()=>{
             dispatch(bookingsAction.actionClearSpotBookings())
+            dispatch(spotsAction.clearSingleSpot())
         }
     }, [dispatch])
-    if(!spot) return null;
+    if(!spot || !spot.SpotImages) return null;
+    
 
     const imagesRender = (images) => {
-        for (let i=0; i<images.length; i++){
-            images[i].ind = `img${i}`
+        console.log('images', images)
+        if(images){
+            for (let i=0; i<images?.length; i++){
+                images[i].ind = `img${i}`
+            }
+            return images;
         }
-        return images;
     }
-    let images = spot.SpotImages;
-    images = imagesRender(images);
+    let images=[]
+    if(spot){
+        images = spot.SpotImages;
+        images = imagesRender(images);
+    }
+    
 
     const reviewNum = (num) => {
         if(num === 1 ) return ` 1 review`
@@ -191,7 +202,10 @@ const SingleSpot = () => {
         if(spot?.ownerId === user?.id) return true
         return false
     }
-      const loginButtonClassName = "loginButton" + (checkOwner(spot, user)) ? "" : " disable";
+    
+    const loginButtonClassName = "loginButton" + (checkOwner(spot, user)) ? "" : " disable";
+
+
 
     
     
@@ -250,7 +264,7 @@ const SingleSpot = () => {
                                     ></i>
                                    <h1>Choose a date</h1> 
                                     <DateRange
-                                        minDate={new Date()}
+                                        minDate={tomorrow}
                                         editableDateInputs={true}
                                         rangeColors={["#D87093"]}
                                         showSelectionPreview={true}
@@ -325,7 +339,7 @@ const SingleSpot = () => {
                         )}</h3>
                     </div>
                     <DateRange
-                       minDate={new Date()}
+                       minDate={tomorrow}
                         editableDateInputs={true}
                         rangeColors={["#D87093"]}
                         showSelectionPreview={true}
@@ -383,6 +397,14 @@ const SingleSpot = () => {
                         </div>
                         
                     ))}
+                    <MapContainer spot={spot}/>
+                    {/* <GoogleMap 
+                    onLoad = { map => {
+                        const bounds = new window.google.maps.LatLngBounds();
+                        map.fitBounds(bounds);
+                    }}
+                    onUnmount={}
+                    /> */}
                 </div>
             </div>
 

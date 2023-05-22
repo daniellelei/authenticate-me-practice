@@ -8,10 +8,13 @@ const bookingsRouter = require('./bookings.js')
 const spotImagesRouter = require('./spot-images.js')
 const reviewImageRouter = require('./review-images.js')
 const { restoreUser, requireAuth } = require('../../utils/auth.js');
+const mapsRouter = require('./maps');
+
 
 router.get('/test', requireAuth, (req, res) => {
   res.json({message: 'success'})
 })
+router.use('/maps', mapsRouter);
 
 router.use(restoreUser);
 
