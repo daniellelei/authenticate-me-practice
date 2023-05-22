@@ -14,11 +14,11 @@ const center = {
   lng: 77.0369,
 };
 
-const Maps = ({ apiKey }) => {
+const Maps = ({ apiKey, spot }) => {
 
 
   const [map, setMap] = useState(null)
-  const spot = useSelector(state=>state.spots.singleSpot)
+  // const spot = useSelector(state=>state.spots.singleSpot)
   const address = spot.address.concat(", ", spot.city).concat(", ", spot.state)
 
   Geocode.setApiKey(apiKey);

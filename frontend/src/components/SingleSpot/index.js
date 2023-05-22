@@ -14,6 +14,7 @@ import {DateRange} from 'react-date-range'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as bookingsAction from "../../store/bookings"
+import * as spotsAction from "../../store/spots"
 import { GoogleMap } from "@react-google-maps/api";
 import MapContainer from '../Maps'
 const SingleSpot = () => {
@@ -97,18 +98,27 @@ const SingleSpot = () => {
         dispatch(bookingsAction.thunkGetSpotBookings(spotId))
         return ()=>{
             dispatch(bookingsAction.actionClearSpotBookings())
+            dispatch(spotsAction.clearSingleSpot())
         }
     }, [dispatch])
-    if(!spot) return null;
+    if(!spot || !spot.SpotImages) return null;
+    
 
     const imagesRender = (images) => {
-        for (let i=0; i<images.length; i++){
-            images[i].ind = `img${i}`
+        console.log('images', images)
+        if(images){
+            for (let i=0; i<images?.length; i++){
+                images[i].ind = `img${i}`
+            }
+            return images;
         }
-        return images;
     }
-    let images = spot.SpotImages;
-    images = imagesRender(images);
+    let images=[]
+    if(spot){
+        images = spot.SpotImages;
+        images = imagesRender(images);
+    }
+    
 
     const reviewNum = (num) => {
         if(num === 1 ) return ` 1 review`
@@ -387,7 +397,7 @@ const SingleSpot = () => {
                         </div>
                         
                     ))}
-                    <MapContainer />
+                    <MapContainer spot={spot}/>
                     {/* <GoogleMap 
                     onLoad = { map => {
                         const bounds = new window.google.maps.LatLngBounds();
