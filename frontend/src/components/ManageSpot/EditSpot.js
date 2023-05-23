@@ -14,11 +14,13 @@ const EditSpot = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const spot = useSelector(state => state.spots.singleSpot);
+    const [lat, setLat] = useState(0);
+    const [lng, setLng] = useState(0);
     
-    useEffect(()=>{
-        dispatch(loadOneSpotThunk(spotId))
-    }, [dispatch])
+    
+    
     useEffect(() => {
+        dispatch(loadOneSpotThunk(spotId))
         if (!key) {
             dispatch(getKey());
         }
@@ -35,8 +37,7 @@ const EditSpot = () => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [resErrors, setResErrors] = useState({});
     //const [showErrors, setShowErrors] = useState({})
-    const [lat, setLat] = useState(0);
-    const [lng, setLng] = useState(0);
+    
 
     useEffect(()=>{
         if(spot) {
@@ -47,8 +48,7 @@ const EditSpot = () => {
             setName(spot.name);
             setDescription(spot.description);
             setPrice(spot.price);
-            setLat(spot.lat)
-            setLng(spot.lng);
+            
         }
     }, [spot])
     
@@ -63,12 +63,12 @@ const EditSpot = () => {
 
     useEffect(()=>{
         const err = {};
-        if(!address.length) err.address = 'Address is required'
-        if(!city.length) err.city = 'City is required'
-        if(!state.length) err.state = 'State is required'
-        if(!country.length) err.country = 'Country is required'
-        if(description.length < 30) err.description = 'Description needs a minimum of 30 characters'
-        if(!name.length) err.name = 'Name is required'
+        if(!address?.length) err.address = 'Address is required'
+        if(!city?.length) err.city = 'City is required'
+        if(!state?.length) err.state = 'State is required'
+        if(!country?.length) err.country = 'Country is required'
+        if(description?.length < 30) err.description = 'Description needs a minimum of 30 characters'
+        if(!name?.length) err.name = 'Name is required'
         if(!price || price <= 0) err.price = 'Price is required and needs to be greater than 0'
         
         setErrors(err);
@@ -95,14 +95,14 @@ const EditSpot = () => {
         const longAddress = address.concat(", ", city).concat(", ", state)
         console.log('long Address', longAddress)
         const response = await Geocode.fromAddress(longAddress)
-        if(response.status == 'OK') {
-            setLat(response.results[0].geometry.location.lat)
-            setLng(response.results[0].geometry.location.lng)
+        if(response.status == 'OK'){
+
+            const resLat = response.results[0].geometry.location.lat
+            const resLng = response.results[0].geometry.location.lng
+            
+            await setLat(resLat)
+            await setLng(resLng)
         }
-        console.log('lat',lat)
-        console.log('lng',lng)
-
-
         
         if(!Boolean(Object.values(errors).length) && lat !== 0 && lng!==0) {
             const payload ={
