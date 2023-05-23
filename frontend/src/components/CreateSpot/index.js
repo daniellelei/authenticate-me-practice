@@ -85,8 +85,8 @@ const CreateSpot = () => {
         console.log('long Address', longAddress)
         const response = await Geocode.fromAddress(longAddress)
         if(response.status == 'OK') {
-            await setLat(response.results[0].geometry.location.lat)
-            await setLng(response.results[0].geometry.location.lng)
+            setLat(response.results[0].geometry.location.lat)
+            setLng(response.results[0].geometry.location.lng)
         }
      
         

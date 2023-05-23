@@ -93,16 +93,20 @@ const EditSpot = () => {
         await setHasSubmitted(true);
         await setResErrors({});
         const longAddress = address.concat(", ", city).concat(", ", state)
-        console.log('long Address', longAddress)
+        // console.log('long Address', longAddress)
         const response = await Geocode.fromAddress(longAddress)
-        if(response.status == 'OK'){
+        
 
-            const resLat = response.results[0].geometry.location.lat
-            const resLng = response.results[0].geometry.location.lng
-            
-            await setLat(resLat)
-            await setLng(resLng)
-        }
+        const resLat = response.results[0].geometry.location.lat
+        const resLng = response.results[0].geometry.location.lng
+        console.log('resLat', resLat)
+        console.log('resLng', resLng)
+        
+        await setLat(resLat)
+        await setLng(resLng)
+        
+        console.log('lat', lat)
+        console.log('lng',lng)
         
         if(!Boolean(Object.values(errors).length) && lat !== 0 && lng!==0) {
             const payload ={
