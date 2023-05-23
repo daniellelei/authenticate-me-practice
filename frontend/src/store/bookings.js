@@ -61,7 +61,11 @@ export const thunkGetCurrentBookings = () => async (dispatch) =>{
     const response = await csrfFetch(`/api/bookings/current`)
     if (response.ok) {
         const bookingsRes = await response.json();
-        await dispatch(actionGetCurrentBookings(bookingsRes.Bookings))
+        if(bookingsRes.message){
+            await dispatch(actionGetCurrentBookings([]))
+        } else {
+            await dispatch(actionGetCurrentBookings(bookingsRes.Bookings))
+        }
     }
 }
 
@@ -127,10 +131,13 @@ const bookingsReducer = (state = initialState, action) => {
             return {...state, currentBookings: {...allBookings}}
         case LOAD_SPOT_BOOKINGS:
             const allSpotBookings = {};
-            action.bookings.forEach((booking)=>{
-                allSpotBookings[booking.id] = booking;
-            })
-            return {...state, spotBookings: {...allSpotBookings}}
+            if(!action.bookings?.length) return {...state,spotBookings:{}}
+            else {
+                action.bookings.forEach((booking)=>{
+                    allSpotBookings[booking.id] = booking;
+                })
+                return {...state, spotBookings: {...allSpotBookings}}
+            }
         case CLEAR_CURRENT_BOOKINGS:
             return{...state, currentBookings:{}}
         case CLEAR_SPOT_BOOKINGS:
