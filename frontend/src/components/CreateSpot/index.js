@@ -71,17 +71,18 @@ const CreateSpot = () => {
     }
 
     
+    Geocode.setApiKey(key);
+    Geocode.setLanguage("en");
+    Geocode.setLocationType('ROOFTOP')
+    Geocode.enableDebug();
     const handleSubmit = async (e) => {
         e.preventDefault();
         await setHasSubmitted(true);
         await setResErrors({});
         
         
-        Geocode.setApiKey(key);
-        Geocode.setLanguage("en");
-        Geocode.setLocationType('ROOFTOP')
-        Geocode.enableDebug();
         const longAddress = address.concat(", ", city).concat(", ", state)
+        console.log('long Address', longAddress)
         Geocode.fromAddress(longAddress).then(
             (response) => {
                 const {lat, lng} = response.results[0].geometry.location
@@ -93,8 +94,8 @@ const CreateSpot = () => {
             }
         )
 
-
-        const newSpot = {
+        if(!Boolean(Object.values(errors).length) && lat!== 0 && lng !==0){
+            const newSpot = {
             address,
             city,
             state,
@@ -105,7 +106,8 @@ const CreateSpot = () => {
             lat,
             lng
         };
-        if(!Boolean(Object.values(errors).length)){
+        console.log('inside if lat', lat)
+        console.log('inside if lng', lng)
             let images = [];
             images.push(image1);
             if(image2) images.push(image2);
