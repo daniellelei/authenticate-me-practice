@@ -397,14 +397,11 @@ const SingleSpot = () => {
                         </div>
                         
                     ))}
-                    <MapContainer spot={spot}/>
-                    {/* <GoogleMap 
-                    onLoad = { map => {
-                        const bounds = new window.google.maps.LatLngBounds();
-                        map.fitBounds(bounds);
-                    }}
-                    onUnmount={}
-                    /> */}
+                    <div>
+                        <h2>Where you'll be</h2>
+                        <MapContainer spot={spot}/>
+                    </div>
+                    
                 </div>
             </div>
 

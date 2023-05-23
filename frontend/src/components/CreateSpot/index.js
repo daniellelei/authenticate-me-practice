@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addSpotThunk} from '../../store/spots';
 import * as spotsActions from '../../store/spots';
 import { useHistory } from 'react-router-dom';
+import Geocode from 'react-geocode'
+import { getKey } from '../../store/maps';
+
 const CreateSpot = () => {
-    
+    const key = useSelector((state) => state.maps.key);
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -19,12 +22,21 @@ const CreateSpot = () => {
     const [image4, setImage4] = useState('');
     const [image5, setImage5] = useState('');
     const [errors, setErrors] = useState({});
+    // const [lat, setLat] = useState(0);
+    // const [lng, setLng] = useState(0);
     //const [showErrors, setShowErrors] = useState([])
     const [resErrors, setResErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
     const dispatch = useDispatch();
     const history = useHistory();
+
+    useEffect(() => {
+        if (!key) {
+        dispatch(getKey());
+        }
+    }, [dispatch, key]);
+
 
     useEffect(()=>{
         const err = [];
@@ -53,14 +65,38 @@ const CreateSpot = () => {
         !image5.includes('.jpeg')) err.image5 ='Image URL must end in .png, .jpg, or .jpeg'
         setErrors(err);
     },[address, city, state, country, name, description, price, image1, image2, image3, image4, image5])
+
+    if (!key) {
+        return null;
+    }
+
     
+    Geocode.setApiKey(key);
+    Geocode.setLanguage("en");
+    Geocode.setLocationType('ROOFTOP')
+    Geocode.enableDebug();
     const handleSubmit = async (e) => {
         e.preventDefault();
         await setHasSubmitted(true);
         await setResErrors({});
-
-
-        const newSpot = {
+        
+        
+        
+        
+        if(!Boolean(Object.values(errors).length)){
+            
+            const longAddress = address.concat(", ", city).concat(", ", state)
+            console.log('long Address', longAddress)
+            const response = await Geocode.fromAddress(longAddress)
+            let lat;
+            let lng;
+            if(response.status == 'OK') {
+               lat = response.results[0].geometry.location.lat
+               lng =response.results[0].geometry.location.lng
+            }
+            console.log('lat', lat)
+            console.log('lng', lng)
+            const newSpot = {
             address,
             city,
             state,
@@ -68,8 +104,10 @@ const CreateSpot = () => {
             name,
             description,
             price,
-        };
-        if(!Boolean(Object.values(errors).length)){
+            lat,
+            lng
+            };
+        
             let images = [];
             images.push(image1);
             if(image2) images.push(image2);

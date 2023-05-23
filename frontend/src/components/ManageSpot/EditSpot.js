@@ -5,17 +5,26 @@ import { useState, useEffect } from 'react';
 import { loadOneSpotThunk } from '../../store/spots';
 import { useHistory } from 'react-router-dom';
 import { editSpotThunk } from '../../store/spots';
+import Geocode from 'react-geocode'
+import { getKey } from '../../store/maps';
 
 const EditSpot = () => {
+    const key = useSelector((state) => state.maps.key);
     const { spotId } = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
     const spot = useSelector(state => state.spots.singleSpot);
-
-    useEffect(()=>{
+    
+    
+    
+    
+    useEffect(() => {
         dispatch(loadOneSpotThunk(spotId))
-    }, [dispatch])
-
+        if (!key) {
+            dispatch(getKey());
+        }
+    }, [dispatch, key]);
+    
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -27,6 +36,7 @@ const EditSpot = () => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [resErrors, setResErrors] = useState({});
     //const [showErrors, setShowErrors] = useState({})
+    
 
     useEffect(()=>{
         if(spot) {
@@ -37,6 +47,7 @@ const EditSpot = () => {
             setName(spot.name);
             setDescription(spot.description);
             setPrice(spot.price);
+            
         }
     }, [spot])
     
@@ -51,12 +62,12 @@ const EditSpot = () => {
 
     useEffect(()=>{
         const err = {};
-        if(!address.length) err.address = 'Address is required'
-        if(!city.length) err.city = 'City is required'
-        if(!state.length) err.state = 'State is required'
-        if(!country.length) err.country = 'Country is required'
-        if(description.length < 30) err.description = 'Description needs a minimum of 30 characters'
-        if(!name.length) err.name = 'Name is required'
+        if(!address?.length) err.address = 'Address is required'
+        if(!city?.length) err.city = 'City is required'
+        if(!state?.length) err.state = 'State is required'
+        if(!country?.length) err.country = 'Country is required'
+        if(description?.length < 30) err.description = 'Description needs a minimum of 30 characters'
+        if(!name?.length) err.name = 'Name is required'
         if(!price || price <= 0) err.price = 'Price is required and needs to be greater than 0'
         
         setErrors(err);
@@ -65,6 +76,13 @@ const EditSpot = () => {
     // useEffect(()=>{
     //     dispatch(loadOneSpotThunk(spotId));
     // }, [dispatch])
+    if (!key ||!spot) {
+        return null;
+    }
+    Geocode.setApiKey(key);
+    Geocode.setLanguage("en");
+    Geocode.setLocationType('ROOFTOP')
+    Geocode.enableDebug();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -73,9 +91,20 @@ const EditSpot = () => {
         //console.log(errors);
         await setHasSubmitted(true);
         await setResErrors({});
+        const longAddress = address.concat(", ", city).concat(", ", state)
+        // console.log('long Address', longAddress)
+        const response = await Geocode.fromAddress(longAddress)
+        let lat;
+        let lng;
+        if(response.status == 'OK') {
+            lat = response.results[0].geometry.location.lat
+            lng =response.results[0].geometry.location.lng
+        }
 
-
-        const payload ={
+        
+        
+        if(!Boolean(Object.values(errors).length) && lat !== 0 && lng!==0) {
+            const payload ={
             ...spot,
             address,
             city,
@@ -83,9 +112,10 @@ const EditSpot = () => {
             country,
             name,
             description,
-            price
+            price,
+            lat,
+            lng
         };
-        if(!Boolean(Object.values(errors).length)) {
             let updatedSpot = await dispatch(editSpotThunk(payload));
             if(!updatedSpot.errors) {
                 history.push(`/spots/${updatedSpot.id}`)
