@@ -88,8 +88,7 @@ const CreateSpot = () => {
             setLat(response.results[0].geometry.location.lat)
             setLng(response.results[0].geometry.location.lng)
         }
-        console.log('after response lat', lat)
-        console.log('after response lng', lng)
+     
         
 
         if(!Boolean(Object.values(errors).length) && lat!== 0 && lng !==0){
@@ -104,8 +103,7 @@ const CreateSpot = () => {
             lat,
             lng
         };
-        console.log('inside if lat', lat)
-        console.log('inside if lng', lng)
+        
             let images = [];
             images.push(image1);
             if(image2) images.push(image2);
