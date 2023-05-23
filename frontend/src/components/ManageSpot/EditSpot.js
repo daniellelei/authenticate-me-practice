@@ -14,18 +14,16 @@ const EditSpot = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const spot = useSelector(state => state.spots.singleSpot);
-    const [lat, setLat] = useState(0);
-    const [lng, setLng] = useState(0);
-
+    
     useEffect(()=>{
         dispatch(loadOneSpotThunk(spotId))
     }, [dispatch])
     useEffect(() => {
         if (!key) {
-        dispatch(getKey());
+            dispatch(getKey());
         }
     }, [dispatch, key]);
-
+    
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -37,6 +35,8 @@ const EditSpot = () => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [resErrors, setResErrors] = useState({});
     //const [showErrors, setShowErrors] = useState({})
+    const [lat, setLat] = useState(0);
+    const [lng, setLng] = useState(0);
 
     useEffect(()=>{
         if(spot) {
@@ -47,6 +47,8 @@ const EditSpot = () => {
             setName(spot.name);
             setDescription(spot.description);
             setPrice(spot.price);
+            setLat(spot.lat)
+            setLng(spot.lng);
         }
     }, [spot])
     
@@ -75,7 +77,7 @@ const EditSpot = () => {
     // useEffect(()=>{
     //     dispatch(loadOneSpotThunk(spotId));
     // }, [dispatch])
-    if (!key) {
+    if (!key ||!spot) {
         return null;
     }
     Geocode.setApiKey(key);
@@ -97,6 +99,8 @@ const EditSpot = () => {
             setLat(response.results[0].geometry.location.lat)
             setLng(response.results[0].geometry.location.lng)
         }
+        console.log('lat',lat)
+        console.log('lng',lng)
 
 
         

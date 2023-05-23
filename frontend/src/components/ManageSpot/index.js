@@ -51,7 +51,7 @@ const CurrentUserSpots = () => {
                 <div className='spots-indexm'>
                 <nav>
                     {spots.map((spot) => (
-                        <div className='spotm' key={spot}>
+                        <div className='spotm' key={spot.id}>
                             <NavLink key={spot.id} to={`/spots/${spot.id}`}
                             className='spotNavm tooltip'>
                                 <img src={spot.previewImage} alt={spot.name} />
