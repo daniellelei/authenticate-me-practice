@@ -14,8 +14,7 @@ const EditSpot = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const spot = useSelector(state => state.spots.singleSpot);
-    const [lat, setLat] = useState(0);
-    const [lng, setLng] = useState(0);
+    
     
     
     
@@ -95,18 +94,14 @@ const EditSpot = () => {
         const longAddress = address.concat(", ", city).concat(", ", state)
         // console.log('long Address', longAddress)
         const response = await Geocode.fromAddress(longAddress)
-        
+        let lat;
+        let lng;
+        if(response.status == 'OK') {
+            lat = response.results[0].geometry.location.lat
+            lng =response.results[0].geometry.location.lng
+        }
 
-        const resLat = response.results[0].geometry.location.lat
-        const resLng = response.results[0].geometry.location.lng
-        console.log('resLat', resLat)
-        console.log('resLng', resLng)
         
-        await setLat(resLat)
-        await setLng(resLng)
-        
-        console.log('lat', lat)
-        console.log('lng',lng)
         
         if(!Boolean(Object.values(errors).length) && lat !== 0 && lng!==0) {
             const payload ={

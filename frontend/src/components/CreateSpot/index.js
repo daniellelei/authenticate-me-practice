@@ -22,8 +22,8 @@ const CreateSpot = () => {
     const [image4, setImage4] = useState('');
     const [image5, setImage5] = useState('');
     const [errors, setErrors] = useState({});
-    const [lat, setLat] = useState(0);
-    const [lng, setLng] = useState(0);
+    // const [lat, setLat] = useState(0);
+    // const [lng, setLng] = useState(0);
     //const [showErrors, setShowErrors] = useState([])
     const [resErrors, setResErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -81,17 +81,21 @@ const CreateSpot = () => {
         await setResErrors({});
         
         
-        const longAddress = address.concat(", ", city).concat(", ", state)
-        console.log('long Address', longAddress)
-        const response = await Geocode.fromAddress(longAddress)
-        if(response.status == 'OK') {
-            setLat(response.results[0].geometry.location.lat)
-            setLng(response.results[0].geometry.location.lng)
-        }
-     
         
-
-        if(!Boolean(Object.values(errors).length) && lat!== 0 && lng !==0){
+        
+        if(!Boolean(Object.values(errors).length)){
+            
+            const longAddress = address.concat(", ", city).concat(", ", state)
+            console.log('long Address', longAddress)
+            const response = await Geocode.fromAddress(longAddress)
+            let lat;
+            let lng;
+            if(response.status == 'OK') {
+               lat = response.results[0].geometry.location.lat
+               lng =response.results[0].geometry.location.lng
+            }
+            console.log('lat', lat)
+            console.log('lng', lng)
             const newSpot = {
             address,
             city,
@@ -102,7 +106,7 @@ const CreateSpot = () => {
             price,
             lat,
             lng
-        };
+            };
         
             let images = [];
             images.push(image1);
