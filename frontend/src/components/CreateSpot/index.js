@@ -22,8 +22,8 @@ const CreateSpot = () => {
     const [image4, setImage4] = useState('');
     const [image5, setImage5] = useState('');
     const [errors, setErrors] = useState({});
-    const [lat, setLat] = useState('');
-    const [lng, setLng] = useState('');
+    const [lat, setLat] = useState(0);
+    const [lng, setLng] = useState(0);
     //const [showErrors, setShowErrors] = useState([])
     const [resErrors, setResErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -83,16 +83,14 @@ const CreateSpot = () => {
         
         const longAddress = address.concat(", ", city).concat(", ", state)
         console.log('long Address', longAddress)
-        Geocode.fromAddress(longAddress).then(
-            (response) => {
-                const {lat, lng} = response.results[0].geometry.location
-                setLat(lat);
-                setLng(lng);
-            },
-            (error) =>{
-                console.error(error)
-            }
-        )
+        const response = await Geocode.fromAddress(longAddress)
+        if(response.status == 'OK') {
+            setLat(response.results[0].geometry.location.lat)
+            setLng(response.results[0].geometry.location.lng)
+        }
+        console.log('after response lat', lat)
+        console.log('after response lng', lng)
+        
 
         if(!Boolean(Object.values(errors).length) && lat!== 0 && lng !==0){
             const newSpot = {
