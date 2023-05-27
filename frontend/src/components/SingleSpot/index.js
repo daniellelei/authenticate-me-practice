@@ -338,25 +338,27 @@ const SingleSpot = () => {
                             </div>
                         )}</h3>
                     </div>
-                    <DateRange
-                       minDate={tomorrow}
-                        editableDateInputs={true}
-                        rangeColors={["#D87093"]}
-                        showSelectionPreview={true}
-                        onChange={item => {
-                            setDate([item.selection])
-                            setStartDate([item.selection][0].startDate)
-                            setEndDate([item.selection][0].endDate)
+                    <div style={{zIndex:'-2',position:"relative"}}>
+                        <DateRange
+                        minDate={tomorrow}
+                            editableDateInputs={true}
+                            rangeColors={["#D87093"]}
+                            showSelectionPreview={true}
+                            onChange={item => {
+                                setDate([item.selection])
+                                setStartDate([item.selection][0].startDate)
+                                setEndDate([item.selection][0].endDate)
 
-                        }}
-                        moveRangeOnFirstSelection={false}
-                        months={2}
-                        calendarFocus="forward"
-                        direction="horizontal"
-                        ranges={date}
-                        preventSnapRefocus={true}
-                        disabledDates={spotBookingDate(spotBookingsArr)}
-                    />
+                            }}
+                            moveRangeOnFirstSelection={false}
+                            months={2}
+                            calendarFocus="forward"
+                            direction="horizontal"
+                            ranges={date}
+                            preventSnapRefocus={true}
+                            disabledDates={spotBookingDate(spotBookingsArr)}
+                        />
+                    </div>
                 </div>
 
                 <div className="reviews">
@@ -414,34 +416,3 @@ const SingleSpot = () => {
 }
 
 export default SingleSpot;
-{/* {date.length > 0 ? (
-    <p className='text-center'>
-    <span className='bold'>Start:</span>{' '}
-    {date[0].toDateString()}
-    &nbsp;|&nbsp;
-    <span className='bold'>End:</span> {date[1].toDateString()}
-    </p>
-) : (
-    <p className='text-center'>
-    <span className='bold'>Default selected date:</span>{' '}
-    {date.toDateString()}
-    </p>
-)}
-<div className='calendar-container'>
-        <Calendar
-            // minDate={new Date()}
-            onChange={setDate}
-            value={date}
-            selectRange={true}
-            tileDisabled={ ({date, view}) =>
-                // ({date})=> spotBookingDate(spotBookingsArr).includes(date.getDate()) 
-                (view === 'month') && // Block day tiles only
-                spotBookingDate(spotBookingsArr).some(disabledDate =>
-                date.getFullYear() === disabledDate.getFullYear() &&
-                date.getMonth() === disabledDate.getMonth() &&
-                date.getDate() === disabledDate.getDate()
-                )
-
-        }
-        />
-</div> */}
