@@ -74,6 +74,11 @@ module.exports = {
     {spotId:13, url:"https://a0.muscache.com/im/pictures/miso/Hosting-24720030/original/72bfb174-8b13-4ecf-90ef-be088247271f.jpeg?im_w=720", preview: true,},
     {spotId:13, url:"https://a0.muscache.com/im/pictures/miso/Hosting-24720030/original/ce21b9aa-8e06-4c65-b7a3-001c27e51463.jpeg?im_w=720", preview: true,},
     {spotId:13, url:"https://a0.muscache.com/im/pictures/ce0113be-533d-4442-9dd4-0616d8417796.jpg?im_w=720", preview: true,},
+    {spotId:14, url:"https://a0.muscache.com/im/pictures/73198cba-b765-4719-9492-85995c4ba7b3.jpg?im_w=1200", preview: true,},
+    {spotId:14, url:"https://a0.muscache.com/im/pictures/756e6baf-ef2d-4cb6-a57e-7c5b8efaff65.jpg?im_w=720", preview: true,},
+    {spotId:14, url:"https://a0.muscache.com/im/pictures/fee017f2-99a9-44c1-ac30-31f944e1d47c.jpg?im_w=720", preview: true,},
+    {spotId:14, url:"https://a0.muscache.com/im/pictures/2336ba42-9633-445a-a86b-b7a4b9a04cda.jpg?im_w=720", preview: true,},
+    {spotId:14, url:"https://a0.muscache.com/im/pictures/0d116e64-b1e4-46fb-8ebd-56dbb99bfa1e.jpg?im_w=720", preview: true,},
    ],{})
   },
 

@@ -171,6 +171,18 @@ module.exports = {
       description: "This is your dreamy A Frame cabin escape nestled in four wooded acres overlooking Shasta Lake.",
       price: 396,
     },
+     {
+      ownerId: 2, 
+      address: "32222 Penitencia Creek Rd",
+      city: "San Jose",
+      state: "California",
+      country: "United States",
+      lat: 37.393709,
+      lng: -121.817315,
+      name: "Treehouse, San Jose",
+      description: "250 sq ft treehouse with stairs leading to 2 lofts with beds overlooking the most gorgeous view of the Silicon Valley. ",
+      price: 408,
+    },
     
    ],{})
   },
