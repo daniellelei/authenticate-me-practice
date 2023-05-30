@@ -1,5 +1,6 @@
 # tree-house-bnb-project
 # Overview
+<img src="https://github.com/daniellelei/tree-house-bnb-project/blob/main/assets/May-30-2023%2012-32-52.gif?raw=true" />
 Welcome to Tree House Bnb!
 
 Tree house Bnb is a Airbnb-clone web application which has multiple functionalities such as spots, reviews, booking, etc.
