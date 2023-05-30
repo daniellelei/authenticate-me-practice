@@ -68,6 +68,7 @@ ul{
     background-color: palevioletred;
     color:white;
     box-shadow: 1px 1px 1px 1px rgb(204, 189, 189);
+    
 }
 .profileButton1:hover {
     background-color: rgb(216, 74, 121);
@@ -94,6 +95,7 @@ ul{
 li {
     margin:1em;
     width:100%;
+    
 }
 
 .dropDown-Button{
