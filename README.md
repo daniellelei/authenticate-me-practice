@@ -10,7 +10,7 @@ Its backend is created with Squelize.js and frontend is created with React-redux
 # Functionalities and MVP
 In Tree House Bnb, all users are able to:
 1. create, view, update and delete spots that are belonged to them
-2. create, view, update and delete reviews that are belonged to them
+2. create, view and delete reviews that are belonged to them
 3. create, view, update and delete bookings that are belonged to them
-
+4. integrated Google Maps with Geocode API to dynamically present spot locations
 live site: https://tree-house-bnb.onrender.com/
