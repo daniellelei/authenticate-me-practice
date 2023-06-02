@@ -307,7 +307,7 @@ const SingleSpot = () => {
                                 <div>
                                     <div className="priceDetail">
                                         <p>${spot.price} x {nightCounter(date[0].startDate, date[0].endDate)} nights</p>
-                                        <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate)}</p>
+                                        <p>${spot.price * nightCounter(date[0].startDate, date[0].endDate).toFixed(2)}</p>
                                     </div>
                                     <div className="priceDetail">
                                         <p>service fee</p>
