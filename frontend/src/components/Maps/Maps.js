@@ -58,6 +58,7 @@ const Maps = ({ apiKey, spot }) => {
   return (
     <>
       {isLoaded && <GoogleMap
+          
           mapContainerStyle={containerStyle}
           zoom={10}
           center={currentPosition}

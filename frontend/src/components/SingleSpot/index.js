@@ -399,7 +399,7 @@ const SingleSpot = () => {
                         </div>
                         
                     ))}
-                    <div>
+                    <div style={{width:"100%"}}>
                         <h2>Where you'll be</h2>
                         <MapContainer spot={spot}/>
                     </div>
