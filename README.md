@@ -14,4 +14,8 @@ In Tree House Bnb, all users are able to:
 2. create, view and delete reviews that are belonged to them
 3. create, view, update and delete bookings that are belonged to them
 4. integrated Google Maps with Geocode API to dynamically present spot locations
-live site: https://tree-house-bnb.onrender.com/
+
+
+
+<a href="https://tree-house-bnb.onrender.com">➡️➡️➡️ Direct me to Live Site</a>
+
