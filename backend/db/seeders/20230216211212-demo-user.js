@@ -12,31 +12,31 @@ module.exports = {
     options.tableName = 'Users';
     return queryInterface.bulkInsert(options, [
       {
-        email: 'user1@user.com',
-        firstName: 'user1firstName',
-        lastName: "user1lastName",
-        username: 'user1',
+        email: 'johnnyK@gmail.com',
+        firstName: 'Johnny',
+        lastName: "Myers",
+        username: 'JohnnyK',
         hashedPassword: bcrypt.hashSync('password1')
       },
       {
-        email: 'user2@user.com',
-        firstName: "user2firstName",
-        lastName: "user2lastName",
-        username: 'user2',
+        email: 'kenneth2@gmail.com',
+        firstName: "Kenneth",
+        lastName: "Gonzalez",
+        username: 'KennethGon',
         hashedPassword: bcrypt.hashSync('password2')
       },
       {
-        email: 'user3@user.com',
-        firstName: "user3firstName",
-        lastName: "user3lastName",
-        username: 'user3',
+        email: 'frank3@hotmail.com',
+        firstName: "Frank",
+        lastName: "Altamirano",
+        username: 'FrankAlta',
         hashedPassword: bcrypt.hashSync('password3')
       },
       {
-        email: "user4@user.com",
-        firstName:"user4firstName",
-        lastName: "user4lastName",
-        username: "user4",
+        email: "tania@user.com",
+        firstName:"Tania",
+        lastName: "Goncalves",
+        username: "taniaGoncal",
         hashedPassword: bcrypt.hashSync('password4')
       },
       {
@@ -45,6 +45,20 @@ module.exports = {
         lastName: "Demo lastName",
         username: "demoUser",
         hashedPassword: bcrypt.hashSync('demoUser')
+      },
+      {
+        email: 'jobwalker1@hotmail.com',
+        firstName: "Job",
+        lastName: "Walker",
+        username: 'jobWalker1',
+        hashedPassword: bcrypt.hashSync('jobwalker')
+      },
+      {
+        email: "necati@gmail.com",
+        firstName:"Necati",
+        lastName: "Diessen",
+        username: "necatiDiessen",
+        hashedPassword: bcrypt.hashSync('password4')
       },
 
       
