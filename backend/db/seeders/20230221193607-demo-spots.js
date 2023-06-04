@@ -207,6 +207,19 @@ module.exports = {
       description: "Gorgeous Pacifica Home w/ views. 6 bedrooms, 3 bathrooms. 82in TV in living room. ",
       price: 719,
     },
+    {
+      ownerId: 6, 
+      address: "3611 N Dinuba Blvd",
+      city: "Visalia",
+      state: "California",
+      country: "United States",
+      lat: 36.363203,
+      lng: -119.299284,
+      name: "Luxury treehouse with views of the Sierras",
+      description: "This beautiful and unique treehouse will provide you a great getaway, whether you're visiting friends or family or headed to the National parks. ",
+      price: 338,
+    },
+    
     
    ],{})
   },
