@@ -33,21 +33,22 @@ function SpotsIndex() {
                     >
                         <img src={spot.previewImage} alt={spot.name} className='allSpotImg' /> 
                         <div className='spoti'>
-                            <div className = 'info'>
-                              <h4 className='tooltip tooltiptext'>{spot.name}</h4>
-                              <h4 className='cityState'> {spot.city}, {spot.state} </h4>
-                              <div className='price-night'>
-                                <h4 className='price'> ${spot.price} </h4>   
-                                <h4>night</h4>
-                              </div>
+                            <div className='infoTop'>
+                                <h4 className='tooltip tooltiptext'>{spot.name}</h4>
+                                <h4 className='cityState'> {spot.city}, {spot.state} </h4>
+                                <div className='rating'>
+                                    {!spot.avgRating ? 
+                                    <h4> New </h4> : 
+                                    (<div className='ratingStar'>
+                                        <i className="fa-sharp fa-solid fa-star"></i>
+                                        <h4 className='spotRate'>{Number.parseFloat(spot.avgRating).toFixed(1)}</h4>
+                                    </div>)}
+                                </div>
                             </div>
-                            <div className='rating'>
-                                {!spot.avgRating ? 
-                                <h4> New </h4> : 
-                                (<div className='ratingStar'>
-                                    <i className="fa-sharp fa-solid fa-star"></i>
-                                    <h4 className='spotRate'>{Number.parseFloat(spot.avgRating).toFixed(1)}</h4>
-                                </div>)}
+                            <div className = 'infoBottom'>
+                                <h4 className='price'> ${spot.price} </h4>   
+                                <h4 style={{marginLeft:'0.5em'}}
+                                >night</h4>
                             </div>
                         </div>
                     </NavLink>     
