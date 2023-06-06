@@ -35,7 +35,8 @@ function SpotsIndex() {
                         <div className='spoti'>
                             <div className='infoTop'>
                                 <h4 className='tooltip tooltiptext'>{spot.name}</h4>
-                                <h4 className='cityState'> {spot.city}, {spot.state} </h4>
+                                <h4 style={{fontWeight:"600"}}
+                                className='cityState'> {spot.city}, {spot.state} </h4>
                                 <div className='rating'>
                                     {!spot.avgRating ? 
                                     <h4> New </h4> : 

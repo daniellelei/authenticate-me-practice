@@ -73,7 +73,7 @@ h4 {
     font-weight: lighter;
 }
 .price {
-    font-weight: bold;
+    font-weight: 600;
     margin:0;
     width:fit-content;
 }
