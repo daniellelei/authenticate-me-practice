@@ -230,7 +230,7 @@ const SingleSpot = () => {
                     </div>
                     
                     <div className="callOut">
-                        <div className="price">
+                        <div className="pricePart">
                             <div className="priceOnly">
                                 <p className="priceP">${spot.price}</p>
                                 <p className="night">night</p>
